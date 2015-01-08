@@ -1,0 +1,19 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="@string/pref_header_profile_body" />
+
+    <!-- height -->
+    <PreferenceScreen
+        android:key="@string/pref_profile_height"
+        android:title="@string/pref_title_user_height" />
+    <!-- weight -->
+    <PreferenceScreen
+        android:key="@string/pref_profile_weight"
+        android:title="@string/pref_title_user_weight" />
+    <!-- quietHeartRate -->
+    <PreferenceScreen
+        android:key="@string/pref_profile_quiet_heart_rate"
+        android:title="@string/pref_title_user_quiet_heart_rate" >
+    </PreferenceScreen>
+
+</PreferenceScreen>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="check">⇒確認画面へ</string>
+    <string name="title">medical aid</string>
+    <string name="userId">ユーザーID</string>
+    <string name="name">名前</string>
+    <string name="name_hint">名前(-20)</string>
+    <string name="sei">姓</string>
+    <string name="mei">名</string>
+    <string name="mailAdd">メールアドレス</string>
+    <string name="mailCheck">メールアドレス(確認用)</string>
+    <string name="gender">性別</string>
+    <string name="sex">性別</string>
+    <string name="male">男性</string>
+    <string name="female">女性</string>
+    <string name="nul"></string>
+    <string name="pass">パスワード</string>
+    <string name="pass_conf">パスワード(確認)</string>
+    <string name="birth">誕生日</string>
+    <string name="year">年</string>
+    <string name="month">月</string>
+    <string name="day">日</string>
+    <string name="height">身長</string>
+    <string name="weight">体重</string>
+    <string name="quiet_heart_rate">安静時心拍数</string>
+
+</resources>

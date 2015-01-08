@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="db_name">heart_rate_db</string>
+
+    <integer name="db_version">1</integer>
+
+    <string name="path_sql_create">sql/create/create.sql</string>
+    <string name="path_sql_insert_training_menu">sql/insert/training_menu.sql</string>
+    <string name="path_sql_insert_training_category">sql/insert/training_category.sql</string>
+
+    <!-- table -->
+    <string name="table_user">user</string>
+    <string name="table_heart_rate">heart_rate</string>
+    <string name="table_heart_rate_log">heart_rate_log</string>
+    <string name="table_training">training</string>
+    <string name="table_training_category">training_category</string>
+    <string name="table_training_menu">training_menu</string>
+    <string name="table_training_rest_log">training_rest_log</string>
+    <string name="table_training_play">training_play</string>
+    <string name="table_training_log">training_log</string>
+    <string name="table_permission">permission</string>
+    <!-- column -->
+    <string name="column_user_id">user_id</string>
+    <string name="column_user_name">user_name</string>
+    <string name="column_password">password</string>
+    <string name="column_gender">gender</string>
+    <string name="column_height">height</string>
+    <string name="column_weight">weight</string>
+    <string name="column_age">age</string>
+    <string name="column_quiet_heart_rate">quiet_heart_rate</string>
+    <string name="column_mail">mail</string>
+    <string name="column_heart_rate_id">heart_rate_id</string>
+    <string name="column_log_id">log_id</string>
+    <string name="column_heart_rate">heart_rate</string>
+    <string name="column_id">id</string>
+    <string name="column_training_id">training_id</string>
+    <string name="column_date">start_date</string>
+    <string name="column_start_time">start_time</string>
+    <string name="column_play_time ">play_time </string>
+    <string name="column_target_heart_rate">target_heart_rate</string>
+    <string name="column_target_calorie">target_cal</string>
+    <string name="column_time">time</string>
+    <string name="column_consumption_calorie">consumption_cal</string>
+    <string name="column_heart_rate_avg">heart_rate_avg</string>
+    <string name="column_strange">strange</string>
+    <string name="column_distance">distance</string>
+    <string name="column_training_category_name">training_category_name</string>
+    <string name="column_training_menu_id">training_menu_id</string>
+    <string name="column_training_name">training_name</string>
+    <string name="column_mets">mets</string>
+    <string name="column_color">color</string>
+    <string name="column_training_category_id">training_category_id</string>
+    <string name="column_play_id">play_id</string>
+    <string name="column_start_play_time">start_play_time</string>
+    <string name="column_end_play_time">end_play_time</string>
+    <string name="column_dis_x">dis_x</string>
+    <string name="column_dis_y">dis_y</string>
+    <string name="column_lap">lap</string>
+    <string name="column_split">split</string>
+    <string name="column_training_time">training_time</string>
+    <string name="column_permission_id">permission_id</string>
+    <string name="column_name">name</string>
+    <string name="column_compel_withdrawal">compel_withdrawal</string>
+    <string name="column_dissolution">dissolution</string>
+    <string name="column_permission_change">permission_change</string>
+    <string name="column_group_info_change">group_info_change</string>
+    <string name="column_member_add_manage">member_add_manage</string>
+    <string name="column_member_data_check">member_data_check</string>
+    <string name="column_member_list_view">member_list_view</string>
+    <string name="column_group_info_view">group_info_view</string>
+    <string name="column_withdrawal">withdrawal</string>
+    <string name="column_join_status">join_status</string>
+    <string name="column_group_news">group_news</string>
+
+</resources>

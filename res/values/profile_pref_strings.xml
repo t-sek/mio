@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="pref_profile_image">profile_image</string>
+    <string name="pref_profile_name">profile_name</string>
+    <string name="pref_profile_birth">profile_birth</string>
+    <string name="pref_profile_gender">profile_gender</string>
+    <string name="pref_profile_mail">profile_mail</string>
+    <string name="pref_profile_id">profile_id</string>
+    <string name="pref_profile_pass">profile_pass</string>
+    <string name="pref_profile_password">profile_password</string>
+    <string name="pref_profile_height">profile_height</string>
+    <string name="pref_profile_weight">profile_weight</string>
+    <string name="pref_profile_age">profile_age</string>
+    <string name="pref_profile_quiet_heart_rate">profile_quiet_heart_rate</string>
+    <string name="pref_facebook_access_token">facebook_access_token</string>
+
+</resources>

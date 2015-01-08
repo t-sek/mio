@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <View
+        android:layout_width="10dp"
+        android:layout_height="match_parent"
+        android:background="@color/theme_light" />
+
+    <TextView
+        android:id="@+id/txt_lap_id"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_weight="2"
+        android:gravity="right"
+        android:text="id"
+        android:textSize="20dp"
+        android:textStyle="italic" />
+
+    <TextView
+        android:id="@+id/txt_lap_time"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center"
+        android:layout_weight="5"
+        android:gravity="center"
+        android:text="lapTime"
+        android:textSize="30dp" />
+
+    <TextView
+        android:id="@+id/txt_split_time"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center"
+        android:layout_toLeftOf="@+id/txt_lap_time"
+        android:layout_weight="5"
+        android:gravity="center"
+        android:text="splitTime"
+        android:textSize="30dp" />
+
+    <TextView
+        android:id="@+id/txt_distance"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center"
+        android:layout_weight="5"
+        android:gravity="center"
+        android:text="distance"
+        android:textSize="30dp" />
+
+</LinearLayout>

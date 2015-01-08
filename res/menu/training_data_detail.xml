@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="ac.neec.mio.TrainingDataDetailActivity" >
+
+    <item
+        android:id="@+id/action_map"
+        android:icon="@drawable/ic_explore_black_48dp"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom"/>
+
+</menu>

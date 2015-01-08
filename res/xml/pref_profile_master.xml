@@ -1,0 +1,57 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!-- NOTE: EditTextPreference accepts EditText attributes. -->
+    <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
+
+    <PreferenceCategory android:title="@string/pref_header_profile_master" />
+
+    <!-- name -->
+    <EditTextPreference
+        android:capitalize="words"
+        android:defaultValue="@string/pref_default_display_name"
+        android:inputType="textCapWords"
+        android:key="@string/pref_profile_name"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary=""
+        android:title="@string/pref_title_user_name" />
+    <!-- date of birth -->
+    <PreferenceScreen
+        android:defaultValue="@string/pref_default_display_date"
+        android:key="@string/pref_profile_birth"
+        android:title="@string/pref_title_user_date" />
+    <!-- gender -->
+    <PreferenceScreen
+        android:key="@string/pref_profile_gender"
+        android:title="@string/pref_title_user_gender" />
+    <!-- mail -->
+    <EditTextPreference
+        android:capitalize="words"
+        android:inputType="textCapWords"
+        android:key="@string/pref_profile_mail"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/pref_title_user_mail" />
+    <!-- id -->
+    <EditTextPreference
+        android:capitalize="words"
+        android:inputType="textCapWords"
+        android:key="@string/pref_profile_id"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/pref_title_user_id" />
+    <!-- password -->
+    <EditTextPreference
+        android:capitalize="words"
+        android:inputType="textCapWords"
+        android:key="@string/pref_profile_password"
+        android:maxLines="1"
+        android:password="true"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/pref_title_user_password" />
+
+</PreferenceScreen>

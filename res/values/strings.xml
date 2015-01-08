@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">SpoIT</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="facebook_api_key">354851221354572</string>
+    <string name="btn_measurement_stop">ストップ</string>
+    <string name="btn_measurement_start">スタート</string>
+    <string name="btn_measurement_rest">ラップ</string>
+    <string name="btn_measurement_end">終了</string>
+    <string name="title_activity_training_menu_detail_setting">TrainingMenuDetailSettingActivity</string>
+    <string name="time">タイム</string>
+    <string name="avg_speed">平均 キロ/分</string>
+    <string name="km">キロメートル</string>
+    <string name="mets">METs</string>
+    <string name="strong">運動強度</string>
+    <string name="calorie">消費カロリー</string>
+    <string name="distance">距離</string>
+    <string name="target_heart_rate">目標心拍数</string>
+    <string name="target_calorie">目標カロリー</string>
+    <string name="estimated_calorie">推定カロリー</string>
+    <string name="title_activity_measurement">MeasurementActivity</string>
+    <string name="title_activity_dashboard">ダッシュボード</string>
+    <string name="title_activity_training_menu_setting">トレーニング設定</string>
+    <string name="title_activity_result">計測結果</string>
+    <string name="title_activity_maina">MainActivity</string>
+    <string name="title_activity_detail_training_date">詳細画面</string>
+    <string name="title_activity_training_data_detail">トレーニング詳細</string>
+    <string name="title_activity_map_data">走行ルート</string>
+    <string name="title_activity_device_scan">デバイス設定</string>
+    <string name="title_activity_device_scan_base">デバイススキャン</string>
+    <string name="title_activity_device_setting">デバイスをさがす</string>
+    <string name="title_activity_quiet_heart_rate_measurement">安静時心拍数</string>
+    <string name="title_activity_first_action">FirstActionActivity</string>
+    <string name="title_activity_login">ようこそ</string>
+    <string name="id">ID</string>
+    <string name="id_hint">ID(6-20)</string>
+    <string name="pass">パスワード</string>
+    <string name="pass_hint">パスワード(6-20)</string>
+    <string name="login">ログイン</string>
+    <string name="sign_up">新規登録</string>
+    <string name="title_activity_user_sign_up">UserSignUpActivity</string>
+    <string name="title_activity_user_data_setting">基本データ設定</string>
+    <string name="title_activity_user_sign_up_bodily">身体情報設定</string>
+    <string name="title_activity_user_sign_up_conf">入力項目確認</string>
+    <string name="title_activity_group_list">グループ</string>
+    <string name="title_activity_group_info">グループ詳細</string>
+    <string name="title_activity_group_member_list">メンバーリスト</string>
+    <string name="title_activity_member_info">メンバー一覧</string>
+    <string name="title_activity_sync_training">未同期トレーニング一覧</string>
+
+</resources>

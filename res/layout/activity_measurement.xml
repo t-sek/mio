@@ -1,0 +1,47 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/ac.neec.mio"
+    android:id="@+id/activity_measurement"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="true"
+    android:orientation="vertical" >
+
+    <!--
+    <com.viewpagerindicator.TitlePageIndicator
+        android:id="@+id/indicator_title_measurement"
+        android:layout_width="fill_parent"
+        style="@style/CustomTabPageIndicator"
+        android:background="@color/theme_white_dark"
+        android:layout_height="wrap_content"
+        android:padding="50dip" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager_title_measurement"
+        android:layout_width="1dp"
+        android:layout_height="1dp" />
+    -->
+
+    <include
+        android:id="@+id/include_measurement_header"
+        layout="@layout/include_measurement_header" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager_measuremet"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <com.viewpagerindicator.CirclePageIndicator
+        android:id="@+id/indicator_measurement"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="7dip"
+        android:background="@color/theme_white_dark"
+        app:fillColor="@color/theme_light"
+        app:radius="10dp"/>
+
+    <include
+        android:id="@+id/include_measurement_footer"
+        layout="@layout/include_measurement_footer" />
+
+</LinearLayout>

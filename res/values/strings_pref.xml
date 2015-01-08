@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="pref_device_address">device_address</string>
+    <string name="pref_device_name">device_name</string>
+    <string name="pref_login_state">login_state</string>
+    <string name="pref_category_picker">category_picker</string>
+    <string name="pref_menu_picker">menu_picker</string>
+
+</resources>

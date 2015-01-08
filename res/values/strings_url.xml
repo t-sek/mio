@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="url_head">http://anninsuika.com/mioapi/</string>
+    <string name="url_head_ssl">https://anninsuika.com/Mio/api/</string>
+    <string name="section">/</string>
+    <string name="url_foot">.xml</string>
+    <!-- user -->
+    <string name="user_info">userinfo/</string>
+    <string name="user_add">useradd/</string>
+    <string name="user_edit">useredit/</string>
+    <string name="user_weight">weightadd/</string>
+    <string name="user_quiet_heart_rate">quiethredit/</string>
+
+    <!-- group -->
+    <string name="group_all">groupall</string>
+    <string name="group_info">groupinfo/</string>
+    <string name="group_add">groupadd/</string>
+    <string name="group_edit">groupedit/</string>
+    <string name="affiliation_edit">affiliationedit/</string>
+    <string name="permition">permition/</string>
+
+    <!-- training -->
+    <string name="training_insert">TrainingInfo.php?func=Insert</string>
+    <string name="training_insert_log">POST_TrainingLog.php?func=Insert</string>
+    <string name="training_insert_play">Play.php?func=Insert</string>
+    <string name="training_select_all">TrainingInfo.php?func=Select&amp;option=findAll</string>
+    <string name="training_select">TrainingInfo.php?func=Select</string>
+    <string name="training_select_date">TrainingInfo.php?func=Select&amp;option=Date</string>
+    <string name="training_select_log">GET_TrainingLog.php?func=Select</string>
+    <string name="training_select_play">Play.php?func=Select</string>
+
+    <!-- training category -->
+    <string name="category_select_all">Category.php?func=SelectALL</string>
+    <!-- training menu -->
+    <string name="menu_select_all">TrainingMenu.php?func=SelectALL</string>
+    <string name="menu_select">TrainingMenu.php?func=Select</string>
+
+    <!-- column -->
+    <string name="user">&amp;user=</string>
+    <string name="time">&amp;time=</string>
+    <string name="training_id">&amp;tid=</string>
+    <string name="log_training_id">&amp;trid=</string>
+    <string name="training_log_id">&amp;num=</string>
+    <string name="training_menu_id">&amp;tmi=</string>
+    <string name="start_time">&amp;st=</string>
+    <string name="play_time">&amp;pt=</string>
+    <string name="target_heart_rate">&amp;thb=</string>
+    <string name="target_calorie">&amp;tc=</string>
+    <string name="heart_rate_avg">&amp;ha=</string>
+    <string name="target_play_time">&amp;tpt=</string>
+    <string name="heart_rate">&amp;rate=</string>
+    <string name="dis_x">&amp;disX=</string>
+    <string name="dis_y">&amp;disY=</string>
+    <string name="lap">&amp;rap=</string>
+    <string name="split">&amp;sprit=</string>
+    <string name="num">&amp;num=</string>
+    <string name="log_target_heart_rate">&amp;th=</string>
+    <string name="calorie">&amp;cal=</string>
+    <string name="distance">&amp;dis=</string>
+    <string name="category_id">&amp;ctg=</string>
+    <string name="date">&amp;date=</string>
+    <string name="play_id">&amp;pid=</string>
+    <string name="training_time">&amp;tt=</string>
+
+</resources>

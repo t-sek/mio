@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/measurement_footer"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="center" >
+
+        <Button
+            android:id="@+id/btn_measurement"
+            style="@style/btn_measurement"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_measurement_start"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="30dp"
+            android:layout_height="20dp" />
+
+        <Button
+            android:id="@+id/btn_finish"
+            style="@style/btn_measurement"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_measurement_rest"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</LinearLayout>
