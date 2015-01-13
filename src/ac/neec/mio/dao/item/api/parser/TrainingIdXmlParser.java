@@ -32,17 +32,14 @@ public class TrainingIdXmlParser extends XmlParser {
 
 	@Override
 	protected void text(String text) {
-		Log.d("parser", "tag " + tagName + " text " + text);
 		if (tagName.equals(TRAINING_ID)) {
 			trainingId = Integer.valueOf(text);
-			Log.d("parser", "trainingId s" + trainingId);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	protected Integer getParseObject() {
-		Log.d("parser", "trainingId " + trainingId);
 		return trainingId;
 	}
 

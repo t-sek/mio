@@ -5,12 +5,12 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.util.Log;
 
-public class Constants {
+public class SQLConstants {
 
 	private static Resources resources;
 
 	public static void init(Resources resources) {
-		Constants.resources = resources;
+		SQLConstants.resources = resources;
 	}
 
 	public static String facebookApiKey() {

@@ -1,14 +1,14 @@
 package ac.neec.mio.dao.item.sqlite.parser;
 
-import static ac.neec.mio.consts.Constants.disX;
-import static ac.neec.mio.consts.Constants.disY;
-import static ac.neec.mio.consts.Constants.heartRate;
-import static ac.neec.mio.consts.Constants.id;
-import static ac.neec.mio.consts.Constants.lap;
-import static ac.neec.mio.consts.Constants.logId;
-import static ac.neec.mio.consts.Constants.split;
-import static ac.neec.mio.consts.Constants.targetHeartRate;
-import static ac.neec.mio.consts.Constants.time;
+import static ac.neec.mio.consts.SQLConstants.disX;
+import static ac.neec.mio.consts.SQLConstants.disY;
+import static ac.neec.mio.consts.SQLConstants.heartRate;
+import static ac.neec.mio.consts.SQLConstants.id;
+import static ac.neec.mio.consts.SQLConstants.lap;
+import static ac.neec.mio.consts.SQLConstants.logId;
+import static ac.neec.mio.consts.SQLConstants.split;
+import static ac.neec.mio.consts.SQLConstants.targetHeartRate;
+import static ac.neec.mio.consts.SQLConstants.time;
 
 import java.util.ArrayList;
 import java.util.List;

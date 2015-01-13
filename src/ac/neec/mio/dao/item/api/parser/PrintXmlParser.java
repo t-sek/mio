@@ -12,27 +12,27 @@ public class PrintXmlParser extends XmlParser {
 
 	@Override
 	protected void startDocument() {
-		Log.d(TAG, "startDocument");
+		Log.d(TAG, "---------- XML FILE ----------");
 	}
 
 	@Override
 	protected void endDocument() {
-		Log.d(TAG, "endDocument");
+		Log.d(TAG, "---------- XML FILE ----------");
 	}
 
 	@Override
 	protected void startTag(String text) {
-		Log.d(TAG, "startTag : " + text);
+		Log.d(TAG, " < " + text + " > ");
 	}
 
 	@Override
 	protected void endTag(String text) {
-		Log.d(TAG, "endTag : " + text);
+		Log.d(TAG, " </ " + text + " > ");
 	}
 
 	@Override
 	protected void text(String text) {
-		Log.d(TAG, "text : " + text);
+		Log.d(TAG, " " + text);
 	}
 
 	@SuppressWarnings("unchecked")

@@ -1,6 +1,7 @@
 package ac.neec.mio.dao.item.api;
 
 import java.io.InputStream;
+import java.util.Collections;
 
 import ac.neec.mio.dao.item.api.parser.GroupAllXmlParser;
 import ac.neec.mio.dao.item.api.parser.GroupXmlParser;
@@ -31,6 +32,7 @@ public class ApiItemDao extends HttpsDao {
 
 	@Override
 	protected void notifyResponse(InputStream response) {
+		Log.d("itemdao", "response " + response);
 		parser.setResponse(response);
 	}
 
@@ -93,7 +95,7 @@ public class ApiItemDao extends HttpsDao {
 	public void insertGroupAffiliation(String userId, String groupId,
 			int permitionId, String password) {
 		String url = SpoITApi.insertGroupAffiliation(userId, groupId,
-				permitionId,password);
+				permitionId, password);
 		parser = new GroupXmlParser();
 		executeApi(url);
 	}
@@ -218,12 +220,22 @@ public class ApiItemDao extends HttpsDao {
 	}
 
 	@Override
+	public void test(String url) {
+		parser = new PrintXmlParser();
+		executeImageApi(url);
+	}
+
+	@Override
 	public <T> T getResponse() throws XmlParseException, XmlReadException {
 		return parser.getXmlParseObject();
 	}
 
 	private void executeApi(String url) {
 		super.execute(url);
+	}
+
+	private void executeImageApi(String url) {
+		super.executeImage(url);
 	}
 
 }

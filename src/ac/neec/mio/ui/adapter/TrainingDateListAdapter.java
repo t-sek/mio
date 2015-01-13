@@ -106,9 +106,6 @@ public class TrainingDateListAdapter extends BaseExpandableListAdapter {
 			boolean isLastChild, View convertView, ViewGroup parent) {
 		View view = getChildGenericView();
 		TrainingItem item = trainings.get(groupPosition).get(childPosition);
-//		 String trainingName = DBManager.selectTrainingCategory(
-//		 item.getCategoryId()).getTrainingCategoryName();
-		Log.d("adapter", "id "+item.getCategoryId());
 		String trainingName = dao.selectTrainingCategory(item.getCategoryId())
 				.getTrainingCategoryName();
 		TextView textTrainingName = (TextView) view

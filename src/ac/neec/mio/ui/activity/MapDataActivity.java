@@ -20,7 +20,7 @@ import ac.neec.mio.http.item.TrainingPlayItem;
 import ac.neec.mio.http.listener.HttpResponseListener;
 import ac.neec.mio.training.log.TrainingLog;
 import ac.neec.mio.user.User;
-import ac.neec.mio.consts.Constants;
+import ac.neec.mio.consts.SQLConstants;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -108,8 +108,8 @@ public class MapDataActivity extends FragmentActivity implements Sourceable {
 				.findFragmentById(R.id.map)).getMap();
 		dao = DaoFacade.getApiDao(getApplicationContext(), this);
 		daoSql = DaoFacade.getSQLiteDao(getApplicationContext());
-		trainingId = getIntent().getIntExtra(Constants.trainingId(), 0);
-		id = getIntent().getIntExtra(Constants.id(), 0);
+		trainingId = getIntent().getIntExtra(SQLConstants.trainingId(), 0);
+		id = getIntent().getIntExtra(SQLConstants.id(), 0);
 		if (id != 0) {
 			// drawMapLine(DBManager.selectTrainingLog(id));
 			drawMapLine(daoSql.selectTrainingLog(id));

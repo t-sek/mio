@@ -1,6 +1,6 @@
 package ac.neec.mio.dao.item.sqlite.parser;
 
-import static ac.neec.mio.consts.Constants.*;
+import static ac.neec.mio.consts.SQLConstants.*;
 import ac.neec.mio.taining.Training;
 import ac.neec.mio.taining.TrainingFactory;
 import ac.neec.mio.training.framework.ProductDataFactory;

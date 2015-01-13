@@ -21,7 +21,7 @@ import android.widget.Button;
 public class FirstSignUpSelectActivity extends Activity {
 
 	private Button buttonSignUp;
-//	private Button buttonFacebookLogin;
+	private Button buttonFacebookLogin;
 //	private Button buttonLogin;
 
 	private Bundle bundle;

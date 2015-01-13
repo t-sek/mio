@@ -5,6 +5,7 @@ import java.sql.Time;
 import ac.neec.mio.group.Permission;
 import ac.neec.mio.training.framework.ProductData;
 import ac.neec.mio.training.framework.ProductDataFactory;
+import android.graphics.Bitmap;
 import android.util.Log;
 
 public class LapItemFactory extends ProductDataFactory {
@@ -92,6 +93,21 @@ public class LapItemFactory extends ProductDataFactory {
 	@Override
 	protected ProductData factoryMethod(String userId, String groupId,
 			Permission permition) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected ProductData factoryMethod(int id, String imageFileName,
+			String userId, String groupId, String created, Bitmap image,
+			Bitmap bigImage, Bitmap smallImage, Bitmap thumbImage) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected ProductData factoryMethod(int id, String name, String created,
+			String updated, int status) {
 		// TODO Auto-generated method stub
 		return null;
 	}

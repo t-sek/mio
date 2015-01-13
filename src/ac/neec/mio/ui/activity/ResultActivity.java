@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ac.neec.mio.R;
-import ac.neec.mio.consts.Constants;
+import ac.neec.mio.consts.SQLConstants;
 import ac.neec.mio.dao.ApiDao;
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.SQLiteDao;
@@ -82,8 +82,8 @@ public class ResultActivity extends Activity implements Sourceable {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_result);
 		Intent intent = getIntent();
-		id = intent.getIntExtra(Constants.id(), 1);
-		int categoryId = intent.getIntExtra(Constants.trainingCategoryId(), 1);
+		id = intent.getIntExtra(SQLConstants.id(), 1);
+		int categoryId = intent.getIntExtra(SQLConstants.trainingCategoryId(), 1);
 		dao = DaoFacade.getApiDao(getApplicationContext(), this);
 		daoSql = DaoFacade.getSQLiteDao(getApplicationContext());
 		isBackPressed = false;
@@ -139,7 +139,7 @@ public class ResultActivity extends Activity implements Sourceable {
 
 	private void intentMapData() {
 		Intent intent = new Intent(ResultActivity.this, MapDataActivity.class);
-		intent.putExtra(Constants.id(), trainingLogs.get(0).getId());
+		intent.putExtra(SQLConstants.id(), trainingLogs.get(0).getId());
 		startActivity(intent);
 	}
 
@@ -319,12 +319,12 @@ public class ResultActivity extends Activity implements Sourceable {
 			try {
 				trainingId = dao.getResponse();
 				Log.d("result", "trainingId " + trainingId);
-			} catch (XmlParseException e1) {
-				e1.printStackTrace();
+			} catch (XmlParseException e) {
+				e.printStackTrace();
 				setMessage(MESSAGE_NETWORK_ERROR);
 				return;
-			} catch (XmlReadException e1) {
-				e1.printStackTrace();
+			} catch (XmlReadException e) {
+				e.printStackTrace();
 				setMessage(MESSAGE_NETWORK_ERROR);
 				return;
 			}

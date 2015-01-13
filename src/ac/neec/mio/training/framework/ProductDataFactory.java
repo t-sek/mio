@@ -3,6 +3,8 @@ package ac.neec.mio.training.framework;
 import java.sql.Time;
 
 import ac.neec.mio.group.Permission;
+import android.graphics.Bitmap;
+import android.graphics.pdf.PdfDocument;
 
 public abstract class ProductDataFactory {
 
@@ -67,9 +69,21 @@ public abstract class ProductDataFactory {
 				joinStatus, groupNews);
 	}
 
+	public ProductData create(int id, String name, String created,
+			String updated, int status) {
+		return factoryMethod(id, name, created, updated, status);
+	}
+
 	public ProductData create(String userId, String groupId,
 			Permission permition) {
 		return factoryMethod(userId, groupId, permition);
+	}
+
+	public ProductData create(int id, String imageFileName, String userId,
+			String groupId, String created, Bitmap image, Bitmap bigImage,
+			Bitmap smallImage, Bitmap thumbImage) {
+		return factoryMethod(id, imageFileName, userId, groupId, created,
+				image, bigImage, smallImage, thumbImage);
 	}
 
 	protected abstract ProductData factoryMethod(Number number, Time time);
@@ -112,5 +126,12 @@ public abstract class ProductDataFactory {
 
 	protected abstract ProductData factoryMethod(String userId, String groupId,
 			Permission permission);
+
+	protected abstract ProductData factoryMethod(int id, String imageFileName,
+			String userId, String groupId, String created, Bitmap image,
+			Bitmap bigImage, Bitmap smallImage, Bitmap thumbImage);
+
+	protected abstract ProductData factoryMethod(int id, String name,
+			String created, String updated, int status);
 
 }

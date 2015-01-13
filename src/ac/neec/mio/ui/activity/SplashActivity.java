@@ -12,9 +12,9 @@ import ac.neec.mio.exception.SQLiteInsertException;
 import ac.neec.mio.exception.SQLiteTableConstraintException;
 import ac.neec.mio.exception.XmlParseException;
 import ac.neec.mio.exception.XmlReadException;
-import ac.neec.mio.group.Affiliation;
 import ac.neec.mio.group.Permission;
 import ac.neec.mio.pref.AppPreference;
+import ac.neec.mio.sns.facebook.Login;
 import ac.neec.mio.taining.category.TrainingCategory;
 import ac.neec.mio.taining.menu.TrainingMenu;
 import ac.neec.mio.timer.TimerManager;
@@ -57,10 +57,13 @@ public class SplashActivity extends FragmentActivity implements
 	private ImageView buttonMeasurement;
 	private Button buttonSignUp;
 	private Button buttonLogin;
+	private Button buttonFacebookLogin;
 	private ApiDao dao;
 	private SQLiteDao daoSql;
 	private int daoFlag;
 	private User user = User.getInstance();
+	private Bundle bundle;
+	private Login login;
 
 	Handler handler = new Handler() {
 		public void handleMessage(Message message) {
@@ -78,6 +81,7 @@ public class SplashActivity extends FragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_dashboard);
+		this.bundle = savedInstanceState;
 		initFindViews();
 		Typeface face = Typeface.createFromAsset(getAssets(),
 				"font/Roboto-Regular.ttf");
@@ -87,7 +91,9 @@ public class SplashActivity extends FragmentActivity implements
 		AppConstants.setResorces(getResources());
 		dao = DaoFacade.getApiDao(getApplicationContext(), this);
 		daoSql = DaoFacade.getSQLiteDao(getApplicationContext());
-		downloadTrainingCategory();
+		// downloadTrainingCategory();
+		downloadUserInfo();
+		startAnimation();
 		manager = new TimerManager(this, 5000);
 		manager.start();
 	}
@@ -97,6 +103,7 @@ public class SplashActivity extends FragmentActivity implements
 		buttonMeasurement = (ImageView) findViewById(R.id.btn_measurement_setting);
 		buttonSignUp = (Button) findViewById(R.id.btn_sign_up);
 		buttonLogin = (Button) findViewById(R.id.btn_login);
+		buttonFacebookLogin = (Button) findViewById(R.id.btn_facebook_login);
 	}
 
 	private void setListeners() {
@@ -114,7 +121,15 @@ public class SplashActivity extends FragmentActivity implements
 		buttonLogin.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				Log.d("activity", "login button");
 				intentLogin();
+			}
+		});
+		buttonFacebookLogin.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Log.d("activity", "login button");
+				facebookLogin();
 			}
 		});
 	}
@@ -137,13 +152,20 @@ public class SplashActivity extends FragmentActivity implements
 				UserSignUpActivity.class);
 		// FirstSignUpSelectActivity.class);
 		startActivity(intent);
-		finish();
+		Log.d("activity", "signup name " + user.getName());
+		// finish();
+	}
+
+	private void facebookLogin() {
+		login = new Login(this, Login.LOGIN, bundle);
+		login.logoutFacebook();
+		login.connectFacebookAuth();
 	}
 
 	private void intentLogin() {
 		Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
 		startActivity(intent);
-		finish();
+		// finish();
 	}
 
 	private void downloadTrainingCategory() {
@@ -196,6 +218,7 @@ public class SplashActivity extends FragmentActivity implements
 			// intentSignUp();
 			buttonSignUp.setVisibility(View.VISIBLE);
 			buttonLogin.setVisibility(View.VISIBLE);
+			buttonFacebookLogin.setVisibility(View.GONE);
 			// popupSelectForm();
 		} else {
 			intentTop();
@@ -283,6 +306,21 @@ public class SplashActivity extends FragmentActivity implements
 	}
 
 	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		Log.d("activity", "requestCode " + requestCode);
+		Log.d("activity", "resultCode " + resultCode);
+		Log.d("activity", "data " + data);
+		Log.d("result", "name " + user.getName());
+		Log.d("result", "mail " + user.getMail());
+		if (login != null) {
+			Log.d("activity", "intent name " + user.getName());
+			login.helperOnActivityResult(requestCode, resultCode, data);
+			intentSignUp();
+		}
+	}
+
+	@Override
 	public void complete() {
 		manager.stop();
 		switch (daoFlag) {
@@ -323,11 +361,13 @@ public class SplashActivity extends FragmentActivity implements
 			try {
 				perm = dao.getResponse();
 			} catch (XmlParseException e) {
-				startAnimation();
 				e.printStackTrace();
+				startAnimation();
+				return;
 			} catch (XmlReadException e) {
-				startAnimation();
 				e.printStackTrace();
+				startAnimation();
+				return;
 			}
 			insertPermition(perm);
 			downloadUserInfo();
@@ -337,12 +377,16 @@ public class SplashActivity extends FragmentActivity implements
 			UserInfo info = null;
 			try {
 				info = dao.getResponse();
+				Log.e("actiivy", "role " + info.getRole().getName());
+				Log.e("actiivy", "role " + info.getImageInfo().getImage());
 			} catch (XmlParseException e) {
 				e.printStackTrace();
 				startAnimation();
+				return;
 			} catch (XmlReadException e) {
 				e.printStackTrace();
 				startAnimation();
+				return;
 			}
 			insertUserInfo(info);
 			startAnimation();

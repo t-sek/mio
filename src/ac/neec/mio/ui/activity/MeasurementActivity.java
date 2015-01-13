@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ac.neec.mio.R;
-import ac.neec.mio.consts.Constants;
+import ac.neec.mio.consts.SQLConstants;
 import ac.neec.mio.dao.ApiDao;
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.SQLiteDao;
@@ -148,9 +148,9 @@ public class MeasurementActivity extends BleConnectBaseActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_measurement);
 		Intent intent = getIntent();
-		trainingCategoryId = intent.getIntExtra(Constants.trainingCategoryId(),
+		trainingCategoryId = intent.getIntExtra(SQLConstants.trainingCategoryId(),
 				1);
-		int trainingMenuId = intent.getIntExtra(Constants.trainingMenuId(), 1);
+		int trainingMenuId = intent.getIntExtra(SQLConstants.trainingMenuId(), 1);
 		daoSql = DaoFacade.getSQLiteDao(getApplicationContext());
 		trainingMenu = daoSql.selectTrainingMenu(trainingMenuId);
 		initFindViews();
@@ -304,7 +304,7 @@ public class MeasurementActivity extends BleConnectBaseActivity implements
 		buttonLap.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (buttonLap.getText().equals(Constants.buttonLapText())) {
+				if (buttonLap.getText().equals(SQLConstants.buttonLapText())) {
 					timerManager.lap();
 				} else {
 					showSelectionAlertDialog();
@@ -335,8 +335,8 @@ public class MeasurementActivity extends BleConnectBaseActivity implements
 	private void intentMeasurementResult() {
 		Intent intent = new Intent(MeasurementActivity.this,
 				ResultActivity.class);
-		intent.putExtra(Constants.id(), id);
-		intent.putExtra(Constants.trainingCategoryId(), trainingCategoryId);
+		intent.putExtra(SQLConstants.id(), id);
+		intent.putExtra(SQLConstants.trainingCategoryId(), trainingCategoryId);
 		startActivity(intent);
 		finish();
 	}

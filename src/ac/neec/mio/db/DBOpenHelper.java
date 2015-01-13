@@ -1,6 +1,6 @@
 package ac.neec.mio.db;
 
-import static ac.neec.mio.consts.Constants.*;
+import static ac.neec.mio.consts.SQLConstants.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;

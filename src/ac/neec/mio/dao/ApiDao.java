@@ -293,6 +293,13 @@ public interface ApiDao {
 	void selectTrainingMenu();
 
 	/**
+	 * テスト用
+	 * 
+	 * @param url
+	 */
+	void test(String url);
+
+	/**
 	 * 取得したレスポンスを返す
 	 * 
 	 * @return レスポンス

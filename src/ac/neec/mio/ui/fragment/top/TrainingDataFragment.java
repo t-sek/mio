@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ac.neec.mio.R;
-import ac.neec.mio.consts.Constants;
+import ac.neec.mio.consts.SQLConstants;
 import ac.neec.mio.dao.ApiDao;
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.SQLiteDao;
@@ -55,7 +55,7 @@ public class TrainingDataFragment extends TopBaseFragment implements
 	private int dateNum = DATE_NUM;
 	private ApiDao dao;
 	private SQLiteDao daoSql;
-	private static boolean created;
+	// private static boolean created;
 	private ImageButton buttonSync;
 	private BadgeView badge;
 
@@ -100,6 +100,9 @@ public class TrainingDataFragment extends TopBaseFragment implements
 	public void onResume() {
 		super.onResume();
 		initSync();
+		if (listView != null) {
+			// reload();
+		}
 	}
 
 	@Override
@@ -109,19 +112,14 @@ public class TrainingDataFragment extends TopBaseFragment implements
 		dao = DaoFacade.getApiDao(getActivity().getApplicationContext(), this);
 		daoSql = DaoFacade.getSQLiteDao(getActivity().getApplicationContext());
 		init();
-		if (!created) {
-			selectTraining();
-			created = true;
-		} else {
-			progressGone();
-		}
+		selectTraining();
+		// progressGone();
 		return view;
 	}
 
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		Log.d("fragment", "onActivityResult");
+	private void reload() {
+		date = 0;
+		selectTraining();
 	}
 
 	private void initSync() {
@@ -149,6 +147,7 @@ public class TrainingDataFragment extends TopBaseFragment implements
 				.findViewById(R.id.list_training_data);
 		adapter = new TrainingDateListAdapter(getActivity(), trainings, this);
 		listView.setAdapter(adapter);
+		listView.setEmptyView(view.findViewById(R.id.empty));
 		listView.setOnChildClickListener(new OnChildClickListener() {
 			@Override
 			public boolean onChildClick(ExpandableListView parent, View v,
@@ -171,8 +170,8 @@ public class TrainingDataFragment extends TopBaseFragment implements
 		TrainingItem item = trainings.get(groupPosition).get(childPosition);
 		Intent intent = new Intent(getActivity(),
 				TrainingDataDetailActivity.class);
-		intent.putExtra(Constants.trainingId(), item.getTrainingId());
-		intent.putExtra(Constants.tableTraining(), item);
+		intent.putExtra(SQLConstants.trainingId(), item.getTrainingId());
+		intent.putExtra(SQLConstants.tableTraining(), item);
 		startActivity(intent);
 	}
 

@@ -5,9 +5,11 @@ import java.util.List;
 
 import ac.neec.mio.group.Affiliation;
 import ac.neec.mio.group.Group;
+import ac.neec.mio.image.ImageInfo;
 import ac.neec.mio.training.framework.ProductDataFactory;
 import ac.neec.mio.user.gender.Gender;
 import ac.neec.mio.user.gender.GenderFactory;
+import ac.neec.mio.user.role.Role;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -22,10 +24,12 @@ public class UserInfo implements Parcelable {
 	private float height;
 	private float weight;
 	private String mail;
+	private ImageInfo image;
+	private Role role;
 
 	public UserInfo(List<Affiliation> affiliations, List<Group> groups,
-			String userId,  String name, String birth,
-			Gender gender, float height, float weight, String mail) {
+			String userId, String name, String birth, Gender gender,
+			float height, float weight, String mail, ImageInfo image, Role role) {
 		this.affiliations = affiliations;
 		this.groups = groups;
 		this.userId = userId;
@@ -35,6 +39,8 @@ public class UserInfo implements Parcelable {
 		this.height = height;
 		this.weight = weight;
 		this.mail = mail;
+		this.image = image;
+		this.role = role;
 	}
 
 	public UserInfo(final Parcel in) {
@@ -87,6 +93,14 @@ public class UserInfo implements Parcelable {
 
 	public String getMail() {
 		return mail;
+	}
+
+	public ImageInfo getImageInfo() {
+		return image;
+	}
+
+	public Role getRole() {
+		return role;
 	}
 
 	@Override

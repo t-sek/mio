@@ -18,7 +18,7 @@ public abstract class XmlParser {
 	private static final String CHARSET = "UTF-8";
 	private BufferedInputStream bufferedInputStream;
 	private XmlPullParser xmlPullParser;
-	private InputStream response;
+	protected InputStream response;
 
 	private void init() throws XmlParseException, XmlReadException {
 		bufferedInputStream = new BufferedInputStream(response);

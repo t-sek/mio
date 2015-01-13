@@ -20,7 +20,7 @@ import ac.neec.mio.ui.dialog.TrainingSelectDialog;
 import ac.neec.mio.ui.dialog.TrainingSelectedDialog;
 import ac.neec.mio.ui.listener.TrainingSelectCallbackListener;
 import ac.neec.mio.util.DateUtil;
-import ac.neec.mio.consts.Constants;
+import ac.neec.mio.consts.SQLConstants;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -78,8 +78,10 @@ public class MeasurementFragment extends TopBaseFragment implements
 		TrainingCategory category = dao.selectTrainingCategory().get(
 				UtilPreference.getCategoryPicker() + 1);
 		categoryId = category.getTrainingCategoryId();
+		
 		TrainingMenu menu = dao.selectTrainingCategoryMenu(categoryId).get(
 				UtilPreference.getMenuPicker());
+		
 		// TrainingMenu menu = dao.selectTrainingMenu().get(
 		// UtilPreference.getMenuPicker());
 		textCategory.setText(category.getTrainingCategoryName());
@@ -182,8 +184,8 @@ public class MeasurementFragment extends TopBaseFragment implements
 			return;
 		}
 		TrainingMenu menu = dao.selectTrainingMenu((String) textMenu.getText());
-		intent.putExtra(Constants.trainingCategoryId(), categoryId);
-		intent.putExtra(Constants.trainingMenuId(), menu.getTrainingMenuId());
+		intent.putExtra(SQLConstants.trainingCategoryId(), categoryId);
+		intent.putExtra(SQLConstants.trainingMenuId(), menu.getTrainingMenuId());
 		startActivity(intent);
 		getActivity().finish();
 	}

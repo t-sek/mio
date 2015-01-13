@@ -1,6 +1,7 @@
 package ac.neec.mio.ui.activity;
 
 import ac.neec.mio.R;
+import ac.neec.mio.consts.ErrorConstants;
 import ac.neec.mio.dao.ApiDao;
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.item.api.Sourceable;
@@ -31,6 +32,7 @@ import com.android.volley.VolleyError;
 public class LoginActivity extends Activity implements Sourceable {
 
 	private static final int MESSAGE_TOAST = 1;
+	private static final int MESSAGE_NETWORK_ERROR = 2;
 
 	private EditText editId;
 	private EditText editPass;
@@ -44,9 +46,16 @@ public class LoginActivity extends Activity implements Sourceable {
 		public void handleMessage(Message message) {
 			switch (message.what) {
 			case MESSAGE_TOAST:
-				Toast.makeText(getApplicationContext(), "入力に誤りがあります",
-						Toast.LENGTH_SHORT).show();
+				dialogLoading.dismiss();
+				Toast.makeText(getApplicationContext(),
+						ErrorConstants.login(), Toast.LENGTH_SHORT).show();
 				break;
+			case MESSAGE_NETWORK_ERROR:
+				dialogLoading.dismiss();
+				Toast.makeText(getApplicationContext(),
+						ErrorConstants.networkError(), Toast.LENGTH_SHORT)
+						.show();
+
 			default:
 				break;
 			}
@@ -145,7 +154,8 @@ public class LoginActivity extends Activity implements Sourceable {
 
 	@Override
 	public void incomplete() {
-		// TODO Auto-generated method stub
-
+		Message message = new Message();
+		message.what = MESSAGE_NETWORK_ERROR;
+		handler.sendMessage(message);
 	}
 }

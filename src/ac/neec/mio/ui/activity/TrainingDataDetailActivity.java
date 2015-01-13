@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ac.neec.mio.R;
-import ac.neec.mio.consts.Constants;
+import ac.neec.mio.consts.SQLConstants;
 import ac.neec.mio.dao.ApiDao;
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.SQLiteDao;
@@ -99,7 +99,7 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 			listener = f.getListener();
 		}
 		Intent intent = getIntent();
-		training = (TrainingItem) intent.getSerializableExtra(Constants
+		training = (TrainingItem) intent.getSerializableExtra(SQLConstants
 				.tableTraining());
 		getActionBar().setTitle(
 				DateUtil.japaneseFormat(training.getDate()) + " "
@@ -128,7 +128,7 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 	private void intentMapData() {
 		Intent intent = new Intent(TrainingDataDetailActivity.this,
 				MapDataActivity.class);
-		intent.putExtra(Constants.trainingId(), training.getTrainingId());
+		intent.putExtra(SQLConstants.trainingId(), training.getTrainingId());
 		startActivity(intent);
 		// finish();
 	}

@@ -1,6 +1,7 @@
 package ac.neec.mio.ui.activity;
 
 import ac.neec.mio.R;
+import ac.neec.mio.consts.ErrorConstants;
 import ac.neec.mio.dao.ApiDao;
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.item.api.Sourceable;
@@ -31,6 +32,7 @@ import com.android.volley.VolleyError;
 public class UserSignUpConfActivity extends Activity implements Sourceable {
 
 	private static final int MESSAGE_USER_ERROR = 1;
+	private static final int MESSAGE_NETWORK_ERROR = 4;
 	private static final int DAO_UPDATE_USER = 2;
 	private static final int DAO_UPDATE_HEART_RATE = 3;
 
@@ -53,7 +55,13 @@ public class UserSignUpConfActivity extends Activity implements Sourceable {
 		public void handleMessage(Message message) {
 			switch (message.what) {
 			case MESSAGE_USER_ERROR:
-				Toast.makeText(getApplicationContext(), "入力に誤りがあります",
+				dialogLoading.dismiss();
+				Toast.makeText(getApplicationContext(), "登録に失敗しました",
+						Toast.LENGTH_SHORT).show();
+				break;
+			case MESSAGE_NETWORK_ERROR:
+				dialogLoading.dismiss();
+				Toast.makeText(getApplicationContext(), ErrorConstants.networkError(),
 						Toast.LENGTH_SHORT).show();
 				break;
 			default:
@@ -100,11 +108,13 @@ public class UserSignUpConfActivity extends Activity implements Sourceable {
 		// user.getGender(), String.valueOf(Math.round(user.getHeight())),
 		// user.getMail(), user.getPassword(),
 		// BodilyUtil.weightToRound(user.getWeight()));
-		dao.insertUser(getApplicationContext(), user.getId(), user.getName(),
-				DateUtil.dateFormat(User.getInstance().getBirth()),
-				user.getGender(), String.valueOf(Math.round(user.getHeight())),
-				user.getMail(), user.getPassword(),
-				BodilyUtil.weightToRound(user.getWeight()));
+		Log.d("activity", "birth " + User.getInstance().getBirth());
+		dao.insertUser(getApplicationContext(), user.getId(),
+				user.getName(),
+				// DateUtil.dateFormat(User.getInstance().getBirth()),
+				user.getBirth(), user.getGender(),
+				String.valueOf(Math.round(user.getHeight())), user.getMail(),
+				user.getPassword(), BodilyUtil.weightToRound(user.getWeight()));
 		daoFlag = DAO_UPDATE_USER;
 	}
 
@@ -112,7 +122,8 @@ public class UserSignUpConfActivity extends Activity implements Sourceable {
 		textId.setText(user.getId());
 		textName.setText(user.getName());
 		textMail.setText(user.getMail());
-		textBirth.setText(user.getBirth());
+		// textBirth.setText(user.getBirth());
+		textBirth.setText(DateUtil.japaneseFormat(user.getBirth()));
 		if (user.getGender().equals(Gender.MALE)) {
 			textGender.setText("男性");
 		} else {
@@ -215,8 +226,9 @@ public class UserSignUpConfActivity extends Activity implements Sourceable {
 
 	@Override
 	public void incomplete() {
-		// TODO Auto-generated method stub
+		Message message = new Message();
+		message.what = MESSAGE_NETWORK_ERROR;
+		handler.sendMessage(message);
 
 	}
-
 }

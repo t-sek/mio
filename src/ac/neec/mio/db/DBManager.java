@@ -8,7 +8,7 @@ import ac.neec.mio.taining.menu.TrainingMenu;
 import ac.neec.mio.taining.play.TrainingPlay;
 import ac.neec.mio.training.heartrate.HeartRate;
 import ac.neec.mio.training.log.TrainingLog;
-import ac.neec.mio.consts.Constants;
+import ac.neec.mio.consts.SQLConstants;
 import ac.neec.mio.consts.PreferenceConstants;
 import ac.neec.mio.util.SignUpConstants;
 import android.content.Context;

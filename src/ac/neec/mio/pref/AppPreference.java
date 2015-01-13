@@ -1,6 +1,6 @@
 package ac.neec.mio.pref;
 
-import ac.neec.mio.consts.Constants;
+import ac.neec.mio.consts.SQLConstants;
 import ac.neec.mio.consts.PreferenceConstants;
 import ac.neec.mio.util.SignUpConstants;
 import android.content.Context;
@@ -15,7 +15,7 @@ public abstract class AppPreference {
 	public static void init(Context context) {
 		sharedPref = context.getSharedPreferences("mio", Context.MODE_PRIVATE);
 		editor = sharedPref.edit();
-		Constants.init(context.getResources());
+		SQLConstants.init(context.getResources());
 		SignUpConstants.init(context.getResources());
 		PreferenceConstants.init(context.getResources());
 	}

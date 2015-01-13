@@ -1,8 +1,8 @@
 package ac.neec.mio.dao.item.sqlite;
 
-import static ac.neec.mio.consts.Constants.dbName;
-import static ac.neec.mio.consts.Constants.dbVersion;
-import static ac.neec.mio.consts.Constants.sqlCreatePath;
+import static ac.neec.mio.consts.SQLConstants.dbName;
+import static ac.neec.mio.consts.SQLConstants.dbVersion;
+import static ac.neec.mio.consts.SQLConstants.sqlCreatePath;
 
 import java.io.BufferedReader;
 import java.io.IOException;

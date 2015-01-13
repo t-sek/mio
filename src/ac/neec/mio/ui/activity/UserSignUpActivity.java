@@ -60,7 +60,7 @@ public class UserSignUpActivity extends Activity implements DrumPickerListener,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_user_sign_up2);
+		setContentView(R.layout.activity_user_sign_up);
 		user.clear();
 		initFindViews();
 		setBirthPicker();

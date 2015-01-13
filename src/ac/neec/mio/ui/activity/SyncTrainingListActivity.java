@@ -8,6 +8,7 @@ import ac.neec.mio.dao.ApiDao;
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.SQLiteDao;
 import ac.neec.mio.dao.item.api.Sourceable;
+import ac.neec.mio.exception.CreateTrainingIdException;
 import ac.neec.mio.exception.XmlParseException;
 import ac.neec.mio.exception.XmlReadException;
 import ac.neec.mio.taining.Training;
@@ -114,6 +115,7 @@ public class SyncTrainingListActivity extends Activity implements Sourceable,
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_upload:
+			uploadTrainingAll();
 			break;
 		case R.id.action_delete:
 			showDeleteDialog();
@@ -161,39 +163,43 @@ public class SyncTrainingListActivity extends Activity implements Sourceable,
 		}
 		Training training = trainings.get(0);
 		id = training.getId();
+		trainingLogs = daoSql.selectTrainingLog(id);
+		trainingPlays = daoSql.selectTrainingPlay(id);
 		dao.insertTraining(user.getId(), training.getDate(), training
 				.getStartTime(), String.valueOf(TimeUtil
 				.stringToInteger(training.getPlayTime())), training
 				.getTargetHrartRate(), training.getTargetCal(), training
 				.getHeartRateAvg(), "0", training.getConsumptionCal(), training
 				.getTrainingCategoryId(), training.getDistance());
+		trainings.remove(0);
 	}
 
 	private void insertTrainingLog() {
 		daoFlag = FLAG_TRAINING_LOG;
-		trainingLogs = daoSql.selectTrainingLog(id);
-		Log.d("activity", "log size " + trainingLogs.size());
-		for (TrainingLog log : trainingLogs) {
-			Log.d("activity", "log " + log.getId());
+		Log.d("activity", "trainingLog size " + trainingLogs.size());
+		if (trainingLogs.size() != 0) {
+			TrainingLog log = trainingLogs.get(0);
 			dao.insertTrainingLog(trainingId, log.getHeartRate(),
 					log.getDisX(), log.getDisY(),
 					TimeUtil.stringToFormat(log.getTime()), log.getLap(),
 					log.getSplit(), log.getLogId(), log.getTargetHeartRate());
+			trainingLogs.remove(0);
 		}
 	}
 
 	private void insertTrainingPlay() {
 		daoFlag = FLAG_TRAINING_PLAY;
-		trainingPlays = daoSql.selectTrainingPlay(id);
-		for (TrainingPlay play : trainingPlays) {
+		if (trainingPlays.size() != 0) {
+			TrainingPlay play = trainingPlays.get(0);
 			dao.insertTrainingPlay(trainingId, play.getPlayId(),
 					play.getTrainingMenuId(),
 					String.valueOf(play.getTrainingTime()));
+			trainingPlays.remove(0);
 		}
 	}
 
 	private void deleteTraining() {
-		Log.d("activity", "delete " + id);
+		Log.e("activity", "delete id " + id);
 		daoSql.deleteTraining(id);
 		daoSql.deleteTrainingLog(id);
 		daoSql.deleteTrainingPlay(id);
@@ -236,13 +242,11 @@ public class SyncTrainingListActivity extends Activity implements Sourceable,
 		switch (daoFlag) {
 		case FLAG_TRAINING:
 			try {
-				setMessage(MESSAGE_UNCLICK);
 				trainingId = dao.getResponse();
-				// trainings.remove(0);
-				daoSql.deleteTraining(id);
-				trainings = daoSql.selectTraining();
-				// updateAdapter();
-				setMessage(MESSAGE_UPDATE);
+				if (trainingId == 0) {
+					throw new CreateTrainingIdException();
+				}
+				Log.d("activity", "trainingId " + trainingId);
 			} catch (XmlParseException e) {
 				e.printStackTrace();
 				dialog.dismiss();
@@ -251,20 +255,38 @@ public class SyncTrainingListActivity extends Activity implements Sourceable,
 			} catch (XmlReadException e) {
 				e.printStackTrace();
 				dialog.dismiss();
-				showNetworkError();
+				setMessage(MESSAGE_ERROR);
+				return;
+			} catch (CreateTrainingIdException e) {
+				e.printStackTrace();
+				dialog.dismiss();
 				setMessage(MESSAGE_ERROR);
 				return;
 			}
 			insertTrainingLog();
 		case FLAG_TRAINING_LOG:
-			insertTrainingPlay();
+			if (trainingLogs.size() != 0) {
+				insertTrainingLog();
+			} else {
+				insertTrainingPlay();
+			}
 			break;
 		case FLAG_TRAINING_PLAY:
-			deleteTraining();
-			if (trainings.size() != 0) {
-				insertTraining();
+			Log.e("activity", "play complete ");
+			if (trainingPlays.size() != 0) {
+				Log.e("activity", "insert play ");
+				insertTrainingPlay();
 			} else {
-				dialog.dismiss();
+				if (trainings.size() != 0) {
+					deleteTraining();
+					insertTraining();
+				} else {
+					deleteTraining();
+					Log.e("activity", "training finish");
+					setMessage(MESSAGE_UNCLICK);
+					setMessage(MESSAGE_UPDATE);
+					dialog.dismiss();
+				}
 			}
 			break;
 		default:
@@ -295,12 +317,20 @@ public class SyncTrainingListActivity extends Activity implements Sourceable,
 		updateAdapter();
 	}
 
-	private void deleteTrainingAll() {
+	private List<SyncTrainingItem> setTrainingAll() {
 		List<SyncTrainingItem> items = new ArrayList<SyncTrainingItem>();
 		for (int i = 0; i < adapter.getCount(); i++) {
 			items.add(adapter.getItem(i));
 		}
-		deleteItems(items);
+		return items;
+	}
+
+	private void uploadTrainingAll() {
+		uploadItems(setTrainingAll());
+	}
+
+	private void deleteTrainingAll() {
+		deleteItems(setTrainingAll());
 		finish();
 	}
 

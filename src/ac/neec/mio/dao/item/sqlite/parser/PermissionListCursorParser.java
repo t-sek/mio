@@ -3,7 +3,7 @@ package ac.neec.mio.dao.item.sqlite.parser;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ac.neec.mio.consts.Constants.*;
+import static ac.neec.mio.consts.SQLConstants.*;
 import ac.neec.mio.group.Permission;
 import ac.neec.mio.group.GroupFactory;
 import ac.neec.mio.training.framework.ProductDataFactory;

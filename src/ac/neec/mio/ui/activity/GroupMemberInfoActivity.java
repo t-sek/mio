@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ac.neec.mio.R;
-import ac.neec.mio.consts.Constants;
+import ac.neec.mio.consts.SQLConstants;
 import ac.neec.mio.dao.ApiDao;
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.item.api.Sourceable;
@@ -137,8 +137,8 @@ public class GroupMemberInfoActivity extends Activity implements Sourceable,
 		TrainingItem item = trainings.get(groupPosition).get(childPosition);
 		Intent intent = new Intent(GroupMemberInfoActivity.this,
 				TrainingDataDetailActivity.class);
-		intent.putExtra(Constants.trainingId(), item.getTrainingId());
-		intent.putExtra(Constants.tableTraining(), item);
+		intent.putExtra(SQLConstants.trainingId(), item.getTrainingId());
+		intent.putExtra(SQLConstants.tableTraining(), item);
 		startActivity(intent);
 	}
 

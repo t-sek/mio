@@ -64,7 +64,6 @@ public class GroupListFragment extends Fragment implements
 		dao.selectGroupAll();
 		listView = (ListView) view.findViewById(R.id.list_group);
 		listView.setEmptyView(view.findViewById(R.id.empty));
-
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {

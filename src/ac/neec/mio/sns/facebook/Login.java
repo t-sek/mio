@@ -8,7 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import ac.neec.mio.user.User;
-import ac.neec.mio.consts.Constants;
+import ac.neec.mio.consts.SQLConstants;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -33,7 +33,7 @@ import com.facebook.model.GraphUser;
 
 public class Login {
 
-	private static final String API_KEY = Constants.facebookApiKey();
+	private static final String API_KEY = SQLConstants.facebookApiKey();
 	private static final String NAME = "name";
 	private static final String GENDER = "gender";
 	private static final String EMAIL = "email";
@@ -142,7 +142,6 @@ public class Login {
 		Bundle parameters = new Bundle();
 		parameters.putString("method", "auth.expireSession");
 		// String response = request(parameters);
-
 		if (!session.isOpened()) {
 			if (session.isClosed()) {
 			}
