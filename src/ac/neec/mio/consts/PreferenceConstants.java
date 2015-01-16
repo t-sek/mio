@@ -72,6 +72,10 @@ public class PreferenceConstants {
 		return resources.getString(R.string.pref_profile_password);
 	}
 
+	public static String created() {
+		return resources.getString(R.string.pref_profile_created);
+	}
+
 	public static String facebookAccessToken() {
 		return resources.getString(R.string.pref_facebook_access_token);
 	}

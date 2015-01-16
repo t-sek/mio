@@ -1,6 +1,5 @@
 package ac.neec.mio.dao;
 
-import ac.neec.mio.dao.item.api.Sourceable;
 import android.content.Context;
 
 public interface DaoFactory {

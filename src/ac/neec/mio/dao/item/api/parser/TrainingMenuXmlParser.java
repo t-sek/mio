@@ -12,11 +12,11 @@ import ac.neec.mio.training.framework.ProductDataFactory;
 
 public class TrainingMenuXmlParser extends XmlParser {
 
-	private static final String MENU_ID = "TrainingMenuID";
-	private static final String METS = "Mets";
-	private static final String NAME = "TrainingName";
-	private static final String CATEGORY_ID = "CategoryID";
-	private static final String COLOR = "Color";
+	private static final String MENU_ID = "training_menu_id";
+	private static final String METS = "mets";
+	private static final String NAME = "training_name";
+	private static final String CATEGORY_ID = "category_id";
+	private static final String COLOR = "color";
 
 	private List<TrainingMenu> menu;
 	private int menuId;

@@ -19,10 +19,12 @@ import ac.neec.mio.user.role.Role;
 import ac.neec.mio.user.role.RoleFactory;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 public class UserInfoXmlParser extends XmlParser {
 
+	private static final String USER_TAG = "User";
 	private static final String USER_ID = "username";
 	private static final String NAME = "name";
 	private static final String BIRTH = "age";
@@ -62,12 +64,11 @@ public class UserInfoXmlParser extends XmlParser {
 	private String created;
 	private int id;
 	private String imageFileName;
-	private Bitmap image;
-	private Bitmap bigImage;
-	private Bitmap smallImage;
-	private Bitmap thumbImage;
+	private String image;
+	private String bigImage;
+	private String smallImage;
+	private String thumbImage;
 	private ImageInfo imageInfo;
-	private String roleName;
 	private String updated;
 	private int status;
 	private Role role;
@@ -100,9 +101,8 @@ public class UserInfoXmlParser extends XmlParser {
 
 	@Override
 	protected void endDocument() {
-		user = new UserInfo(affiliations, groups, userId, name, birth,
-				(Gender) genderFactory.create(Gender.MALE), height, weight,
-				mail, imageInfo, role);
+		user.setGroups(groups);
+		user.setAffiliations(affiliations);
 	}
 
 	@Override
@@ -120,15 +120,25 @@ public class UserInfoXmlParser extends XmlParser {
 					groupComment, created));
 			created = null;
 		} else if (text.equals(IMAGE_TAG)) {
-			imageInfo = (ImageInfo) imageFactory.create(id, imageFileName,
-					userId, groupId, created, image, bigImage, smallImage,
-					thumbImage);
+			// imageInfo = (ImageInfo) imageFactory.create(id, imageFileName,
+			// userId, groupId, created, image, bigImage, smallImage,
+			// thumbImage);
+			user.setImageInfo((ImageInfo) imageFactory.create(id,
+					imageFileName, userId, groupId, created, image, bigImage,
+					smallImage, thumbImage));
 			created = null;
 		} else if (text.equals(ROLE_TAG)) {
-			role = (Role) roleFactory.create(id, roleName, created, updated,
-					status);
+			// role = (Role) roleFactory
+			// .create(id, name, created, updated, status);
+			user.setRole((Role) roleFactory.create(id, name, created, updated,
+					status));
+			name = null;
 			created = null;
 			updated = null;
+		} else if (text.equals(USER_TAG)) {
+			user = new UserInfo(affiliations, groups, userId, name, birth,
+					(Gender) genderFactory.create(Gender.MALE), height, weight,
+					mail, imageInfo, role);
 		}
 	}
 
@@ -162,10 +172,20 @@ public class UserInfoXmlParser extends XmlParser {
 		} else if (tagName.equals(IMAGE_FILE_NAME)) {
 			imageFileName = text;
 		} else if (tagName.equals(IMAGE)) {
-			Log.e("parser", "image " + text);
+			image = text;
+		} else if (tagName.equals(BIG_IMAGE)) {
+			bigImage = text;
+		} else if (tagName.equals(SMALL_IMAGE)) {
+			smallImage = text;
+		} else if (tagName.equals(THUMB_IMAGE)) {
+			thumbImage = text;
 		} else if (tagName.equals(UPDATED)) {
 			updated = text;
 		} else if (tagName.equals(STATUS)) {
+			status = Integer.valueOf(text);
+		} else if (tagName.equals(UPDATED)) {
+			updated = text;
+		} else if (tagName.equals(status)) {
 			status = Integer.valueOf(text);
 		}
 	}

@@ -1,5 +1,7 @@
 package ac.neec.mio.ui.activity;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
 
 import ac.neec.mio.R;
@@ -7,7 +9,8 @@ import ac.neec.mio.consts.AppConstants;
 import ac.neec.mio.dao.ApiDao;
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.SQLiteDao;
-import ac.neec.mio.dao.item.api.Sourceable;
+import ac.neec.mio.dao.Sourceable;
+import ac.neec.mio.dao.item.api.SpoITApi;
 import ac.neec.mio.exception.SQLiteInsertException;
 import ac.neec.mio.exception.SQLiteTableConstraintException;
 import ac.neec.mio.exception.XmlParseException;
@@ -23,8 +26,13 @@ import ac.neec.mio.ui.listener.TimerCallbackListener;
 import ac.neec.mio.user.LoginState;
 import ac.neec.mio.user.User;
 import ac.neec.mio.user.UserInfo;
+import ac.neec.mio.user.bodily.weight.Weight;
+import ac.neec.mio.util.BitmapUtil;
+import ac.neec.mio.util.DateUtil;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -48,7 +56,6 @@ public class SplashActivity extends FragmentActivity implements
 	private static final int FLAG_MENU = 3;
 	private static final int FLAG_USER = 4;
 	private static final int FLAG_PERM = 5;
-
 	private static final int MESSAGE_INTENT = 1;
 	private static final int WEIT_TIME = 100;
 
@@ -64,6 +71,7 @@ public class SplashActivity extends FragmentActivity implements
 	private User user = User.getInstance();
 	private Bundle bundle;
 	private Login login;
+	private Bitmap image;
 
 	Handler handler = new Handler() {
 		public void handleMessage(Message message) {
@@ -92,8 +100,13 @@ public class SplashActivity extends FragmentActivity implements
 		dao = DaoFacade.getApiDao(getApplicationContext(), this);
 		daoSql = DaoFacade.getSQLiteDao(getApplicationContext());
 		// downloadTrainingCategory();
-		downloadUserInfo();
-		startAnimation();
+		dao.insertUserImage(getApplicationContext(), "noppoid", "cccccc",
+				"test.jpg", "image/jpg",
+				"content://media/external/images/media/571", 0, 200);
+		// dao.insertUserImage(getApplicationContext(), "testid", "testid",
+		// "name",
+		// "image/png", "/var/tmp/", 0, 100);
+		// startAnimation();
 		manager = new TimerManager(this, 5000);
 		manager.start();
 	}
@@ -184,6 +197,10 @@ public class SplashActivity extends FragmentActivity implements
 				user.getPassword());
 	}
 
+	private void downloadUserImage(String image) {
+		dao.selectImage(image);
+	}
+
 	private void downloadPermition() {
 		daoFlag = FLAG_PERM;
 		dao.selectPermition();
@@ -268,11 +285,11 @@ public class SplashActivity extends FragmentActivity implements
 
 	private void insertTrainingMenu(List<TrainingMenu> menu) {
 		daoSql.deleteTrainingMenuTableAll();
-		for (TrainingMenu m : menu) {
+		for (TrainingMenu item : menu) {
 			try {
-				daoSql.insertTrainingMenu(m.getTrainingMenuId(),
-						m.getTrainingName(), m.getMets(),
-						m.getTrainingCategoryId(), m.getColor());
+				daoSql.insertTrainingMenu(item.getTrainingMenuId(),
+						item.getTrainingName(), item.getMets(),
+						item.getTrainingCategoryId(), item.getColor());
 			} catch (SQLiteInsertException e) {
 				e.printStackTrace();
 			} catch (SQLiteTableConstraintException e) {
@@ -290,6 +307,8 @@ public class SplashActivity extends FragmentActivity implements
 		user.setHeight(info.getHeight());
 		user.setWeight(info.getWeight());
 		user.setMail(info.getMail());
+		String date = info.getRole().getCreated();
+		user.setCreated(DateUtil.splitCreated(date));
 	}
 
 	private void insertPermition(List<Permission> perm) {
@@ -329,9 +348,11 @@ public class SplashActivity extends FragmentActivity implements
 			try {
 				category = dao.getResponse();
 			} catch (XmlParseException e) {
+				e.printStackTrace();
 				startAnimation();
 				return;
 			} catch (XmlReadException e) {
+				e.printStackTrace();
 				startAnimation();
 				return;
 			}
@@ -347,14 +368,12 @@ public class SplashActivity extends FragmentActivity implements
 				e.printStackTrace();
 				return;
 			} catch (XmlReadException e) {
-				startAnimation();
 				e.printStackTrace();
+				startAnimation();
 				return;
 			}
 			insertTrainingMenu(menu);
-			// downloadUserInfo();
 			downloadPermition();
-			// startAnimation();
 			break;
 		case FLAG_PERM:
 			List<Permission> perm = null;
@@ -377,8 +396,9 @@ public class SplashActivity extends FragmentActivity implements
 			UserInfo info = null;
 			try {
 				info = dao.getResponse();
-				Log.e("actiivy", "role " + info.getRole().getName());
-				Log.e("actiivy", "role " + info.getImageInfo().getImage());
+				Log.e("activity", "user name " + info.getName());
+				Log.e("activity", "user image "
+						+ info.getImageInfo().getImage());
 			} catch (XmlParseException e) {
 				e.printStackTrace();
 				startAnimation();
@@ -389,7 +409,7 @@ public class SplashActivity extends FragmentActivity implements
 				return;
 			}
 			insertUserInfo(info);
-			startAnimation();
+			downloadUserImage(info.getImageInfo().getSmallImage());
 			break;
 		default:
 			break;
@@ -398,6 +418,16 @@ public class SplashActivity extends FragmentActivity implements
 
 	@Override
 	public void incomplete() {
+		startAnimation();
+	}
+
+	@Override
+	public void complete(InputStream response) {
+	}
+
+	@Override
+	public void complete(Bitmap image) {
+		user.setImage(image);
 		startAnimation();
 	}
 }

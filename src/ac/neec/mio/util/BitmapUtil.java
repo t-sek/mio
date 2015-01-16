@@ -1,8 +1,13 @@
 package ac.neec.mio.util;
 
-import android.graphics.AvoidXfermode.Mode;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -10,9 +15,37 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 public class BitmapUtil {
+
+	public static Drawable bitmapToDrawable(Resources res, Bitmap image) {
+		return new BitmapDrawable(res, image);
+	}
+
+	public static Bitmap streamToBitmap(InputStream image) {
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		int read = 0;
+		byte[] b = null;
+		try {
+			while ((read = image.read()) != -1) {
+				stream.write(read);
+			}
+			b = stream.toByteArray();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				stream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return BitmapFactory.decodeByteArray(b, 0, b.length);
+		// return BitmapFactory.decodeStream(image);
+	}
 
 	public static Bitmap rectImage(Bitmap image) {
 		// 画像サイズ取得
@@ -44,8 +77,8 @@ public class BitmapUtil {
 
 		return newImage;
 	}
-	
-	public static Bitmap resize(Bitmap image,int width,int height){
+
+	public static Bitmap resize(Bitmap image, int width, int height) {
 		return Bitmap.createScaledBitmap(image, width, height, true);
 	}
 

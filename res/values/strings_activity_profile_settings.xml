@@ -63,6 +63,7 @@
     <string name="pref_header_profile_master">ユーザ情報</string>
     <string name="pref_header_profile_body">身体情報</string>
     <string name="pref_header_account">アカウント</string>
+    <string name="pref_weight_graph"><u>過去の体重</u></string>
     <string name="pref_header_notifications">Notifications</string>
     <string name="pref_title_new_message_notifications">New message notifications</string>
     <string name="pref_title_ringtone">Ringtone</string>

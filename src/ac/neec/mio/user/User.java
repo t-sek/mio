@@ -1,17 +1,6 @@
 package ac.neec.mio.user;
 
-import static ac.neec.mio.consts.PreferenceConstants.age;
-import static ac.neec.mio.consts.PreferenceConstants.birth;
-import static ac.neec.mio.consts.PreferenceConstants.facebookAccessToken;
-import static ac.neec.mio.consts.PreferenceConstants.gender;
-import static ac.neec.mio.consts.PreferenceConstants.height;
-import static ac.neec.mio.consts.PreferenceConstants.image;
-import static ac.neec.mio.consts.PreferenceConstants.mail;
-import static ac.neec.mio.consts.PreferenceConstants.name;
-import static ac.neec.mio.consts.PreferenceConstants.password;
-import static ac.neec.mio.consts.PreferenceConstants.quietHeartRate;
-import static ac.neec.mio.consts.PreferenceConstants.userId;
-import static ac.neec.mio.consts.PreferenceConstants.weight;
+import static ac.neec.mio.consts.PreferenceConstants.*;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -91,6 +80,10 @@ public class User extends AppPreference {
 		return sharedPref.getInt(quietHeartRate(), 60);
 	}
 
+	public String getCreated() {
+		return sharedPref.getString(created(), null);
+	}
+
 	public String getFacebookAccessToken() {
 		return sharedPref.getString(facebookAccessToken(), "");
 	}
@@ -156,6 +149,11 @@ public class User extends AppPreference {
 
 	public void setQuietHeartRate(int quietHeartRate) {
 		editor.putInt(quietHeartRate(), quietHeartRate);
+		editor.commit();
+	}
+
+	public void setCreated(String date) {
+		editor.putString(created(), date);
 		editor.commit();
 	}
 

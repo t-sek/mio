@@ -12,12 +12,17 @@ public class DateUtil {
 
 	private static final String SECTION = "-";
 
+	public static String splitCreated(String date) {
+		String[] created = date.split(" ");
+		return created[0];
+	}
+
 	public static String splitDate(String format) {
 		String[] date = format.split(SECTION);
 		return date[0] + date[1] + date[2];
 	}
 
-	private static String nowDate() {
+	public static String nowDate() {
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String date = sdf.format(cal.getTime());

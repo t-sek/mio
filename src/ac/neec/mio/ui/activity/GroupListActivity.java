@@ -1,13 +1,15 @@
 package ac.neec.mio.ui.activity;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import ac.neec.mio.R;
 import ac.neec.mio.dao.ApiDao;
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.SQLiteDao;
-import ac.neec.mio.dao.item.api.Sourceable;
+import ac.neec.mio.dao.Sourceable;
 import ac.neec.mio.exception.XmlParseException;
 import ac.neec.mio.exception.XmlReadException;
 import ac.neec.mio.group.Affiliation;
@@ -19,7 +21,10 @@ import ac.neec.mio.ui.dialog.GroupSettingDialog.CallbackListener;
 import ac.neec.mio.ui.listener.SearchNotifyListener;
 import ac.neec.mio.user.User;
 import ac.neec.mio.user.UserInfo;
+import ac.neec.mio.util.DateUtil;
+import ac.neec.mio.util.TimeUtil;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -165,7 +170,8 @@ public class GroupListActivity extends FragmentActivity implements Sourceable,
 		// HttpManager.uploadNewGroup(getApplicationContext(), this, id, name,
 		// comment);
 		daoFlag = FLAG_GROUP;
-		dao.insertGroup(groupId, groupName, comment);
+		dao.insertGroup(groupId, groupName, comment, DateUtil.nowDate(),
+				user.getId(), user.getPassword());
 	}
 
 	@Override
@@ -185,6 +191,18 @@ public class GroupListActivity extends FragmentActivity implements Sourceable,
 	public void incomplete() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void complete(InputStream response) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void complete(Bitmap image) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

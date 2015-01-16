@@ -1,5 +1,6 @@
 package ac.neec.mio.ui.activity;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +9,7 @@ import ac.neec.mio.consts.SQLConstants;
 import ac.neec.mio.dao.ApiDao;
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.SQLiteDao;
-import ac.neec.mio.dao.item.api.Sourceable;
+import ac.neec.mio.dao.Sourceable;
 import ac.neec.mio.exception.XmlParseException;
 import ac.neec.mio.exception.XmlReadException;
 import ac.neec.mio.taining.Training;
@@ -24,6 +25,7 @@ import ac.neec.mio.util.TimeUtil;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -83,7 +85,8 @@ public class ResultActivity extends Activity implements Sourceable {
 		setContentView(R.layout.activity_result);
 		Intent intent = getIntent();
 		id = intent.getIntExtra(SQLConstants.id(), 1);
-		int categoryId = intent.getIntExtra(SQLConstants.trainingCategoryId(), 1);
+		int categoryId = intent.getIntExtra(SQLConstants.trainingCategoryId(),
+				1);
 		dao = DaoFacade.getApiDao(getApplicationContext(), this);
 		daoSql = DaoFacade.getSQLiteDao(getApplicationContext());
 		isBackPressed = false;
@@ -128,11 +131,12 @@ public class ResultActivity extends Activity implements Sourceable {
 		httpLoadDialog.show(getFragmentManager(), "dialog");
 		daoFlag = FLAG_TRAINING;
 		Log.e("result", "date " + training.getDate());
-		dao.insertTraining(user.getId(), training.getDate(), training
-				.getStartTime(), String.valueOf(TimeUtil
-				.stringToInteger(training.getPlayTime())), training
-				.getTargetHrartRate(), training.getTargetCal(), training
-				.getHeartRateAvg(), "0", training.getConsumptionCal(),
+		dao.insertTraining(user.getId(), user.getPassword(),
+				training.getDate(), training.getStartTime(), String
+						.valueOf(TimeUtil.stringToInteger(training
+								.getPlayTime())),
+				training.getTargetHrartRate(), training.getTargetCal(),
+				training.getHeartRateAvg(), "0", training.getConsumptionCal(),
 				trainingCategory.getTrainingCategoryId(), training
 						.getDistance());
 	}
@@ -343,5 +347,17 @@ public class ResultActivity extends Activity implements Sourceable {
 	@Override
 	public void incomplete() {
 		setMessage(MESSAGE_NETWORK_ERROR);
+	}
+
+	@Override
+	public void complete(InputStream response) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void complete(Bitmap image) {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -19,6 +19,10 @@ public class UrlConstants extends AppConstants {
 		return resources.getString(R.string.url_head_ssl);
 	}
 
+	public static String urlSelectImage() {
+		return resources.getString(R.string.select_image);
+	}
+
 	public static String section() {
 		return resources.getString(R.string.section);
 	}
@@ -43,8 +47,44 @@ public class UrlConstants extends AppConstants {
 		return resources.getString(R.string.user_weight);
 	}
 
+	public static String userGetWeight() {
+		return resources.getString(R.string.user_get_weight);
+	}
+
 	public static String userQuietHeartRate() {
 		return resources.getString(R.string.user_quiet_heart_rate);
+	}
+
+	public static String userAddImage() {
+		return resources.getString(R.string.user_add_image);
+	}
+
+	public static String postName() {
+		return resources.getString(R.string.post_name);
+	}
+
+	public static String postType() {
+		return resources.getString(R.string.post_type);
+	}
+
+	public static String postTmpName() {
+		return resources.getString(R.string.post_tmp_name);
+	}
+
+	public static String postError() {
+		return resources.getString(R.string.post_error);
+	}
+
+	public static String postSize() {
+		return resources.getString(R.string.post_size);
+	}
+
+	public static String postUserId() {
+		return resources.getString(R.string.post_user_id);
+	}
+
+	public static String postPassword() {
+		return resources.getString(R.string.post_password);
 	}
 
 	public static String groupAll() {

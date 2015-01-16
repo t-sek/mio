@@ -1,5 +1,6 @@
 package ac.neec.mio.ui.activity;
 
+import java.io.InputStream;
 import java.util.List;
 
 import ac.neec.mio.R;
@@ -8,7 +9,7 @@ import ac.neec.mio.R.layout;
 import ac.neec.mio.dao.ApiDao;
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.SQLiteDao;
-import ac.neec.mio.dao.item.api.Sourceable;
+import ac.neec.mio.dao.Sourceable;
 import ac.neec.mio.db.DBManager;
 import ac.neec.mio.exception.XmlParseException;
 import ac.neec.mio.exception.XmlReadException;
@@ -21,6 +22,7 @@ import ac.neec.mio.http.listener.HttpResponseListener;
 import ac.neec.mio.training.log.TrainingLog;
 import ac.neec.mio.user.User;
 import ac.neec.mio.consts.SQLConstants;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -226,5 +228,17 @@ public class MapDataActivity extends FragmentActivity implements Sourceable {
 	@Override
 	public void incomplete() {
 
+	}
+
+	@Override
+	public void complete(InputStream response) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void complete(Bitmap image) {
+		// TODO Auto-generated method stub
+		
 	}
 }

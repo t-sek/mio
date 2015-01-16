@@ -125,7 +125,8 @@ public class ProfileBirthSettingDialog extends DialogFragment implements
 	}
 
 	private void setPickerIndex() {
-		String[] date = DateUtil.getSplitDate(user.getBirth());
+		String[] date = DateUtil.getSplitDate(DateUtil.japaneseFormat(user
+				.getBirth()));
 		int indexYear = DateUtil.dateIndex(years, date[0]) - 1;
 		int indexMonth = DateUtil.dateIndex(months, date[1]) - 1;
 		int indexDay = DateUtil.dateIndex(days, date[2]) - 1;

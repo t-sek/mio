@@ -1,15 +1,16 @@
 package ac.neec.mio.user.bodily;
 
 import ac.neec.mio.training.framework.ProductData;
+import ac.neec.mio.user.bodily.weight.Weight;
 
 public class Bodily extends ProductData {
 
 	private float height;
-	private float weight;
+	private Weight weight;
 	private float bmi;
 	private int quietHeartRate;
 
-	protected Bodily(float height, float weight, int quietHeartRate) {
+	protected Bodily(float height, Weight weight, int quietHeartRate) {
 		this.height = height;
 		this.weight = weight;
 		this.quietHeartRate = quietHeartRate;
@@ -19,7 +20,7 @@ public class Bodily extends ProductData {
 		return height;
 	}
 
-	public float getWeight() {
+	public Weight getWeight() {
 		return weight;
 	}
 

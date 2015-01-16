@@ -12,16 +12,16 @@ import android.util.Log;
 public class TrainingXmlParser extends XmlParser {
 
 	private static final String TITLE = "Training";
-	private static final String T_ID = "TrainingID";
-	private static final String DATE = "Date";
-	private static final String CATEGORY = "Category";
-	private static final String S_TIME = "StartTime";
-	private static final String P_TIME = "PlayTime";
-	private static final String T_RATE = "TargetHeartRate";
-	private static final String T_CAL = "TargetCal";
-	private static final String CAL = "Cal";
-	private static final String AVG_RATE = "HeartRateAVG";
-	private static final String DISTANCE = "Distance";
+	private static final String T_ID = "training_id";
+	private static final String DATE = "taked";
+	private static final String CATEGORY = "category_id";
+	private static final String S_TIME = "start_time";
+	private static final String P_TIME = "play_time";
+	private static final String T_RATE = "target_heartrate_beats";
+	private static final String T_CAL = "target_cal";
+	private static final String CAL = "cal";
+	private static final String AVG_RATE = "heartrate_avg";
+	private static final String DISTANCE = "distance";
 
 	private String tagName;
 	private TrainingItem training;

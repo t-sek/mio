@@ -9,11 +9,12 @@ import ac.neec.mio.exception.XmlReadException;
 import ac.neec.mio.taining.category.TrainingCategory;
 import ac.neec.mio.taining.category.TrainingCategoryFactory;
 import ac.neec.mio.training.framework.ProductDataFactory;
+import android.util.Log;
 
 public class TrainingCategoryXmlParser extends XmlParser {
 
-	public static final String ID = "CategoryID";
-	public static final String NAME = "CategoryName";
+	public static final String ID = "category_id";
+	public static final String NAME = "category_name";
 
 	private String tagName;
 	private int categoryId;

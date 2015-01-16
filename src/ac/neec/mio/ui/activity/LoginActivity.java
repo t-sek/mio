@@ -1,10 +1,12 @@
 package ac.neec.mio.ui.activity;
 
+import java.io.InputStream;
+
 import ac.neec.mio.R;
 import ac.neec.mio.consts.ErrorConstants;
 import ac.neec.mio.dao.ApiDao;
 import ac.neec.mio.dao.DaoFacade;
-import ac.neec.mio.dao.item.api.Sourceable;
+import ac.neec.mio.dao.Sourceable;
 import ac.neec.mio.exception.XmlParseException;
 import ac.neec.mio.exception.XmlReadException;
 import ac.neec.mio.http.HttpManager;
@@ -18,6 +20,7 @@ import ac.neec.mio.user.gender.GenderFactory;
 import ac.neec.mio.util.DateUtil;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -157,5 +160,17 @@ public class LoginActivity extends Activity implements Sourceable {
 		Message message = new Message();
 		message.what = MESSAGE_NETWORK_ERROR;
 		handler.sendMessage(message);
+	}
+
+	@Override
+	public void complete(InputStream response) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void complete(Bitmap image) {
+		// TODO Auto-generated method stub
+		
 	}
 }

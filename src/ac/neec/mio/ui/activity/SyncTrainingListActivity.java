@@ -1,5 +1,6 @@
 package ac.neec.mio.ui.activity;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +8,7 @@ import ac.neec.mio.R;
 import ac.neec.mio.dao.ApiDao;
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.SQLiteDao;
-import ac.neec.mio.dao.item.api.Sourceable;
+import ac.neec.mio.dao.Sourceable;
 import ac.neec.mio.exception.CreateTrainingIdException;
 import ac.neec.mio.exception.XmlParseException;
 import ac.neec.mio.exception.XmlReadException;
@@ -24,6 +25,7 @@ import ac.neec.mio.ui.listener.AlertCallbackListener;
 import ac.neec.mio.user.User;
 import ac.neec.mio.util.TimeUtil;
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -165,12 +167,13 @@ public class SyncTrainingListActivity extends Activity implements Sourceable,
 		id = training.getId();
 		trainingLogs = daoSql.selectTrainingLog(id);
 		trainingPlays = daoSql.selectTrainingPlay(id);
-		dao.insertTraining(user.getId(), training.getDate(), training
-				.getStartTime(), String.valueOf(TimeUtil
-				.stringToInteger(training.getPlayTime())), training
-				.getTargetHrartRate(), training.getTargetCal(), training
-				.getHeartRateAvg(), "0", training.getConsumptionCal(), training
-				.getTrainingCategoryId(), training.getDistance());
+		dao.insertTraining(user.getId(), user.getPassword(),
+				training.getDate(), training.getStartTime(), String
+						.valueOf(TimeUtil.stringToInteger(training
+								.getPlayTime())),
+				training.getTargetHrartRate(), training.getTargetCal(),
+				training.getHeartRateAvg(), "0", training.getConsumptionCal(),
+				training.getTrainingCategoryId(), training.getDistance());
 		trainings.remove(0);
 	}
 
@@ -359,5 +362,17 @@ public class SyncTrainingListActivity extends Activity implements Sourceable,
 	@Override
 	public void onPositiveSelected() {
 		deleteTrainingAll();
+	}
+
+	@Override
+	public void complete(InputStream response) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void complete(Bitmap image) {
+		// TODO Auto-generated method stub
+		
 	}
 }

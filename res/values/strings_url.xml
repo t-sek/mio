@@ -4,13 +4,23 @@
     <string name="url_head">http://anninsuika.com/mioapi/</string>
     <string name="url_head_ssl">https://anninsuika.com/Mio/api/</string>
     <string name="section">/</string>
+    <string name="select_image">http://anninsuika.com/Mio/img/images/</string>
     <string name="url_foot">.xml</string>
     <!-- user -->
     <string name="user_info">userinfo/</string>
     <string name="user_add">useradd/</string>
     <string name="user_edit">useredit/</string>
     <string name="user_weight">weightadd/</string>
+    <string name="user_get_weight">getweight/</string>
     <string name="user_quiet_heart_rate">quiethredit/</string>
+    <string name="user_add_image">adduserimage</string>
+    <string name="post_name">name</string>
+    <string name="post_type">type</string>
+    <string name="post_tmp_name">tmp_name</string>
+    <string name="post_error">error</string>
+    <string name="post_size">size</string>
+    <string name="post_user_id">userid</string>
+    <string name="post_password">pass</string>
 
     <!-- group -->
     <string name="group_all">groupall</string>
@@ -21,20 +31,20 @@
     <string name="permition">permition/</string>
 
     <!-- training -->
-    <string name="training_insert">TrainingInfo.php?func=Insert</string>
+    <string name="training_insert">addtraining/</string>
     <string name="training_insert_log">POST_TrainingLog.php?func=Insert</string>
     <string name="training_insert_play">Play.php?func=Insert</string>
     <string name="training_select_all">TrainingInfo.php?func=Select&amp;option=findAll</string>
-    <string name="training_select">TrainingInfo.php?func=Select</string>
+    <string name="training_select">findtraining/</string>
     <string name="training_select_date">TrainingInfo.php?func=Select&amp;option=Date</string>
     <string name="training_select_log">GET_TrainingLog.php?func=Select</string>
     <string name="training_select_play">Play.php?func=Select</string>
 
     <!-- training category -->
-    <string name="category_select_all">Category.php?func=SelectALL</string>
+    <string name="category_select_all">getcategorys</string>
     <!-- training menu -->
-    <string name="menu_select_all">TrainingMenu.php?func=SelectALL</string>
-    <string name="menu_select">TrainingMenu.php?func=Select</string>
+    <string name="menu_select_all">getmenues</string>
+    <string name="menu_select">getmenues/</string>
 
     <!-- column -->
     <string name="user">&amp;user=</string>

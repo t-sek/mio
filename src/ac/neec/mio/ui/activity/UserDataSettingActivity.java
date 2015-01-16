@@ -11,6 +11,7 @@ import static ac.neec.mio.util.SignUpConstants.quietHeartRate;
 import static ac.neec.mio.util.SignUpConstants.userId;
 import static ac.neec.mio.util.SignUpConstants.weight;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,7 @@ import ac.neec.mio.R;
 import ac.neec.mio.consts.PreferenceConstants;
 import ac.neec.mio.dao.ApiDao;
 import ac.neec.mio.dao.DaoFacade;
-import ac.neec.mio.dao.item.api.Sourceable;
+import ac.neec.mio.dao.Sourceable;
 import ac.neec.mio.ui.adapter.ProfileSettingListAdapter;
 import ac.neec.mio.ui.adapter.ProfileSettingListItem;
 import ac.neec.mio.ui.dialog.ProfileBirthSettingDialog;
@@ -39,11 +40,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class UserDataSettingActivity extends Activity implements
 		PickerChangedListener, EditChangedListener, PasswordChangedListener,
@@ -53,7 +57,7 @@ public class UserDataSettingActivity extends Activity implements
 	private ListView listBody;
 	private ListView listMaster;
 	private ListView listAccount;
-
+	private TextView textWeightGraph;
 	private List<ProfileSettingListItem> itemBody = new ArrayList<ProfileSettingListItem>();
 	private List<ProfileSettingListItem> itemMaster = new ArrayList<ProfileSettingListItem>();
 	private List<ProfileSettingListItem> itemAccount = new ArrayList<ProfileSettingListItem>();
@@ -88,12 +92,13 @@ public class UserDataSettingActivity extends Activity implements
 	private void setList() {
 		itemBody.add(new ProfileSettingListItem(height(), String.valueOf(user
 				.getHeight())));
-		itemBody.add(new ProfileSettingListItem(weight(), String.valueOf(user
-				.getWeight())));
 		itemBody.add(new ProfileSettingListItem(quietHeartRate(), String
 				.valueOf(user.getQuietHeartRate())));
+		itemBody.add(new ProfileSettingListItem(weight(), String.valueOf(user
+				.getWeight())));
 		itemMaster.add(new ProfileSettingListItem(name(), user.getName()));
-		itemMaster.add(new ProfileSettingListItem(birth(), user.getBirth()));
+		itemMaster.add(new ProfileSettingListItem(birth(), DateUtil
+				.japaneseFormat(user.getBirth())));
 		itemMaster.add(new ProfileSettingListItem(gender(), user.getGender()));
 		itemMaster.add(new ProfileSettingListItem(mail(), user.getMail()));
 		itemMaster.add(new ProfileSettingListItem(userId(), user.getId()));
@@ -140,10 +145,23 @@ public class UserDataSettingActivity extends Activity implements
 
 	}
 
+	private void intentWeightGraph() {
+		Intent intent = new Intent(UserDataSettingActivity.this,
+				WeightGraphActivity.class);
+		startActivity(intent);
+	}
+
 	private void init() {
 		listBody = (ListView) findViewById(R.id.list_profile_body);
 		listMaster = (ListView) findViewById(R.id.list_profile_master);
 		listAccount = (ListView) findViewById(R.id.list_account);
+		textWeightGraph = (TextView) findViewById(R.id.text_weight_graph);
+		textWeightGraph.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				intentWeightGraph();
+			}
+		});
 		setAdapter();
 	}
 
@@ -154,11 +172,11 @@ public class UserDataSettingActivity extends Activity implements
 					ProfileBodilySelectDialog.HEIGHT);
 			break;
 		case 1:
-			showProfileBodilyDialog(BodilyUtil.weight(),
-					ProfileBodilySelectDialog.WEIGHT);
+			showQuietHeartRateDialog();
 			break;
 		case 2:
-			showQuietHeartRateDialog();
+			showProfileBodilyDialog(BodilyUtil.weight(),
+					ProfileBodilySelectDialog.WEIGHT);
 			break;
 		default:
 			break;
@@ -275,9 +293,11 @@ public class UserDataSettingActivity extends Activity implements
 			String key) {
 		if (key.equals(PreferenceConstants.weight())) {
 			dao.updateUserWeight(getApplicationContext(), user.getId(),
+					user.getPassword(),
 					String.valueOf(Math.round(user.getWeight())));
 		} else if (key.equals(PreferenceConstants.quietHeartRate())) {
 			dao.updateUserQuietHeartRate(getApplicationContext(), user.getId(),
+					user.getPassword(),
 					String.valueOf(user.getQuietHeartRate()));
 		} else {
 			dao.updateUser(getApplicationContext(), user.getId(),
@@ -295,7 +315,6 @@ public class UserDataSettingActivity extends Activity implements
 
 	@Override
 	public void incomplete() {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -304,6 +323,18 @@ public class UserDataSettingActivity extends Activity implements
 		user.setBirth(DateUtil.dateFormat(year, month, day));
 		user.setAge(DateUtil.getAge(year, month, day));
 		updateList();
+	}
+
+	@Override
+	public void complete(InputStream response) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void complete(Bitmap image) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

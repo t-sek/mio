@@ -17,6 +17,22 @@ public interface ApiDao {
 	void selectUser(Context context, String userId, String password);
 
 	/**
+	 * ユーザの体重の推移を取得
+	 * 
+	 * @param context
+	 * @param userId
+	 *            ユーザID
+	 * @param password
+	 *            パスワード
+	 * @param date1
+	 *            開始日 yy-mm-dd形式
+	 * @param date2
+	 *            終了日 yy-mm-dd形式
+	 */
+	void selectWeight(Context context, String userId, String password,
+			String date1, String date2);
+
+	/**
 	 * ユーザを登録
 	 * 
 	 * @param userId
@@ -39,6 +55,28 @@ public interface ApiDao {
 	void insertUser(Context context, String userId, String name, String birth,
 			String gender, String height, String mail, String password,
 			String weight);
+
+	/**
+	 * ユーザのプロフィール画像を追加
+	 * 
+	 * @param context
+	 * @param userId
+	 *            ユーザID
+	 * @param password
+	 *            パスワード
+	 * @param name
+	 *            画像名
+	 * @param type
+	 *            タイプ
+	 * @param tmpName
+	 *            タグ名
+	 * @param error
+	 *            エラーコード(基本0でOK)
+	 * @param size
+	 *            サイズ
+	 */
+	void insertUserImage(Context context, String userId, String password,
+			String name, String type, String tmpName, int error, int size);
 
 	/**
 	 * ユーザ情報を編集
@@ -66,7 +104,8 @@ public interface ApiDao {
 	 * @param weight
 	 *            体重
 	 */
-	void updateUserWeight(Context context, String userId, String weight);
+	void updateUserWeight(Context context, String userId, String password,
+			String weight);
 
 	/**
 	 * ユーザ情報の安静時心拍数を追加
@@ -77,7 +116,7 @@ public interface ApiDao {
 	 *            安静時心拍数
 	 */
 	void updateUserQuietHeartRate(Context context, String userId,
-			String heartRate);
+			String password, String heartRate);
 
 	/**
 	 * 全グループを取得
@@ -115,8 +154,15 @@ public interface ApiDao {
 	 *            グループ名
 	 * @param comment
 	 *            コメント
+	 * @param date
+	 *            日付 yyyy-mm-dd形式
+	 * @param userId
+	 *            ユーザID
+	 * @param password
+	 *            パスワード
 	 */
-	void insertGroup(String groupId, String groupName, String comment);
+	void insertGroup(String groupId, String groupName, String comment,
+			String date, String userId, String password);
 
 	/**
 	 * グループに加入
@@ -188,6 +234,8 @@ public interface ApiDao {
 	 * 
 	 * @param userId
 	 *            ユーザID
+	 * @param password
+	 *            パスワード
 	 * @param date
 	 *            トレーニング日 yyyy-mm-dd形式
 	 * @param startTime
@@ -209,10 +257,10 @@ public interface ApiDao {
 	 * @param dis
 	 *            走行距離
 	 */
-	void insertTraining(String userId, String date, String startTime,
-			String playTime, int targetHeartRate, int targetCalorie,
-			int heartRateAvg, String targetPlayTime, int calorie,
-			int categoryId, double distance);
+	void insertTraining(String userId, String password, String date,
+			String startTime, String playTime, int targetHeartRate,
+			int targetCalorie, int heartRateAvg, String targetPlayTime,
+			int calorie, int categoryId, double distance);
 
 	/**
 	 * トレーニングIDを取得
@@ -271,8 +319,10 @@ public interface ApiDao {
 	 *            ユーザID
 	 * @param trainingId
 	 *            トレーニングID
+	 * @param password
+	 *            パスワード
 	 */
-	void selectTraining(String userId, int trainingId);
+	void selectTraining(String userId, int trainingId, String password);
 
 	/**
 	 * ユーザの全トレーニングを取得
@@ -291,6 +341,14 @@ public interface ApiDao {
 	 * トレーニングメニューを取得
 	 */
 	void selectTrainingMenu();
+
+	/**
+	 * 画像を取得
+	 * 
+	 * @param image
+	 *            サーバーに保存されている画像名
+	 */
+	void selectImage(String image);
 
 	/**
 	 * テスト用

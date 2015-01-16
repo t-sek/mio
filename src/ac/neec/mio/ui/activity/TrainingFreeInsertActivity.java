@@ -1,12 +1,13 @@
 package ac.neec.mio.ui.activity;
 
+import java.io.InputStream;
 import java.util.List;
 
 import ac.neec.mio.R;
 import ac.neec.mio.dao.ApiDao;
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.SQLiteDao;
-import ac.neec.mio.dao.item.api.Sourceable;
+import ac.neec.mio.dao.Sourceable;
 import ac.neec.mio.exception.XmlParseException;
 import ac.neec.mio.exception.XmlReadException;
 import ac.neec.mio.pref.UtilPreference;
@@ -24,6 +25,7 @@ import ac.neec.mio.user.User;
 import ac.neec.mio.util.DateUtil;
 import ac.neec.mio.util.TimeUtil;
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -177,9 +179,10 @@ public class TrainingFreeInsertActivity extends Activity implements Sourceable,
 		TrainingCategory category = daoSql.selectTrainingCategory(textCategory
 				.getText().toString());
 		int categoryId = category.getTrainingCategoryId();
-		dao.insertTraining(user.getId(), date, startTime, playTime, 0, 0, 0,
-				null, Integer.valueOf(textCalorie.getText().toString()),
-				categoryId, Double.valueOf(textDistance.getText().toString()));
+		dao.insertTraining(user.getId(), user.getPassword(), date, startTime,
+				playTime, 0, 0, 0, null,
+				Integer.valueOf(textCalorie.getText().toString()), categoryId,
+				Double.valueOf(textDistance.getText().toString()));
 		dialogLoading = new LoadingDialog();
 		dialogLoading.show(getFragmentManager(), "dialog");
 	}
@@ -204,7 +207,7 @@ public class TrainingFreeInsertActivity extends Activity implements Sourceable,
 		try {
 			trainingId = dao.getResponse();
 			daoFlag = 0;
-			dao.selectTraining(user.getId(), trainingId);
+			dao.selectTraining(user.getId(), trainingId, user.getPassword());
 			Log.d("activity", "trainingId " + trainingId);
 		} catch (XmlParseException e) {
 			e.printStackTrace();
@@ -302,5 +305,17 @@ public class TrainingFreeInsertActivity extends Activity implements Sourceable,
 		default:
 			break;
 		}
+	}
+
+	@Override
+	public void complete(InputStream response) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void complete(Bitmap image) {
+		// TODO Auto-generated method stub
+		
 	}
 }

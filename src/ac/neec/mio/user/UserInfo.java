@@ -59,6 +59,22 @@ public class UserInfo implements Parcelable {
 
 	}
 
+	public void setAffiliations(List<Affiliation> affiliations) {
+		this.affiliations = affiliations;
+	}
+
+	public void setGroups(List<Group> groups) {
+		this.groups = groups;
+	}
+
+	public void setImageInfo(ImageInfo info) {
+		this.image = info;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
 	public List<Affiliation> getAffiliations() {
 		return affiliations;
 	}

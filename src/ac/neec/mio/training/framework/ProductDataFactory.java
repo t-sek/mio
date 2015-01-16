@@ -3,8 +3,8 @@ package ac.neec.mio.training.framework;
 import java.sql.Time;
 
 import ac.neec.mio.group.Permission;
+import ac.neec.mio.user.bodily.weight.Weight;
 import android.graphics.Bitmap;
-import android.graphics.pdf.PdfDocument;
 
 public abstract class ProductDataFactory {
 
@@ -32,7 +32,7 @@ public abstract class ProductDataFactory {
 				trainingCategoryId, color);
 	}
 
-	public ProductData create(float height, float weight, int quietHeartRate) {
+	public ProductData create(float height, Weight weight, int quietHeartRate) {
 		return factoryMethod(height, weight, quietHeartRate);
 	}
 
@@ -80,10 +80,14 @@ public abstract class ProductDataFactory {
 	}
 
 	public ProductData create(int id, String imageFileName, String userId,
-			String groupId, String created, Bitmap image, Bitmap bigImage,
-			Bitmap smallImage, Bitmap thumbImage) {
+			String groupId, String created, String image, String bigImage,
+			String smallImage, String thumbImage) {
 		return factoryMethod(id, imageFileName, userId, groupId, created,
 				image, bigImage, smallImage, thumbImage);
+	}
+
+	public ProductData create(int id, String date, float weight) {
+		return factoryMethod(id, date, weight);
 	}
 
 	protected abstract ProductData factoryMethod(Number number, Time time);
@@ -100,7 +104,7 @@ public abstract class ProductDataFactory {
 			String trainingName, float mets, int trainingCategoryId,
 			String color);
 
-	protected abstract ProductData factoryMethod(float height, float weight,
+	protected abstract ProductData factoryMethod(float height, Weight weight,
 			int quietHeartRate);
 
 	protected abstract ProductData factoryMethod(String gender);
@@ -128,10 +132,13 @@ public abstract class ProductDataFactory {
 			Permission permission);
 
 	protected abstract ProductData factoryMethod(int id, String imageFileName,
-			String userId, String groupId, String created, Bitmap image,
-			Bitmap bigImage, Bitmap smallImage, Bitmap thumbImage);
+			String userId, String groupId, String created, String image,
+			String bigImage, String smallImage, String thumbImage);
 
 	protected abstract ProductData factoryMethod(int id, String name,
 			String created, String updated, int status);
+
+	protected abstract ProductData factoryMethod(int id, String date,
+			float weight);
 
 }

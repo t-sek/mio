@@ -49,5 +49,6 @@
     <string name="title_activity_group_member_list">メンバーリスト</string>
     <string name="title_activity_member_info">メンバー一覧</string>
     <string name="title_activity_sync_training">未同期トレーニング一覧</string>
+    <string name="title_activity_weight_graph">過去の体重</string>
 
 </resources>

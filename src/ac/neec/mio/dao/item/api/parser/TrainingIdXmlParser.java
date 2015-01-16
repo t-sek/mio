@@ -8,7 +8,7 @@ import android.util.Log;
 
 public class TrainingIdXmlParser extends XmlParser {
 
-	private static final String TRAINING_ID = "TrainingID";
+	private static final String TRAINING_ID = "training_id";
 
 	private int trainingId;
 	private String tagName;
@@ -40,6 +40,7 @@ public class TrainingIdXmlParser extends XmlParser {
 	@SuppressWarnings("unchecked")
 	@Override
 	protected Integer getParseObject() {
+		Log.d("parser", "trainingId " + trainingId);
 		return trainingId;
 	}
 

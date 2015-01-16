@@ -1,7 +1,6 @@
 package ac.neec.mio.dao;
 
 import ac.neec.mio.dao.item.api.ApiDaoFactory;
-import ac.neec.mio.dao.item.api.Sourceable;
 import ac.neec.mio.dao.item.sqlite.SQLiteDaoFactory;
 import android.content.Context;
 

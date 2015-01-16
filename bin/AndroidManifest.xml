@@ -156,6 +156,10 @@
             android:name=".ui.activity.SyncTrainingListActivity"
             android:label="@string/title_activity_sync_training" >
         </activity>
+        <activity
+            android:name=".ui.activity.WeightGraphActivity"
+            android:label="@string/title_activity_weight_graph" >
+        </activity>
     </application>
 
 </manifest>

@@ -5,6 +5,7 @@ import java.sql.Time;
 import ac.neec.mio.group.Permission;
 import ac.neec.mio.training.framework.ProductData;
 import ac.neec.mio.training.framework.ProductDataFactory;
+import ac.neec.mio.user.bodily.weight.Weight;
 import android.graphics.Bitmap;
 
 public class ChangeTrainingFactory extends ProductDataFactory {
@@ -28,7 +29,7 @@ public class ChangeTrainingFactory extends ProductDataFactory {
 	}
 
 	@Override
-	protected ProductData factoryMethod(float height, float weight,
+	protected ProductData factoryMethod(float height, Weight weight,
 			int quietHeartRate) {
 		return null;
 	}
@@ -93,8 +94,8 @@ public class ChangeTrainingFactory extends ProductDataFactory {
 
 	@Override
 	protected ProductData factoryMethod(int id, String imageFileName,
-			String userId, String groupId, String created, Bitmap image,
-			Bitmap bigImage, Bitmap smallImage, Bitmap thumbImage) {
+			String userId, String groupId, String created, String image,
+			String bigImage, String smallImage, String thumbImage) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -102,6 +103,12 @@ public class ChangeTrainingFactory extends ProductDataFactory {
 	@Override
 	protected ProductData factoryMethod(int id, String name, String created,
 			String updated, int status) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected ProductData factoryMethod(int id, String date, float weight) {
 		// TODO Auto-generated method stub
 		return null;
 	}

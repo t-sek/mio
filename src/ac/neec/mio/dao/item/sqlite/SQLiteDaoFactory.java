@@ -4,7 +4,7 @@ import ac.neec.mio.dao.ApiDao;
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.DaoFactory;
 import ac.neec.mio.dao.SQLiteDao;
-import ac.neec.mio.dao.item.api.Sourceable;
+import ac.neec.mio.dao.Sourceable;
 import android.content.Context;
 
 public class SQLiteDaoFactory implements DaoFactory{

@@ -1,5 +1,6 @@
 package ac.neec.mio.ui.fragment.top;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +9,7 @@ import ac.neec.mio.consts.SQLConstants;
 import ac.neec.mio.dao.ApiDao;
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.SQLiteDao;
-import ac.neec.mio.dao.item.api.Sourceable;
+import ac.neec.mio.dao.Sourceable;
 import ac.neec.mio.exception.XmlParseException;
 import ac.neec.mio.exception.XmlReadException;
 import ac.neec.mio.http.item.TrainingItem;
@@ -20,6 +21,7 @@ import ac.neec.mio.ui.listener.TrainingDataListCallbackListener;
 import ac.neec.mio.user.User;
 import ac.neec.mio.util.DateUtil;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -237,5 +239,17 @@ public class TrainingDataFragment extends TopBaseFragment implements
 	public void incomplete() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void complete(InputStream response) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void complete(Bitmap image) {
+		// TODO Auto-generated method stub
+		
 	}
 }

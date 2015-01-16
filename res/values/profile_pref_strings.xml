@@ -12,6 +12,7 @@
     <string name="pref_profile_height">profile_height</string>
     <string name="pref_profile_weight">profile_weight</string>
     <string name="pref_profile_age">profile_age</string>
+    <string name="pref_profile_created">profile_created</string>
     <string name="pref_profile_quiet_heart_rate">profile_quiet_heart_rate</string>
     <string name="pref_facebook_access_token">facebook_access_token</string>
 
