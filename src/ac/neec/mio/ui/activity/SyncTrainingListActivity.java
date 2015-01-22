@@ -87,8 +87,8 @@ public class SyncTrainingListActivity extends Activity implements Sourceable,
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sync_training_list);
-		dao = DaoFacade.getApiDao(getApplicationContext(), this);
-		daoSql = DaoFacade.getSQLiteDao(getApplicationContext());
+		dao = DaoFacade.getApiDao(this);
+		daoSql = DaoFacade.getSQLiteDao();
 		setTrainingList();
 		adapter = new SyncTrainingListAdapter(savedInstanceState,
 				getApplicationContext(), this, list);
@@ -367,12 +367,12 @@ public class SyncTrainingListActivity extends Activity implements Sourceable,
 	@Override
 	public void complete(InputStream response) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void complete(Bitmap image) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

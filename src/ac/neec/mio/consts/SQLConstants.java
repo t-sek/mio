@@ -77,6 +77,14 @@ public class SQLConstants {
 		return resources.getString(R.string.table_permission);
 	}
 
+	public static String tableGroup() {
+		return resources.getString(R.string.table_group);
+	}
+
+	public static String tableAffiliation() {
+		return resources.getString(R.string.table_affiliation);
+	}
+
 	public static String userId() {
 		return resources.getString(R.string.column_user_id);
 	}
@@ -273,6 +281,18 @@ public class SQLConstants {
 		return resources.getString(R.string.column_group_news);
 	}
 
+	public static String groupId() {
+		return resources.getString(R.string.column_group_id);
+	}
+
+	public static String comment() {
+		return resources.getString(R.string.column_comment);
+	}
+
+	public static String created() {
+		return resources.getString(R.string.column_created);
+	}
+
 	public static String[] selectUserTable() {
 		return new String[] { userId(), userName(), password(), gender(),
 				height(), weight(), age(), quietHeartRate(), mail() };
@@ -315,5 +335,13 @@ public class SQLConstants {
 				dissolution(), permissionChange(), groupInfoChange(),
 				memberAddManage(), memberDataCheck(), memberListView(),
 				groupInfoView(), withdrawal(), joinStatus(), groupNews() };
+	}
+
+	public static String[] selectAffiliationTable() {
+		return new String[] { groupId(), permissionId() };
+	}
+
+	public static String[] selectGroupTable() {
+		return new String[] { id(), name(), comment(), userId(), created() };
 	}
 }

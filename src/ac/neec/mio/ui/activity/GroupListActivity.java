@@ -3,7 +3,6 @@ package ac.neec.mio.ui.activity;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import ac.neec.mio.R;
 import ac.neec.mio.dao.ApiDao;
@@ -15,6 +14,7 @@ import ac.neec.mio.exception.XmlReadException;
 import ac.neec.mio.group.Affiliation;
 import ac.neec.mio.group.Group;
 import ac.neec.mio.group.GroupInfo;
+import ac.neec.mio.taining.Training;
 import ac.neec.mio.ui.adapter.GroupListPagerAdapter;
 import ac.neec.mio.ui.dialog.GroupSettingDialog;
 import ac.neec.mio.ui.dialog.GroupSettingDialog.CallbackListener;
@@ -22,7 +22,6 @@ import ac.neec.mio.ui.listener.SearchNotifyListener;
 import ac.neec.mio.user.User;
 import ac.neec.mio.user.UserInfo;
 import ac.neec.mio.util.DateUtil;
-import ac.neec.mio.util.TimeUtil;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -51,20 +50,18 @@ public class GroupListActivity extends FragmentActivity implements Sourceable,
 	private SQLiteDao daoSql;
 	private User user = User.getInstance();
 	private List<Affiliation> affiliations = new ArrayList<Affiliation>();
-	private int daoFlag;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_group_list);
-		dao = DaoFacade.getApiDao(getApplicationContext(), this);
-		daoSql = DaoFacade.getSQLiteDao(getApplicationContext());
+		dao = DaoFacade.getApiDao(this);
+		daoSql = DaoFacade.getSQLiteDao();
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		GroupListPagerAdapter adapter = new GroupListPagerAdapter(
 				getSupportFragmentManager());
 		listener = adapter.getSearchListener();
 		viewPager.setAdapter(adapter);
-		daoFlag = FLAG_USER;
 		setSearchEdit();
 	}
 
@@ -137,19 +134,6 @@ public class GroupListActivity extends FragmentActivity implements Sourceable,
 	}
 
 	private void setGroupList() {
-		GroupInfo group = null;
-		try {
-			group = dao.getResponse();
-		} catch (XmlParseException e) {
-			e.printStackTrace();
-		} catch (XmlReadException e) {
-			e.printStackTrace();
-		}
-		if (group != null) {
-			Log.d("activity", "group " + group.getId());
-		} else {
-			Log.d("activity", "group " + group);
-		}
 		listener.onUpdate();
 	}
 
@@ -169,22 +153,13 @@ public class GroupListActivity extends FragmentActivity implements Sourceable,
 	public void notifyChenged(String groupId, String groupName, String comment) {
 		// HttpManager.uploadNewGroup(getApplicationContext(), this, id, name,
 		// comment);
-		daoFlag = FLAG_GROUP;
 		dao.insertGroup(groupId, groupName, comment, DateUtil.nowDate(),
 				user.getId(), user.getPassword());
 	}
 
 	@Override
 	public void complete() {
-		switch (daoFlag) {
-		case FLAG_GROUP:
-			setGroupList();
-			break;
-		case FLAG_USER:
-			setUser();
-		default:
-			break;
-		}
+		setGroupList();
 	}
 
 	@Override
@@ -202,7 +177,7 @@ public class GroupListActivity extends FragmentActivity implements Sourceable,
 	@Override
 	public void complete(Bitmap image) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

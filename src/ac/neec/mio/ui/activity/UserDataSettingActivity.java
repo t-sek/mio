@@ -73,7 +73,7 @@ public class UserDataSettingActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user_data_setting);
 		user.setListener(this);
-		dao = DaoFacade.getApiDao(getApplicationContext(), this);
+		dao = DaoFacade.getApiDao(this);
 		init();
 	}
 

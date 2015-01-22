@@ -148,10 +148,11 @@ public class MeasurementActivity extends BleConnectBaseActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_measurement);
 		Intent intent = getIntent();
-		trainingCategoryId = intent.getIntExtra(SQLConstants.trainingCategoryId(),
+		trainingCategoryId = intent.getIntExtra(
+				SQLConstants.trainingCategoryId(), 1);
+		int trainingMenuId = intent.getIntExtra(SQLConstants.trainingMenuId(),
 				1);
-		int trainingMenuId = intent.getIntExtra(SQLConstants.trainingMenuId(), 1);
-		daoSql = DaoFacade.getSQLiteDao(getApplicationContext());
+		daoSql = DaoFacade.getSQLiteDao();
 		trainingMenu = daoSql.selectTrainingMenu(trainingMenuId);
 		initFindViews();
 		setListeners();
@@ -322,7 +323,7 @@ public class MeasurementActivity extends BleConnectBaseActivity implements
 	private void showTrainingDialog() {
 		stopMeasurement();
 		ChangeTrainingSelectDialog dialog = new ChangeTrainingSelectDialog(
-				getApplicationContext(), this, trainingCategoryId);
+				this, trainingCategoryId);
 		dialog.show(getSupportFragmentManager(), "dialog");
 	}
 
@@ -375,8 +376,7 @@ public class MeasurementActivity extends BleConnectBaseActivity implements
 					TimeUtil.timeToLong(TimerManager.getTime()),
 					user.getWeight());
 		} else {
-			calorie = CalorieUtil.calcPlayCalorie(getApplicationContext(),
-					play, user.getWeight(),
+			calorie = CalorieUtil.calcPlayCalorie(play, user.getWeight(),
 					TimeUtil.timeToInteger(TimerManager.getTime()));
 		}
 		for (NotificationCallbackListener listener : listeners) {
@@ -425,8 +425,7 @@ public class MeasurementActivity extends BleConnectBaseActivity implements
 		try {
 			daoSql.updateTraining(id, timerManager.getMeasurementTime(),
 					Integer.valueOf(textCalorie.getText().toString()),
-					HeartRateUtil.heartRateAvg(getApplicationContext(), id),
-					distance);
+					HeartRateUtil.heartRateAvg(id), distance);
 		} catch (NumberFormatException e1) {
 			e1.printStackTrace();
 		}

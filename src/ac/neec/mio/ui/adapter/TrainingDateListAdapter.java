@@ -33,7 +33,7 @@ public class TrainingDateListAdapter extends BaseExpandableListAdapter {
 		this.context = context;
 		this.trainings = trainings;
 		this.listener = listener;
-		dao = DaoFacade.getSQLiteDao(context);
+		dao = DaoFacade.getSQLiteDao();
 	}
 
 	@Override

@@ -108,8 +108,8 @@ public class MapDataActivity extends FragmentActivity implements Sourceable {
 		setContentView(R.layout.activity_map_data);
 		map = ((SupportMapFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.map)).getMap();
-		dao = DaoFacade.getApiDao(getApplicationContext(), this);
-		daoSql = DaoFacade.getSQLiteDao(getApplicationContext());
+		dao = DaoFacade.getApiDao(this);
+		daoSql = DaoFacade.getSQLiteDao();
 		trainingId = getIntent().getIntExtra(SQLConstants.trainingId(), 0);
 		id = getIntent().getIntExtra(SQLConstants.id(), 0);
 		if (id != 0) {
@@ -233,12 +233,12 @@ public class MapDataActivity extends FragmentActivity implements Sourceable {
 	@Override
 	public void complete(InputStream response) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void complete(Bitmap image) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

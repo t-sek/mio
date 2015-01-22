@@ -27,9 +27,9 @@ public class CalorieUtil {
 		return calcCalorie(mets, hour, weight);
 	}
 
-	public static int calcPlayItemCalorie(Context context,
-			List<TrainingPlayItem> list, float weight, int time) {
-		SQLiteDao dao = DaoFacade.getSQLiteDao(context);
+	public static int calcPlayItemCalorie(List<TrainingPlayItem> list,
+			float weight, int time) {
+		SQLiteDao dao = DaoFacade.getSQLiteDao();
 		int calorie = 0;
 		for (TrainingPlayItem trainingPlayItem : list) {
 			// TrainingMenu menu = DBManager.selectTrainingMenu(trainingPlayItem
@@ -49,9 +49,9 @@ public class CalorieUtil {
 		return calorie;
 	}
 
-	public static int calcPlayCalorie(Context context, List<TrainingPlay> list,
-			float weight, int time) {
-		SQLiteDao dao = DaoFacade.getSQLiteDao(context);
+	public static int calcPlayCalorie(List<TrainingPlay> list, float weight,
+			int time) {
+		SQLiteDao dao = DaoFacade.getSQLiteDao();
 		int calorie = 0;
 		for (TrainingPlay trainingPlayItem : list) {
 			// TrainingMenu menu = DBManager.selectTrainingMenu(trainingPlayItem
@@ -68,9 +68,8 @@ public class CalorieUtil {
 		return calorie;
 	}
 
-	public static int calcCalorie(Context context, List<TrainingPlay> list,
-			float weight) {
-		SQLiteDao dao = DaoFacade.getSQLiteDao(context);
+	public static int calcCalorie(List<TrainingPlay> list, float weight) {
+		SQLiteDao dao = DaoFacade.getSQLiteDao();
 		int calorie = 0;
 		for (TrainingPlay trainingPlayItem : list) {
 			// TrainingMenu menu = DBManager.selectTrainingMenu(trainingPlayItem

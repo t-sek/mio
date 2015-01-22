@@ -33,17 +33,17 @@ public class ChangeTrainingSelectDialog extends DialogFragment {
 	private ChangeTrainingSettingListAdapter adapter;
 	private SQLiteDao dao;
 
-	public ChangeTrainingSelectDialog(Context context,
-			MeasurementCallbackListener listener, int categoryId) {
+	public ChangeTrainingSelectDialog(MeasurementCallbackListener listener,
+			int categoryId) {
 		this.listener = listener;
-		dao = DaoFacade.getSQLiteDao(context);
+		dao = DaoFacade.getSQLiteDao();
 		list = dao.selectTrainingCategoryMenu(categoryId);
 	}
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		dialog = new Dialog(getActivity());
-		dao = DaoFacade.getSQLiteDao(getActivity().getApplicationContext());
+		dao = DaoFacade.getSQLiteDao();
 		setDialog();
 		setAdapter();
 		return dialog;

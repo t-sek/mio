@@ -50,8 +50,8 @@ public class LoginActivity extends Activity implements Sourceable {
 			switch (message.what) {
 			case MESSAGE_TOAST:
 				dialogLoading.dismiss();
-				Toast.makeText(getApplicationContext(),
-						ErrorConstants.login(), Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), ErrorConstants.login(),
+						Toast.LENGTH_SHORT).show();
 				break;
 			case MESSAGE_NETWORK_ERROR:
 				dialogLoading.dismiss();
@@ -71,7 +71,7 @@ public class LoginActivity extends Activity implements Sourceable {
 		setContentView(R.layout.activity_login);
 		initFindViews();
 		setListener();
-		dao = DaoFacade.getApiDao(getApplicationContext(), this);
+		dao = DaoFacade.getApiDao(this);
 	}
 
 	private void initFindViews() {
@@ -165,12 +165,12 @@ public class LoginActivity extends Activity implements Sourceable {
 	@Override
 	public void complete(InputStream response) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void complete(Bitmap image) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

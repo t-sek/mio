@@ -10,21 +10,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 
+import ac.neec.mio.consts.AppConstants;
 import ac.neec.mio.dao.ApiDao;
 import ac.neec.mio.dao.Sourceable;
 import ac.neec.mio.exception.NetworkException;
 import ac.neec.mio.http.HttpsClient;
+import ac.neec.mio.user.User;
 import ac.neec.mio.util.BitmapUtil;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.util.Log;
 
 public abstract class HttpsDao implements Runnable, ApiDao {
@@ -41,8 +49,8 @@ public abstract class HttpsDao implements Runnable, ApiDao {
 	private JSONArray json;
 	private List<NameValuePair> postData;
 
-	protected HttpsDao(Context context, Sourceable listener) {
-		this.context = context;
+	protected HttpsDao(Sourceable listener) {
+		this.context = AppConstants.getContext();
 		this.listener = listener;
 	}
 
@@ -58,7 +66,7 @@ public abstract class HttpsDao implements Runnable, ApiDao {
 			connect();
 			break;
 		case POST_IMAGE:
-			postImage2();
+			postImage4();
 			break;
 		case IMAGE:
 			image();
@@ -68,11 +76,71 @@ public abstract class HttpsDao implements Runnable, ApiDao {
 		}
 	}
 
+	private void postImage3() {
+		HttpPost request = new HttpPost(url);
+		try {
+			// 送信パラメータのエンコードを指定
+			request.setEntity(new UrlEncodedFormEntity(postData, "UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		DefaultHttpClient httpClient = new DefaultHttpClient();
+		String ret = "";
+		try {
+			Log.d("posttest", "POST開始");
+			ret = httpClient.execute(request, new ResponseHandler<String>() {
+				@Override
+				public String handleResponse(HttpResponse response)
+						throws IOException {
+					Log.d("posttest", "レスポンスコード："
+							+ response.getStatusLine().getStatusCode());
+					// 正常に受信できた場合は200
+					switch (response.getStatusLine().getStatusCode()) {
+					case HttpStatus.SC_OK:
+						Log.d("posttest", "レスポンス取得に成功");
+						// レスポンスデータをエンコード済みの文字列として取得する
+						return EntityUtils.toString(response.getEntity(),
+								"UTF-8");
+					case HttpStatus.SC_NOT_FOUND:
+						Log.d("posttest", "データが存在しない");
+						return null;
+					default:
+						Log.d("posttest", "通信エラー");
+						return null;
+					}
+				}
+			});
+		} catch (IOException e) {
+			Log.d("posttest", "通信に失敗：" + e.toString());
+		} finally {
+			// shutdownすると通信できなくなる
+			httpClient.getConnectionManager().shutdown();
+		}
+	}
+
+	private void postImage4() {
+		HttpImageMultipartRequest request = new HttpImageMultipartRequest(url,
+				postData, "nori",
+				"/storage/emulated/0/DCIM/Camera/148101398012~2~2.jpg");
+		for (NameValuePair nameValuePair : postData) {
+			Log.d("dao", "pair " + nameValuePair.getName());
+			Log.d("dao", "pair " + nameValuePair.getValue());
+		}
+		request.exetute(context, listener);
+		// String response = request.execute();
+	}
+
 	private void postImage2() {
 		HttpImageMultipartRequest request = new HttpImageMultipartRequest(
 				"http://www.hogehoge.com", postData, "upload-file",
 				"file:///hoge/hoge.jpeg");
-		String response = request.send();
+		// HttpImageMultipartRequest request = new
+		// HttpImageMultipartRequest(url,
+		// postData, bos.toByteArray());
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		Bitmap image = User.getInstance().getImage();
+		image.compress(CompressFormat.JPEG, 100, bos);
+		String response = request.execute();
 	}
 
 	private void postImage() {

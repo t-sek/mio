@@ -6,6 +6,8 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.android.gms.internal.ed;
+
 import ac.neec.mio.group.Affiliation;
 import ac.neec.mio.pref.AppPreference;
 import ac.neec.mio.user.gender.Gender;
@@ -38,6 +40,10 @@ public class User extends AppPreference {
 		}
 		byte[] b = Base64.decode(s, Base64.DEFAULT);
 		return BitmapFactory.decodeByteArray(b, 0, b.length);
+	}
+
+	public String getImageUri() {
+		return sharedPref.getString(imageUri(), null);
 	}
 
 	public String getName() {
@@ -99,6 +105,11 @@ public class User extends AppPreference {
 			bitmapStr = null;
 		}
 		editor.putString(image(), bitmapStr);
+		editor.commit();
+	}
+
+	public void setImageUri(String uri) {
+		editor.putString(imageUri(), uri);
 		editor.commit();
 	}
 

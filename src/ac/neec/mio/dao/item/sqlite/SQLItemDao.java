@@ -1,13 +1,16 @@
 package ac.neec.mio.dao.item.sqlite;
 
 import static ac.neec.mio.consts.SQLConstants.color;
+import static ac.neec.mio.consts.SQLConstants.comment;
 import static ac.neec.mio.consts.SQLConstants.compelWithdrawal;
 import static ac.neec.mio.consts.SQLConstants.consumptionCal;
+import static ac.neec.mio.consts.SQLConstants.created;
 import static ac.neec.mio.consts.SQLConstants.date;
 import static ac.neec.mio.consts.SQLConstants.disX;
 import static ac.neec.mio.consts.SQLConstants.disY;
 import static ac.neec.mio.consts.SQLConstants.dissolution;
 import static ac.neec.mio.consts.SQLConstants.distance;
+import static ac.neec.mio.consts.SQLConstants.groupId;
 import static ac.neec.mio.consts.SQLConstants.groupInfoChange;
 import static ac.neec.mio.consts.SQLConstants.groupInfoView;
 import static ac.neec.mio.consts.SQLConstants.groupNews;
@@ -24,8 +27,9 @@ import static ac.neec.mio.consts.SQLConstants.mets;
 import static ac.neec.mio.consts.SQLConstants.name;
 import static ac.neec.mio.consts.SQLConstants.permissionChange;
 import static ac.neec.mio.consts.SQLConstants.permissionId;
-import static ac.neec.mio.consts.SQLConstants.playId;
 import static ac.neec.mio.consts.SQLConstants.playTime;
+import static ac.neec.mio.consts.SQLConstants.selectAffiliationTable;
+import static ac.neec.mio.consts.SQLConstants.selectGroupTable;
 import static ac.neec.mio.consts.SQLConstants.selectPermissionTable;
 import static ac.neec.mio.consts.SQLConstants.selectTrainingCategoryTable;
 import static ac.neec.mio.consts.SQLConstants.selectTrainingLogTable;
@@ -35,6 +39,8 @@ import static ac.neec.mio.consts.SQLConstants.selectTrainingTable;
 import static ac.neec.mio.consts.SQLConstants.split;
 import static ac.neec.mio.consts.SQLConstants.startTime;
 import static ac.neec.mio.consts.SQLConstants.strange;
+import static ac.neec.mio.consts.SQLConstants.tableAffiliation;
+import static ac.neec.mio.consts.SQLConstants.tableGroup;
 import static ac.neec.mio.consts.SQLConstants.tablePermission;
 import static ac.neec.mio.consts.SQLConstants.tableTraining;
 import static ac.neec.mio.consts.SQLConstants.tableTrainingCategory;
@@ -55,7 +61,11 @@ import static ac.neec.mio.util.PermissionUtil.getInt;
 
 import java.util.List;
 
+import ac.neec.mio.dao.item.sqlite.parser.AffiliationCursorParser;
+import ac.neec.mio.dao.item.sqlite.parser.AffiliationsCursorParser;
 import ac.neec.mio.dao.item.sqlite.parser.CursorParser;
+import ac.neec.mio.dao.item.sqlite.parser.GroupCursorParser;
+import ac.neec.mio.dao.item.sqlite.parser.GroupsCursorParser;
 import ac.neec.mio.dao.item.sqlite.parser.PermissionCursorParser;
 import ac.neec.mio.dao.item.sqlite.parser.PermissionListCursorParser;
 import ac.neec.mio.dao.item.sqlite.parser.TrainingCategoryCursorParser;
@@ -68,6 +78,8 @@ import ac.neec.mio.dao.item.sqlite.parser.TrainingMenuListCursorParser;
 import ac.neec.mio.dao.item.sqlite.parser.TrainingPlayCursorParser;
 import ac.neec.mio.exception.SQLiteInsertException;
 import ac.neec.mio.exception.SQLiteTableConstraintException;
+import ac.neec.mio.group.Affiliation;
+import ac.neec.mio.group.Group;
 import ac.neec.mio.group.Permission;
 import ac.neec.mio.taining.Training;
 import ac.neec.mio.taining.category.TrainingCategory;
@@ -75,13 +87,12 @@ import ac.neec.mio.taining.menu.TrainingMenu;
 import ac.neec.mio.taining.play.TrainingPlay;
 import ac.neec.mio.training.log.TrainingLog;
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 public class SQLItemDao extends SQLiteItemDao {
 
-	protected SQLItemDao(Context context) {
-		super(context);
+	protected SQLItemDao() {
 	}
 
 	@Override
@@ -351,6 +362,68 @@ public class SQLItemDao extends SQLiteItemDao {
 	@Override
 	public void deletePermission() {
 		super.delete(tablePermission());
+	}
+
+	@Override
+	public void insertGroup(String groupId, String name, String comment,
+			String userId, String created) throws SQLiteInsertException,
+			SQLiteTableConstraintException {
+		ContentValues cv = new ContentValues();
+		cv.put(id(), groupId);
+		cv.put(name(), name);
+		cv.put(comment(), comment);
+		cv.put(userId(), userId);
+		cv.put(created(), created);
+		super.insert(tableGroup(), cv);
+	}
+
+	@Override
+	public List<Group> selectGroup() {
+		Cursor c = super.select(tableGroup(), selectGroupTable());
+		CursorParser parser = new GroupsCursorParser(c);
+		return parser.getObject();
+	}
+
+	@Override
+	public Group selectGroup(String groupId) {
+		Cursor c = super.select(tableGroup(), selectGroupTable(), id(),
+				groupId);
+		CursorParser parser = new GroupCursorParser(c);
+		return parser.getObject();
+	}
+
+	@Override
+	public void deleteGroup() {
+		super.delete(tableGroup());
+	}
+
+	@Override
+	public void insertAffiliation(String groupId, int permissionId)
+			throws SQLiteInsertException, SQLiteTableConstraintException {
+		ContentValues cv = new ContentValues();
+		cv.put(groupId(), groupId);
+		cv.put(permissionId(), permissionId);
+		super.insert(tableAffiliation(), cv);
+	}
+
+	@Override
+	public Affiliation selectAffiliation(String groupId) {
+		Cursor c = super.select(tableAffiliation(), selectAffiliationTable(),
+				groupId(), groupId);
+		CursorParser parser = new AffiliationCursorParser(c);
+		return parser.getObject();
+	}
+
+	@Override
+	public List<Affiliation> selectAffiliation() {
+		Cursor c = super.select(tableAffiliation(), selectAffiliationTable());
+		CursorParser parser = new AffiliationsCursorParser(c);
+		return parser.getObject();
+	}
+
+	@Override
+	public void deleteAffiliation() {
+		super.delete(tableAffiliation());
 	}
 
 }

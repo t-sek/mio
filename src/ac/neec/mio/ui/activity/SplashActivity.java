@@ -1,8 +1,11 @@
 package ac.neec.mio.ui.activity;
 
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.util.List;
+
+import com.google.android.gms.internal.gr;
 
 import ac.neec.mio.R;
 import ac.neec.mio.consts.AppConstants;
@@ -15,6 +18,8 @@ import ac.neec.mio.exception.SQLiteInsertException;
 import ac.neec.mio.exception.SQLiteTableConstraintException;
 import ac.neec.mio.exception.XmlParseException;
 import ac.neec.mio.exception.XmlReadException;
+import ac.neec.mio.group.Affiliation;
+import ac.neec.mio.group.Group;
 import ac.neec.mio.group.Permission;
 import ac.neec.mio.pref.AppPreference;
 import ac.neec.mio.sns.facebook.Login;
@@ -33,6 +38,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -97,12 +103,12 @@ public class SplashActivity extends FragmentActivity implements
 		setListeners();
 		AppPreference.init(getApplicationContext());
 		AppConstants.setResorces(getResources());
-		dao = DaoFacade.getApiDao(getApplicationContext(), this);
-		daoSql = DaoFacade.getSQLiteDao(getApplicationContext());
-		// downloadTrainingCategory();
-		dao.insertUserImage(getApplicationContext(), "noppoid", "cccccc",
-				"test.jpg", "image/jpg",
-				"content://media/external/images/media/571", 0, 200);
+		AppConstants.setContext(getApplicationContext());
+		dao = DaoFacade.getApiDao(this);
+		daoSql = DaoFacade.getSQLiteDao();
+		downloadTrainingCategory();
+		// dao.insertUserImage(getApplicationContext(), "noppoid", "cccccc",
+		// "test.jpg", "image/jpg", user.getImageUri(), 0, 200);
 		// dao.insertUserImage(getApplicationContext(), "testid", "testid",
 		// "name",
 		// "image/png", "/var/tmp/", 0, 100);
@@ -341,6 +347,7 @@ public class SplashActivity extends FragmentActivity implements
 
 	@Override
 	public void complete() {
+		Log.d("activity", "complete");
 		manager.stop();
 		switch (daoFlag) {
 		case FLAG_CATEGORY:
@@ -399,6 +406,18 @@ public class SplashActivity extends FragmentActivity implements
 				Log.e("activity", "user name " + info.getName());
 				Log.e("activity", "user image "
 						+ info.getImageInfo().getImage());
+				daoSql.deleteGroup();
+				for (Group group : info.getGroups()) {
+					daoSql.insertGroup(group.getId(), group.getGroupName(),
+							group.getComment(), group.getUserId(),
+							group.getCreated());
+				}
+				daoSql.deleteAffiliation();
+				for (Affiliation aff : info.getAffiliations()) {
+					daoSql.insertAffiliation(aff.getGroupId(), aff
+							.getPermition().getId());
+					Log.d("activity", "aff " + aff.getPermition().getName());
+				}
 			} catch (XmlParseException e) {
 				e.printStackTrace();
 				startAnimation();
@@ -407,6 +426,12 @@ public class SplashActivity extends FragmentActivity implements
 				e.printStackTrace();
 				startAnimation();
 				return;
+			} catch (SQLiteInsertException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SQLiteTableConstraintException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			insertUserInfo(info);
 			downloadUserImage(info.getImageInfo().getSmallImage());

@@ -1,5 +1,6 @@
 package ac.neec.mio.ui.fragment.top;
 
+import java.io.File;
 import java.io.InputStream;
 
 import ac.neec.mio.R;
@@ -173,7 +174,6 @@ public class ProfileFragment extends TopBaseFragment implements
 		switch (requestCode) {
 		case ExternalAppGallery.REQUEST_GALLERY:
 			imageUri = getImageUri(data);
-//			 ExternalAppGallery.openCrop(getActivity(), imageUri);
 			ExternalAppGallery.performCrop(getActivity(), imageUri);
 			break;
 		case ExternalAppGallery.REQUEST_CAMERA:
@@ -215,7 +215,7 @@ public class ProfileFragment extends TopBaseFragment implements
 
 	@Override
 	public void onNegativeSelected() {
-//		ExternalAppGallery.openGallery(getActivity());
+		// ExternalAppGallery.openGallery(getActivity());
 		Intent intent = new Intent(Intent.ACTION_PICK);
 		intent.setType("*/*");
 		intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, imageUri);

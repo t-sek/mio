@@ -53,12 +53,14 @@ public class MeasurementFragment extends TopBaseFragment implements
 	private int categoryId = 1;
 	private int menuId = 1;
 	private SQLiteDao dao;
+	private List<TrainingCategory> categorys = new ArrayList<TrainingCategory>();
+	private List<TrainingMenu> menus = new ArrayList<TrainingMenu>();
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.fragment_measurement, null);
-		dao = DaoFacade.getSQLiteDao(getActivity().getApplicationContext());
+		dao = DaoFacade.getSQLiteDao();
 		init();
 		setSpinnerAdapter();
 		return view;
@@ -75,17 +77,23 @@ public class MeasurementFragment extends TopBaseFragment implements
 		});
 		textCategory = (TextView) view.findViewById(R.id.txt_training_category);
 		textMenu = (TextView) view.findViewById(R.id.txt_training_menu);
-		TrainingCategory category = dao.selectTrainingCategory().get(
-				UtilPreference.getCategoryPicker() + 1);
+		categorys = dao.selectTrainingCategory();
+		TrainingCategory category = categorys.get(UtilPreference
+				.getCategoryPicker() + 1);
 		categoryId = category.getTrainingCategoryId();
-		
-		TrainingMenu menu = dao.selectTrainingCategoryMenu(categoryId).get(
-				UtilPreference.getMenuPicker());
-		
+		Log.d("fragment", "category " + category.getTrainingCategoryName());
+		dao.selectTrainingCategoryMenu(categoryId);
+		Log.d("fragment", "categoryId " + categoryId);
+		menus = dao.selectTrainingCategoryMenu(categoryId);
+		TrainingMenu menu;
+		if (menus.size() != 0) {
+			menu = menus.get(UtilPreference.getMenuPicker());
+			textMenu.setText(menu.getTrainingName());
+		}
+
 		// TrainingMenu menu = dao.selectTrainingMenu().get(
 		// UtilPreference.getMenuPicker());
 		textCategory.setText(category.getTrainingCategoryName());
-		textMenu.setText(menu.getTrainingName());
 		textCategory.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -122,19 +130,18 @@ public class MeasurementFragment extends TopBaseFragment implements
 
 	private void setDialogStrings() {
 		if (dialogState == DIALOG_CATEGORY) {
-			List<TrainingCategory> list = dao.selectTrainingCategory();
-			strings = new String[list.size()];
+			categorys = dao.selectTrainingCategory();
+			strings = new String[categorys.size()];
 			int i = 0;
-			for (TrainingCategory category : list) {
+			for (TrainingCategory category : categorys) {
 				strings[i] = category.getTrainingCategoryName();
 				i++;
 			}
 		} else if (dialogState == DIALOG_MENU) {
-			List<TrainingMenu> list = dao
-					.selectTrainingCategoryMenu(categoryId);
-			strings = new String[list.size()];
+			menus = dao.selectTrainingCategoryMenu(categoryId);
+			strings = new String[menus.size()];
 			int i = 0;
-			for (TrainingMenu menu : list) {
+			for (TrainingMenu menu : menus) {
 				strings[i] = menu.getTrainingName();
 				i++;
 			}
@@ -197,6 +204,9 @@ public class MeasurementFragment extends TopBaseFragment implements
 
 	@Override
 	public void onSelected(int index) {
+		// Log.d("fragment", "index " + index);
+		// Log.d("fragment", "category "
+		// + dao.selectTrainingCategory(index).getTrainingCategoryName());
 		if (dialogState == DIALOG_CATEGORY) {
 			UtilPreference.putCategoryPicker(index);
 			UtilPreference.putMenuPicker(0);
@@ -208,8 +218,8 @@ public class MeasurementFragment extends TopBaseFragment implements
 	@Override
 	public void onSelected(String element) {
 		if (dialogState == DIALOG_CATEGORY) {
-//			List<String> elements = Arrays.asList(strings);
-//			int index = elements.indexOf(element);
+			// List<String> elements = Arrays.asList(strings);
+			// int index = elements.indexOf(element);
 			int index = DateUtil.dateIndex(strings, element);
 			TrainingCategory category = dao.selectTrainingCategory().get(index);
 			// TrainingCategory category = dao.selectTrainingCategory(element);

@@ -4,6 +4,8 @@ import java.util.List;
 
 import ac.neec.mio.exception.SQLiteInsertException;
 import ac.neec.mio.exception.SQLiteTableConstraintException;
+import ac.neec.mio.group.Affiliation;
+import ac.neec.mio.group.Group;
 import ac.neec.mio.group.Permission;
 import ac.neec.mio.taining.Training;
 import ac.neec.mio.taining.category.TrainingCategory;
@@ -336,5 +338,87 @@ public interface SQLiteDao {
 	 * グループ権限一覧を削除
 	 */
 	void deletePermission();
+
+	/**
+	 * グループを登録
+	 * 
+	 * @param groupId
+	 *            グループID
+	 * @param name
+	 *            名前
+	 * @param comment
+	 *            コメント
+	 * @param userId
+	 *            作成者ID
+	 * @param created
+	 *            作成日 yy-mm-dd形式
+	 * 
+	 * @throws SQLiteInsertException
+	 * @throws SQLiteTableConstraintException
+	 */
+	void insertGroup(String groupId, String name, String comment,
+			String userId, String created) throws SQLiteInsertException,
+			SQLiteTableConstraintException;
+
+	/**
+	 * 全グループを取得
+	 * 
+	 * @return
+	 */
+	List<Group> selectGroup();
+
+	/**
+	 * グループを取得
+	 * 
+	 * @param groupId
+	 *            グループID
+	 * @return
+	 */
+	Group selectGroup(String groupId);
+
+	/**
+	 * 全グループ削除
+	 */
+	void deleteGroup();
+
+	/**
+	 * 
+	 */
+
+	/**
+	 * 
+	 * グループ権限を登録
+	 * 
+	 * @param groupId
+	 *            グループId
+	 * @param permissionId
+	 *            パーミッションID
+	 * 
+	 * @throws SQLiteInsertException
+	 * @throws SQLiteTableConstraintException
+	 */
+	void insertAffiliation(String groupId, int permissionId)
+			throws SQLiteInsertException, SQLiteTableConstraintException;
+
+	/**
+	 * グループ権限を取得
+	 * 
+	 * @param groupId
+	 *            グループID
+	 * @return
+	 */
+	Affiliation selectAffiliation(String groupId);
+
+	/**
+	 * 全グループ権限を取得
+	 * 
+	 * @return
+	 */
+	List<Affiliation> selectAffiliation();
+
+	/**
+	 * 全グループ権限を削除
+	 */
+	void deleteAffiliation();
 
 }

@@ -9,14 +9,16 @@ public class Group {
 	private String id;
 	private String groupName;
 	private String comment;
+	private String userId;
 	private String created;
 
 	public Group(String id, String groupName, Bitmap bitmap, String comment,
-			String created) {
+			String userId, String created) {
 		this.id = id;
 		this.groupName = groupName;
 		this.bitmap = bitmap;
 		this.comment = comment;
+		this.userId = userId;
 		this.created = created;
 	}
 
@@ -34,6 +36,10 @@ public class Group {
 
 	public String getComment() {
 		return comment;
+	}
+
+	public String getUserId() {
+		return userId;
 	}
 
 	public String getCreated() {

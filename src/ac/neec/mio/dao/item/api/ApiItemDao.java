@@ -28,8 +28,8 @@ public class ApiItemDao extends HttpsDao {
 
 	private XmlParser parser;
 
-	protected ApiItemDao(Context context, Sourceable listener) {
-		super(context, listener);
+	protected ApiItemDao(Sourceable listener) {
+		super(listener);
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class ApiItemDao extends HttpsDao {
 	public void selectUser(Context context, String userId, String password) {
 		String url = SpoITApi.selectUser(userId, password);
 		parser = new UserInfoXmlParser(context);
-		// parser = new PrintXmlParser();
+//		 parser = new PrintXmlParser();
 		executeApi(url);
 	}
 

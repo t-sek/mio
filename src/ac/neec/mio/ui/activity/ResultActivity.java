@@ -87,8 +87,8 @@ public class ResultActivity extends Activity implements Sourceable {
 		id = intent.getIntExtra(SQLConstants.id(), 1);
 		int categoryId = intent.getIntExtra(SQLConstants.trainingCategoryId(),
 				1);
-		dao = DaoFacade.getApiDao(getApplicationContext(), this);
-		daoSql = DaoFacade.getSQLiteDao(getApplicationContext());
+		dao = DaoFacade.getApiDao(this);
+		daoSql = DaoFacade.getSQLiteDao();
 		isBackPressed = false;
 		trainingLogs = daoSql.selectTrainingLog(id);
 		trainingPlays = daoSql.selectTrainingPlay(id);
@@ -284,8 +284,7 @@ public class ResultActivity extends Activity implements Sourceable {
 			textDatasHeartRate.setText(String.valueOf(trainingLogs.get(index)
 					.getHeartRate()));
 			textDatasCalorie.setText(String.valueOf(CalorieUtil
-					.calcPlayCalorie(getActivity().getApplicationContext(),
-							trainingPlays, user.getWeight(),
+					.calcPlayCalorie(trainingPlays, user.getWeight(),
 							Integer.valueOf(time))));
 		}
 	}
@@ -352,12 +351,12 @@ public class ResultActivity extends Activity implements Sourceable {
 	@Override
 	public void complete(InputStream response) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void complete(Bitmap image) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

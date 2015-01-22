@@ -111,8 +111,8 @@ public class TrainingDataFragment extends TopBaseFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.fragment_training_data, null);
-		dao = DaoFacade.getApiDao(getActivity().getApplicationContext(), this);
-		daoSql = DaoFacade.getSQLiteDao(getActivity().getApplicationContext());
+		dao = DaoFacade.getApiDao(this);
+		daoSql = DaoFacade.getSQLiteDao();
 		init();
 		selectTraining();
 		// progressGone();
@@ -244,12 +244,12 @@ public class TrainingDataFragment extends TopBaseFragment implements
 	@Override
 	public void complete(InputStream response) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void complete(Bitmap image) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

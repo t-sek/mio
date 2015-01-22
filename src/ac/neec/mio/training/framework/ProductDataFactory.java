@@ -90,6 +90,10 @@ public abstract class ProductDataFactory {
 		return factoryMethod(id, date, weight);
 	}
 
+	public ProductData create(String groupId, int permissionId) {
+		return factoryMethod(groupId, permissionId);
+	}
+
 	protected abstract ProductData factoryMethod(Number number, Time time);
 
 	protected abstract ProductData factoryMethod(int id, int trainingMenuId,
@@ -140,5 +144,8 @@ public abstract class ProductDataFactory {
 
 	protected abstract ProductData factoryMethod(int id, String date,
 			float weight);
+
+	protected abstract ProductData factoryMethod(String groupId,
+			int permissionId);
 
 }

@@ -44,6 +44,10 @@ public class PreferenceConstants {
 		return resources.getString(R.string.pref_profile_image);
 	}
 
+	public static String imageUri() {
+		return resources.getString(R.string.pref_profile_image_uri);
+	}
+
 	public static String name() {
 		return resources.getString(R.string.pref_profile_name);
 	}

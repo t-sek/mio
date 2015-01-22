@@ -113,4 +113,10 @@ public class GenderFactory extends ProductDataFactory {
 		return null;
 	}
 
+	@Override
+	protected ProductData factoryMethod(String groupId, int permissionId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

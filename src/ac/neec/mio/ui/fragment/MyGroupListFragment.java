@@ -9,6 +9,7 @@ import ac.neec.mio.R;
 import ac.neec.mio.dao.ApiDao;
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.DaoFactory;
+import ac.neec.mio.dao.SQLiteDao;
 import ac.neec.mio.dao.Sourceable;
 import ac.neec.mio.dao.item.api.ApiDaoFactory;
 import ac.neec.mio.exception.XmlParseException;
@@ -36,7 +37,7 @@ import android.widget.ListView;
 
 import com.android.volley.VolleyError;
 
-public class MyGroupListFragment extends Fragment implements Sourceable {
+public class MyGroupListFragment extends Fragment {
 
 	private static final String TITLE = "参加しているグループ";
 
@@ -45,10 +46,9 @@ public class MyGroupListFragment extends Fragment implements Sourceable {
 	private static final int FLAG_USER = 4;
 
 	private ListView listView;
-	private List<Group> list = new ArrayList<Group>();
+	private List<Group> groups = new ArrayList<Group>();
 	private User user = User.getInstance();
-	private ApiDao dao;
-	private int daoFlag;
+	private SQLiteDao daoSql;
 	private List<Affiliation> affiliations = new ArrayList<Affiliation>();
 
 	Handler handler = new Handler() {
@@ -73,20 +73,19 @@ public class MyGroupListFragment extends Fragment implements Sourceable {
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_my_group_list,
 				container, false);
-		dao = DaoFacade.getApiDao(getActivity().getApplicationContext(), this);
-//		daoFlag = FLAG_GROUP;
-		daoFlag = FLAG_USER;
-		dao.selectUser(getActivity(), user.getId(), user.getPassword());
-		// dao.selectMyGroupAll(user.getId(), user.getPassword());
+		daoSql = DaoFacade.getSQLiteDao();
+		affiliations = daoSql.selectAffiliation();
+		groups = daoSql.selectGroup();
 		listView = (ListView) view.findViewById(R.id.list_my_group);
 		listView.setEmptyView(view.findViewById(R.id.empty));
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				String groupId = list.get(position).getId();
+				String groupId = groups.get(position).getId();
 				intentGroupDetails(groupId);
 			}
 		});
+		update();
 		return view;
 	}
 
@@ -95,75 +94,23 @@ public class MyGroupListFragment extends Fragment implements Sourceable {
 				GroupDetailsActivity.class);
 		intent.putExtra("Group_Id", groupId);
 		int permissionId = 0;
-		for (Affiliation affiliation : affiliations) {
-			if (affiliation.getGroupId().equals(groupId)) {
-				permissionId = affiliation.getPermition().getId();
-			}
-		}
+		Affiliation affiliation = daoSql.selectAffiliation(groupId);
+		Log.d("activity", "a  "+affiliation);
+		List<Affiliation> a = daoSql.selectAffiliation();
+		Log.d("activity", "a size "+a.size());
+		permissionId = affiliation.getPermition().getId();
 		intent.putExtra(GroupDetailsActivity.PERMISSION_ID, permissionId);
-		intent.putExtra(GroupDetailsActivity.SHOW_ACTION_SETTING,
-				GroupDetailsActivity.SETTING_SHOW);
 		startActivity(intent);
 	}
 
 	private void update() {
 		GroupListAdapter adapter = new GroupListAdapter(getActivity()
-				.getApplicationContext(), R.layout.item_group, list);
+				.getApplicationContext(), R.layout.item_group, groups);
 		listView.setAdapter(adapter);
-	}
-
-	private void setGroupList() {
-		List<Group> response = new ArrayList<Group>();
-		try {
-			response = dao.getResponse();
-		} catch (XmlParseException e) {
-			e.printStackTrace();
-		} catch (XmlReadException e) {
-			e.printStackTrace();
-		}
 	}
 
 	private void setMyGroupList() {
 
-	}
-	
-	private void setGroups(List<Group> groups){
-		for (Group group : groups) {
-			Log.d("fragment", "groupName " + group.getGroupName());
-			Log.d("fragment", "size " + affiliations.size());
-			for (Affiliation affiliation : affiliations) {
-				Log.d("fragment", "joinStatus "
-						+ affiliation.getPermition().getJoinStatus());
-				if (affiliation.getGroupId().equals(group.getId())) {
-					// permissionId = affiliation.getPermition().getId();
-					if (affiliation.getPermition().getJoinStatus()) {
-						list.add(group);
-					}
-				}
-			}
-		}
-	}
-
-	private void setUser() {
-		UserInfo user = null;
-		try {
-			user = dao.getResponse();
-		} catch (XmlParseException e) {
-			e.printStackTrace();
-		} catch (XmlReadException e) {
-			e.printStackTrace();
-		}
-		affiliations = user.getAffiliations();
-		setGroups(user.getGroups());
-		Message message = new Message();
-		message.what = MESSAGE_UPDATE;
-		handler.sendMessage(message);
-	}
-
-	private void selectUser() {
-		daoFlag = FLAG_USER;
-		dao.selectUser(getActivity().getApplicationContext(), user.getId(),
-				user.getPassword());
 	}
 
 	@Override
@@ -171,35 +118,4 @@ public class MyGroupListFragment extends Fragment implements Sourceable {
 		return TITLE;
 	}
 
-	@Override
-	public void complete() {
-		switch (daoFlag) {
-		case FLAG_GROUP:
-			selectUser();
-			setGroupList();
-			break;
-		case FLAG_USER:
-			setUser();
-			break;
-		default:
-			break;
-		}
-	}
-
-	@Override
-	public void incomplete() {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void complete(InputStream response) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void complete(Bitmap image) {
-		// TODO Auto-generated method stub
-		
-	}
 }

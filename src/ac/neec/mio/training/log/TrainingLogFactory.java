@@ -110,4 +110,10 @@ public class TrainingLogFactory extends ProductDataFactory {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	protected ProductData factoryMethod(String groupId, int permissionId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

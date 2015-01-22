@@ -114,4 +114,10 @@ public class HeartRateFactory extends ProductDataFactory {
 		return null;
 	}
 
+	@Override
+	protected ProductData factoryMethod(String groupId, int permissionId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

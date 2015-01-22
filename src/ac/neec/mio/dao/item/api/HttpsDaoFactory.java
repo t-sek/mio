@@ -9,12 +9,12 @@ import android.content.Context;
 public class HttpsDaoFactory implements DaoFactory {
 
 	@Override
-	public ApiDao createApiItemDao(Context context, Sourceable listener) {
-		return new ApiItemDao(context, listener);
+	public ApiDao createApiItemDao(Sourceable listener) {
+		return new ApiItemDao(listener);
 	}
 
 	@Override
-	public SQLiteDao createSQLiteDao(Context context) {
+	public SQLiteDao createSQLiteDao() {
 		return null;
 	}
 

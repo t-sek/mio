@@ -26,7 +26,7 @@ public class GroupXmlParser extends XmlParser {
 	private GroupInfo info;
 	private String userId;
 	private String groupId;
-	private String permitionId;
+	private int permitionId;
 	private String groupName;
 	private String userName;
 	private String comment;
@@ -61,7 +61,7 @@ public class GroupXmlParser extends XmlParser {
 		} else if (tagName.equals(GROUP_ID)) {
 			groupId = text;
 		} else if (tagName.equals(PERMITION_ID)) {
-			permitionId = text;
+			permitionId = Integer.valueOf(text);
 		} else if (tagName.equals(GROUP_NAME)) {
 			groupName = text;
 		} else if (tagName.equals(USER_NAME)) {

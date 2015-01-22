@@ -81,7 +81,7 @@ public class UserSignUpConfActivity extends Activity implements Sourceable {
 		initFindViews();
 		setListener();
 		setUserData();
-		dao = DaoFacade.getApiDao(getApplicationContext(), this);
+		dao = DaoFacade.getApiDao(this);
 	}
 
 	private void initFindViews() {
@@ -239,12 +239,12 @@ public class UserSignUpConfActivity extends Activity implements Sourceable {
 	@Override
 	public void complete(InputStream response) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void complete(Bitmap image) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

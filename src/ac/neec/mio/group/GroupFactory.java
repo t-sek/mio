@@ -123,4 +123,9 @@ public class GroupFactory extends ProductDataFactory {
 		return null;
 	}
 
+	@Override
+	protected ProductData factoryMethod(String groupId, int permissionId) {
+		return new Affiliation(groupId, permissionId);
+	}
+
 }

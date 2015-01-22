@@ -7,16 +7,16 @@ import ac.neec.mio.dao.SQLiteDao;
 import ac.neec.mio.dao.Sourceable;
 import android.content.Context;
 
-public class SQLiteDaoFactory implements DaoFactory{
+public class SQLiteDaoFactory implements DaoFactory {
 
 	@Override
-	public ApiDao createApiItemDao(Context context, Sourceable listener) {
+	public ApiDao createApiItemDao(Sourceable listener) {
 		return null;
 	}
 
 	@Override
-	public SQLiteDao createSQLiteDao(Context context) {
-		return new SQLItemDao(context);
+	public SQLiteDao createSQLiteDao() {
+		return new SQLItemDao();
 	}
 
 }

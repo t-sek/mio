@@ -96,7 +96,7 @@ public class UserInfoXmlParser extends XmlParser {
 		roleFactory = new RoleFactory();
 		affiliations = new ArrayList<Affiliation>();
 		groups = new ArrayList<Group>();
-		dao = DaoFacade.getSQLiteDao(context);
+		dao = DaoFacade.getSQLiteDao();
 	}
 
 	@Override
@@ -117,7 +117,7 @@ public class UserInfoXmlParser extends XmlParser {
 					permission));
 		} else if (text.equals(GROUP_TAG)) {
 			groups.add((Group) new Group(groupId, groupName, null,
-					groupComment, created));
+					groupComment, userId, created));
 			created = null;
 		} else if (text.equals(IMAGE_TAG)) {
 			// imageInfo = (ImageInfo) imageFactory.create(id, imageFileName,

@@ -6,13 +6,13 @@ import android.content.Context;
 
 public class DaoFacade {
 
-	public static ApiDao getApiDao(Context context, Sourceable listener) {
+	public static ApiDao getApiDao(Sourceable listener) {
 		DaoFactory factory = new ApiDaoFactory();
-		return factory.createApiItemDao(context, listener);
+		return factory.createApiItemDao(listener);
 	}
-	
-	public static SQLiteDao getSQLiteDao(Context context){
+
+	public static SQLiteDao getSQLiteDao() {
 		DaoFactory factory = new SQLiteDaoFactory();
-		return factory.createSQLiteDao(context);
+		return factory.createSQLiteDao();
 	}
 }

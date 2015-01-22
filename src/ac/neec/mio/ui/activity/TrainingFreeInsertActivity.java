@@ -88,8 +88,8 @@ public class TrainingFreeInsertActivity extends Activity implements Sourceable,
 		initFindViews();
 		setListener();
 		setNowDate();
-		dao = DaoFacade.getApiDao(getApplicationContext(), this);
-		daoSql = DaoFacade.getSQLiteDao(getApplicationContext());
+		dao = DaoFacade.getApiDao(this);
+		daoSql = DaoFacade.getSQLiteDao();
 		textCategory.setText(daoSql.selectTrainingCategory().get(0)
 				.getTrainingCategoryName());
 	}
@@ -310,12 +310,12 @@ public class TrainingFreeInsertActivity extends Activity implements Sourceable,
 	@Override
 	public void complete(InputStream response) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void complete(Bitmap image) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

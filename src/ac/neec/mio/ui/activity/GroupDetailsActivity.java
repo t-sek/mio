@@ -44,7 +44,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 
 public class GroupDetailsActivity extends FragmentActivity implements
-		Sourceable, CallbackListener {
+		CallbackListener {
 
 	private static final int MESSAGE_GROUP_NAME = 20;
 
@@ -52,8 +52,6 @@ public class GroupDetailsActivity extends FragmentActivity implements
 	public static final int INDEX_ADD_MEMBER = 1;
 	public static final int INDEX_INVITE_MEMBER = 2;
 
-	public static final String SHOW_ACTION_SETTING = "FLAG";
-	public static final boolean SETTING_SHOW = true;
 	public static final String PERMISSION_ID = "perm_id";
 
 	private GroupInfoListItem[] list = new GroupInfoListItem[3];
@@ -61,26 +59,13 @@ public class GroupDetailsActivity extends FragmentActivity implements
 	private TextView textGroupName;
 	private TextView textGroupId;
 	private TextView textGroupComment;
-	private GroupInfo group;
+	private Group group;
 	private User user = User.getInstance();
 	private boolean settingShowFlag = false;
 	private boolean groupChenged;
 	private ApiDao dao;
 	private SQLiteDao daoSql;
-	private LoadingDialog dialog;
 	private Permission permission;
-
-	Handler handler = new Handler() {
-		public void handleMessage(Message message) {
-			switch (message.what) {
-			case MESSAGE_GROUP_NAME:
-				updateGroupName();
-				break;
-			default:
-				break;
-			}
-		};
-	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -89,18 +74,17 @@ public class GroupDetailsActivity extends FragmentActivity implements
 
 		Intent intent = getIntent();
 		String groupId = intent.getStringExtra("Group_Id");
-		int permissionId = intent.getIntExtra(PERMISSION_ID, 0);
-		settingShowFlag = intent.getBooleanExtra(SHOW_ACTION_SETTING, false);
-		dao = DaoFacade.getApiDao(getApplicationContext(), this);
-		daoSql = DaoFacade.getSQLiteDao(getApplicationContext());
-		dao.selectGroup(groupId);
-		Log.d("activity", "permissionId " + permissionId);
-		permission = daoSql.selectPermission(permissionId);
+		// int permissionId = intent.getIntExtra(PERMISSION_ID, 0);
+		daoSql = DaoFacade.getSQLiteDao();
+		// dao.selectGroup(groupId);
+		group = daoSql.selectGroup(groupId);
+		permission = daoSql.selectAffiliation(groupId).getPermition();
+		Log.d("activity", "permission " + permission.getName());
+		// permission = daoSql.selectPermission(permissionId);
 		initFindViews(groupId);
+		updateGroupName();
 		setListItem();
 		setAdapter();
-		dialog = new LoadingDialog();
-		dialog.show(getFragmentManager(), "dialog");
 	}
 
 	@Override
@@ -141,9 +125,13 @@ public class GroupDetailsActivity extends FragmentActivity implements
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				if (position == INDEX_MEMBER) {
-					intentMember();
+					if (permission.getMemberListView()) {
+						intentMember();
+					}
 				} else if (position == INDEX_ADD_MEMBER) {
-					intentAddMember();
+					if (permission.getMemberAddManage()) {
+						intentAddMember();
+					}
 				} else if (position == INDEX_INVITE_MEMBER) {
 					intentInviteMember();
 				}
@@ -167,11 +155,8 @@ public class GroupDetailsActivity extends FragmentActivity implements
 	private void intentMember() {
 		Intent intent = new Intent(GroupDetailsActivity.this,
 				GroupMemberListActivity.class);
-		List<Member> list = group.getMembers();
-		intent.putParcelableArrayListExtra("member",
-				(ArrayList<? extends Parcelable>) group.getMembers());
-		intent.putExtra(SHOW_ACTION_SETTING, settingShowFlag);
-		intent.putExtra("group_name", group.getName());
+		intent.putExtra("group_id", group.getId());
+		intent.putExtra("permissionId", permission.getId());
 		startActivity(intent);
 	}
 
@@ -204,7 +189,7 @@ public class GroupDetailsActivity extends FragmentActivity implements
 
 	private void updateGroupName() {
 		if (group != null) {
-			textGroupName.setText(group.getName());
+			textGroupName.setText(group.getGroupName());
 			textGroupComment.setText(group.getComment());
 		}
 	}
@@ -216,36 +201,4 @@ public class GroupDetailsActivity extends FragmentActivity implements
 		// comment);
 	}
 
-	@Override
-	public void complete() {
-		try {
-			group = dao.getResponse();
-		} catch (XmlParseException e) {
-			e.printStackTrace();
-		} catch (XmlReadException e) {
-			e.printStackTrace();
-		}
-		Message message = new Message();
-		message.what = MESSAGE_GROUP_NAME;
-		handler.sendMessage(message);
-		dialog.dismiss();
-	}
-
-	@Override
-	public void incomplete() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void complete(InputStream response) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void complete(Bitmap image) {
-		// TODO Auto-generated method stub
-		
-	}
 }

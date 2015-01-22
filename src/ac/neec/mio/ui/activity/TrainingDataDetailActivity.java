@@ -106,8 +106,8 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 		getActionBar().setTitle(
 				DateUtil.japaneseFormat(training.getDate()) + " "
 						+ DateUtil.timeJapaneseFormat(training.getStartTime()));
-		daoSql = DaoFacade.getSQLiteDao(getApplicationContext());
-		dao = DaoFacade.getApiDao(getApplicationContext(), this);
+		daoSql = DaoFacade.getSQLiteDao();
+		dao = DaoFacade.getApiDao(this);
 		dao.selectTrainingPlay(user.getId(), training.getTrainingId());
 	}
 
@@ -162,8 +162,7 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_result,
 					container, false);
-			daoSql = DaoFacade.getSQLiteDao(getActivity()
-					.getApplicationContext());
+			daoSql = DaoFacade.getSQLiteDao();
 			initFindViews(rootView);
 			setViewText();
 			return rootView;
@@ -253,12 +252,9 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 			} catch (Exception e) {
 				time = Integer.valueOf(trainingLog.getTime(index));
 			}
-			textDatasCalorie.setText(String.valueOf(CalorieUtil
-					.calcPlayItemCalorie(getActivity().getApplicationContext(),
-							trainingPlays,
-							// user.getBodily().getWeight(),
-							// Integer.valueOf(user.getWeight()), time)));
-							user.getWeight(), time)));
+			textDatasCalorie
+					.setText(String.valueOf(CalorieUtil.calcPlayItemCalorie(
+							trainingPlays, user.getWeight(), time)));
 		}
 
 		@Override
@@ -323,19 +319,19 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 	@Override
 	public void incomplete() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void complete(InputStream response) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void complete(Bitmap image) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

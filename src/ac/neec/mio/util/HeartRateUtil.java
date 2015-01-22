@@ -64,12 +64,12 @@ public class HeartRateUtil {
 		return heartRate / heartRates.size();
 	}
 
-	public static int heartRateAvg(Context context, int id) {
-		SQLiteDao dao = DaoFacade.getSQLiteDao(context);
+	public static int heartRateAvg(int id) {
+		SQLiteDao dao = DaoFacade.getSQLiteDao();
 		int num = 0;
 		// List<TrainingLog> log = DBManager.selectTrainingLog(id);
 		List<TrainingLog> log = dao.selectTrainingLog(id);
-		Log.d("util", "log size "+log.size());
+		Log.d("util", "log size " + log.size());
 		int size = log.size();
 		for (TrainingLog trainingLog : log) {
 			num += trainingLog.getHeartRate();

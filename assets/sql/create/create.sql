@@ -25,8 +25,17 @@ CREATE TABLE user
 	height integer,
 	weight integer,
 	age integer,
-	quiet_heart_rate,
+	quiet_heart_rate integer,
 	mail text
+)
+/
+CREATE TABLE my_group
+(
+	id text PRIMARY KEY,
+	name text,
+	comment text,
+	user_id text,
+	created text
 )
 /
 CREATE TABLE training
@@ -111,5 +120,13 @@ CREATE TABLE permission
 	withdrawal integer,
 	join_status integer,
 	group_news integer
+)
+/
+CREATE TABLE affiliation
+(
+	group_id text,
+	permission_id integer,
+	FOREIGN KEY(group_id) REFERENCES my_group(id),
+	FOREIGN KEY(permission_id) REFERENCES permission(permission_id)
 )
 /

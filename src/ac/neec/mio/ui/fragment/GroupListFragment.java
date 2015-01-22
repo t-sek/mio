@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ac.neec.mio.R;
+import ac.neec.mio.consts.PermissionConstants;
 import ac.neec.mio.dao.ApiDao;
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.DaoFactory;
@@ -62,7 +63,7 @@ public class GroupListFragment extends Fragment implements
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_group_list, container,
 				false);
-		dao = DaoFacade.getApiDao(getActivity().getApplicationContext(), this);
+		dao = DaoFacade.getApiDao(this);
 		dao.selectGroupAll();
 		listView = (ListView) view.findViewById(R.id.list_group);
 		listView.setEmptyView(view.findViewById(R.id.empty));
@@ -84,6 +85,14 @@ public class GroupListFragment extends Fragment implements
 		Intent intent = new Intent(getActivity().getApplicationContext(),
 				GroupDetailsActivity.class);
 		intent.putExtra("Group_Id", groupId);
+		int permissionId = 0;
+//		for (Affiliation affiliation : affiliations) {
+//			if (affiliation.getUserId().equals(user.getId())) {
+//				permissionId = affiliation.getPermition().getId();
+//			}
+//		}
+		intent.putExtra(GroupDetailsActivity.PERMISSION_ID,
+				PermissionConstants.notice());
 		startActivity(intent);
 	}
 
@@ -137,18 +146,18 @@ public class GroupListFragment extends Fragment implements
 	@Override
 	public void incomplete() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void complete(InputStream response) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void complete(Bitmap image) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

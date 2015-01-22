@@ -20,6 +20,8 @@
     <string name="table_training_play">training_play</string>
     <string name="table_training_log">training_log</string>
     <string name="table_permission">permission</string>
+    <string name="table_group">my_group</string>
+    <string name="table_affiliation">affiliation</string>
     <!-- column -->
     <string name="column_user_id">user_id</string>
     <string name="column_user_name">user_name</string>
@@ -72,5 +74,8 @@
     <string name="column_withdrawal">withdrawal</string>
     <string name="column_join_status">join_status</string>
     <string name="column_group_news">group_news</string>
+    <string name="column_group_id">group_id</string>
+    <string name="column_comment">comment</string>
+    <string name="column_created">created</string>
 
 </resources>

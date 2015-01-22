@@ -77,8 +77,8 @@ public class GroupMemberInfoActivity extends Activity implements Sourceable,
 		Intent intent = getIntent();
 		userId = intent.getStringExtra(Member.ID);
 		userName = intent.getStringExtra(Member.NAME);
-		dao = DaoFacade.getApiDao(getApplicationContext(), this);
-//		downloadTrainingData();
+		dao = DaoFacade.getApiDao(this);
+		// downloadTrainingData();
 		initFindViews();
 		setUserData();
 		setAdapter();
@@ -115,7 +115,7 @@ public class GroupMemberInfoActivity extends Activity implements Sourceable,
 		textUserId = (TextView) findViewById(R.id.text_user_id);
 		listView = (ExpandableListView) findViewById(R.id.list_training_data);
 		listView.setEmptyView(findViewById(R.id.empty));
-		progress = (ProgressBar)findViewById(R.id.progress);
+		progress = (ProgressBar) findViewById(R.id.progress);
 		progress.setMax(DATE_NUM);
 	}
 
@@ -206,18 +206,18 @@ public class GroupMemberInfoActivity extends Activity implements Sourceable,
 	@Override
 	public void incomplete() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void complete(InputStream response) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void complete(Bitmap image) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

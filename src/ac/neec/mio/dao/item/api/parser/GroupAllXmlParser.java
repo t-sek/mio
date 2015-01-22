@@ -11,6 +11,7 @@ public class GroupAllXmlParser extends XmlParser {
 	private static final String ID = "group_id";
 	private static final String NAME = "group_name";
 	private static final String COMMENT = "group_comment";
+	private static final String USER_ID = "user_id";
 	private static final String CREATED = "created";
 
 	private List<Group> list;
@@ -18,6 +19,7 @@ public class GroupAllXmlParser extends XmlParser {
 	private String id;
 	private String name;
 	private String comment;
+	private String userId;
 	private String created;
 
 	@Override
@@ -37,7 +39,7 @@ public class GroupAllXmlParser extends XmlParser {
 	@Override
 	protected void endTag(String text) {
 		if (text.equals(GROUP)) {
-			list.add(new Group(id, name, null, comment, created));
+			list.add(new Group(id, name, null, comment, userId, created));
 		}
 	}
 
@@ -49,6 +51,8 @@ public class GroupAllXmlParser extends XmlParser {
 			name = text;
 		} else if (tagName.equals(COMMENT)) {
 			comment = text;
+		} else if (tagName.equals(USER_ID)) {
+			userId = text;
 		} else if (tagName.equals(CREATED)) {
 			created = text;
 		}

@@ -1,28 +1,25 @@
 package ac.neec.mio.ui.activity;
 
+import java.io.File;
 import java.util.List;
 
 import ac.neec.mio.R;
-import ac.neec.mio.db.DBManager;
-import ac.neec.mio.http.HttpManager;
 import ac.neec.mio.http.item.DateNumItem;
 import ac.neec.mio.http.item.TrainingItem;
 import ac.neec.mio.http.item.TrainingLogItem;
 import ac.neec.mio.http.item.TrainingPlayItem;
 import ac.neec.mio.http.listener.HttpResponseListener;
-import ac.neec.mio.taining.category.TrainingCategory;
-import ac.neec.mio.taining.menu.TrainingMenu;
 import ac.neec.mio.ui.fragment.pager.TopPagerAdapter;
 import ac.neec.mio.ui.listener.TopCallbackListener;
 import ac.neec.mio.user.User;
-import ac.neec.mio.util.DateUtil;
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.android.volley.VolleyError;
@@ -55,6 +52,13 @@ public class TopActivity extends FragmentActivity implements
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// ギャラリーから画像取得
 		int index = adapter.getFragments().size() - 1;
+		ContentResolver cr = getContentResolver();
+		String[] columns = { MediaStore.Images.Media.DATA };
+		Cursor c = cr.query(data.getData(), columns, null, null, null);
+		c.moveToFirst();
+		User.getInstance().setImageUri(c.getString(0));
+		// File picture = new File(c.getString(0));
+		// Log.e("activity", "image uri " + c.getString(0));
 		adapter.getFragments().get(index)
 				.onActivityResult(requestCode, resultCode, data);
 		super.onActivityResult(requestCode, resultCode, data);

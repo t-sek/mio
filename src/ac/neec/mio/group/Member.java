@@ -13,10 +13,10 @@ public class Member implements Parcelable {
 	private String userId;
 	private String userName;
 	private String groupId;
-	private String permitionId;
+	private int permitionId;
 
 	public Member(String userId, String userName, String groupId,
-			String permitionId) {
+			int permitionId) {
 		this.userId = userId;
 		this.userName = userName;
 		this.groupId = groupId;
@@ -27,7 +27,7 @@ public class Member implements Parcelable {
 		userId = in.readString();
 		userName = in.readString();
 		groupId = in.readString();
-		permitionId = in.readString();
+		permitionId = in.readInt();
 	}
 
 	public String getUserId() {
@@ -42,7 +42,7 @@ public class Member implements Parcelable {
 		return groupId;
 	}
 
-	public String getPermitionId() {
+	public int getPermitionId() {
 		return permitionId;
 	}
 
@@ -56,7 +56,7 @@ public class Member implements Parcelable {
 		dest.writeString(userId);
 		dest.writeString(userName);
 		dest.writeString(groupId);
-		dest.writeString(permitionId);
+		dest.writeInt(permitionId);
 	}
 
 	public static final Parcelable.Creator<Member> CREATOR = new Creator<Member>() {

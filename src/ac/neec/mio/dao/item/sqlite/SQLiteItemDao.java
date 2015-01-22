@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import ac.neec.mio.consts.AppConstants;
 import ac.neec.mio.dao.SQLiteDao;
 import ac.neec.mio.dao.item.sqlite.parser.CursorParser;
 import ac.neec.mio.exception.SQLiteInsertException;
@@ -31,9 +32,9 @@ public abstract class SQLiteItemDao extends SQLiteOpenHelper implements
 	private CursorParser parser;
 	private RingBuffer buffer;
 
-	protected SQLiteItemDao(Context context) {
-		super(context, dbName(), null, dbVersion());
-		this.context = context;
+	protected SQLiteItemDao() {
+		super(AppConstants.getContext(), dbName(), null, dbVersion());
+		this.context = AppConstants.getContext();
 		db = getWritableDatabase();
 		buffer = new RingBuffer(this);
 	}
