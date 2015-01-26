@@ -32,13 +32,13 @@ public class SelectionAlertDialog extends DialogFragment {
 		dialog.setPositiveButton(positive,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-						listener.onPositiveSelected();
+						listener.onPositiveSelected(message);
 					}
 				});
 		dialog.setNegativeButton(negative,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-						listener.onNegativeSelected();
+						listener.onNegativeSelected(message);
 					}
 				});
 		setCancelable(cancel);

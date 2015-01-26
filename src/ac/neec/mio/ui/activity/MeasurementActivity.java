@@ -416,7 +416,7 @@ public class MeasurementActivity extends BleConnectBaseActivity implements
 	}
 
 	@Override
-	public void onNegativeSelected() {
+	public void onNegativeSelected(String message) {
 		if (id == 0 && trainingMenu == null
 				|| textCalorie.getText().equals("---")) {
 			intentTop();
@@ -443,7 +443,7 @@ public class MeasurementActivity extends BleConnectBaseActivity implements
 	}
 
 	@Override
-	public void onPositiveSelected() {
+	public void onPositiveSelected(String message) {
 		if (isMeasurement) {
 			startMeasurement();
 		}

@@ -6,7 +6,7 @@ public class Training extends ProductData {
 
 	private int id;
 	private int trainingCategoryId;
-	private int userId;
+	private String userId;
 	private String date;
 	private String startTime;
 	private String playTime;
@@ -17,7 +17,7 @@ public class Training extends ProductData {
 	private int strange;
 	private double distance;
 
-	protected Training(int id, int trainingCategoryId, int userId, String date,
+	protected Training(int id, int trainingCategoryId, String userId, String date,
 			String startTime, String playTime, int targetHeartRate,
 			int targetCal, int consumptionCal, int heartRateAvg, int strange,
 			double distance) {
@@ -43,7 +43,7 @@ public class Training extends ProductData {
 		return trainingCategoryId;
 	}
 
-	public int getUserId() {
+	public String getUserId() {
 		return userId;
 	}
 

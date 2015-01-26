@@ -20,6 +20,25 @@
             android:layout_height="wrap_content"
             layout="@layout/item_group_member" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:orientation="vertical" >
+
+            <Button
+                android:id="@+id/button_trainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="トレーナーに追加" />
+
+            <Button
+                android:id="@+id/button_notice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="メンバーを退会" />
+        </LinearLayout>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -40,11 +59,11 @@
         <ProgressBar
             android:id="@+id/progress"
             style="@android:style/Widget.ProgressBar.Horizontal"
-            android:progressDrawable="@drawable/progressbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp" />
+            android:layout_marginRight="20dp"
+            android:progressDrawable="@drawable/progressbar" />
 
         <ExpandableListView
             android:id="@+id/list_training_data"

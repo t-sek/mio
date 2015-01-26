@@ -90,12 +90,12 @@ public class DeviceSettingActivity extends BleDeviceScanBaseActivity implements
 	}
 
 	@Override
-	public void onNegativeSelected() {
+	public void onNegativeSelected(String message) {
 
 	}
 
 	@Override
-	public void onPositiveSelected() {
+	public void onPositiveSelected(String message) {
 		setDeviceInfo(position);
 		if (flag == INTENT_MEASUREMENT) {
 			intentMeasurement();

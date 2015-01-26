@@ -1,36 +1,49 @@
 package ac.neec.mio.dao.item.api.parser;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import ac.neec.mio.exception.XmlParseException;
-import ac.neec.mio.exception.XmlReadException;
 import ac.neec.mio.http.item.TrainingItem;
-import android.util.Log;
+import ac.neec.mio.taining.Training;
+import ac.neec.mio.taining.TrainingFactory;
+import ac.neec.mio.training.framework.ProductDataFactory;
 
-public class TrainingXmlParser extends XmlParser {
+public class TrainingsXmlParser extends XmlParser {
 
 	private static final String TITLE = "Training";
 	private static final String T_ID = "training_id";
 	private static final String DATE = "taked";
 	private static final String CATEGORY = "category_id";
+	private static final String USER_ID = "user_id";
 	private static final String S_TIME = "start_time";
 	private static final String P_TIME = "play_time";
 	private static final String T_RATE = "target_heartrate_beats";
 	private static final String T_CAL = "target_cal";
+	private static final String TARGET_PLAY_TIME = "target_play_time";
 	private static final String CAL = "cal";
 	private static final String AVG_RATE = "heartrate_avg";
 	private static final String DISTANCE = "distance";
 
 	private String tagName;
-	private TrainingItem training;
-	private List<TrainingItem> trainings;
+	private List<Training> trainings;
+	private ProductDataFactory factory;
+	private int trainingId;
+	private String date;
+	private int categoryId;
+	private String userId;
+	private String startTime;
+	private int playTime;
+	private int targetHeartRate;
+	private int targetCalorie;
+	private int targetPlayTime;
+	private int calorie;
+	private int heartRateAvg;
+	private double distance;
 
 	@Override
 	protected void startDocument() {
-		training = new TrainingItem();
-		trainings = new ArrayList<TrainingItem>();
+		trainings = new ArrayList<Training>();
+		factory = new TrainingFactory();
 	}
 
 	@Override
@@ -46,8 +59,9 @@ public class TrainingXmlParser extends XmlParser {
 	protected void endTag(String text) {
 		if (text != null) {
 			if (text.equals(TITLE)) {
-				trainings.add(training);
-				training = new TrainingItem();
+				trainings.add((Training) factory.create(trainingId, categoryId,
+						userId, date, date, startTime, playTime,
+						targetHeartRate, calorie, heartRateAvg, 0, distance));
 			}
 		}
 	}
@@ -55,31 +69,33 @@ public class TrainingXmlParser extends XmlParser {
 	@Override
 	protected void text(String text) {
 		if (tagName.equals(T_ID)) {
-			training.setTrainingId(Integer.valueOf(text));
+			trainingId = Integer.valueOf(text);
 		} else if (tagName.equals(DATE)) {
-			training.setDate(text);
+			date = text;
 		} else if (tagName.equals(CATEGORY)) {
-			training.setCategoryId(Integer.valueOf(text));
+			categoryId = Integer.valueOf(categoryId);
+		} else if (tagName.equals(USER_ID)) {
+			userId = text;
 		} else if (tagName.equals(S_TIME)) {
-			training.setStartTime(String.valueOf(text));
+			startTime = text;
 		} else if (tagName.equals(P_TIME)) {
-			training.setPlayTime(String.valueOf(text));
+			playTime = Integer.valueOf(text);
 		} else if (tagName.equals(T_RATE)) {
-			training.setTargetHeartRate(Integer.valueOf(text));
+			targetHeartRate = Integer.valueOf(text);
 		} else if (tagName.equals(T_CAL)) {
-			training.setTargetCal(Integer.valueOf(text));
+			targetCalorie = Integer.valueOf(text);
 		} else if (tagName.equals(CAL)) {
-			training.setCal(Integer.valueOf(text));
+			calorie = Integer.valueOf(text);
 		} else if (tagName.equals(AVG_RATE)) {
-			training.setHeartRateAvg(Integer.valueOf(text));
+			heartRateAvg = Integer.valueOf(text);
 		} else if (tagName.equals(DISTANCE)) {
-			training.setDistance(Double.valueOf(text));
+			distance = Double.valueOf(text);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected List<TrainingItem> getParseObject() {
+	protected List<Training> getParseObject() {
 		return trainings;
 	}
 

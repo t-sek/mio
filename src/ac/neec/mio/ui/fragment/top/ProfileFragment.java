@@ -214,7 +214,7 @@ public class ProfileFragment extends TopBaseFragment implements
 	}
 
 	@Override
-	public void onNegativeSelected() {
+	public void onNegativeSelected(String message) {
 		// ExternalAppGallery.openGallery(getActivity());
 		Intent intent = new Intent(Intent.ACTION_PICK);
 		intent.setType("*/*");
@@ -225,7 +225,7 @@ public class ProfileFragment extends TopBaseFragment implements
 	}
 
 	@Override
-	public void onPositiveSelected() {
+	public void onPositiveSelected(String message) {
 		imageUri = ExternalAppGallery.openCamera(getActivity());
 	}
 

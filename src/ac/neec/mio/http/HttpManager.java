@@ -10,7 +10,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import ac.neec.mio.dao.item.api.parser.TrainingIdXmlParser;
 import ac.neec.mio.dao.item.api.parser.TrainingLogXmlParser;
 import ac.neec.mio.dao.item.api.parser.TrainingPlayXmlParser;
-import ac.neec.mio.dao.item.api.parser.TrainingXmlParser;
+import ac.neec.mio.dao.item.api.parser.TrainingsXmlParser;
 import ac.neec.mio.exception.XmlParseException;
 import ac.neec.mio.exception.XmlReadException;
 import ac.neec.mio.http.item.TrainingItem;

@@ -36,6 +36,7 @@
     <string name="training_insert_play">Play.php?func=Insert</string>
     <string name="training_select_all">TrainingInfo.php?func=Select&amp;option=findAll</string>
     <string name="training_select">findtraining/</string>
+    <string name="trainings_select">findtrainings/</string>
     <string name="training_select_date">TrainingInfo.php?func=Select&amp;option=Date</string>
     <string name="training_select_log">GET_TrainingLog.php?func=Select</string>
     <string name="training_select_play">Play.php?func=Select</string>

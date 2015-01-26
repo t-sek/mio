@@ -131,6 +131,10 @@ public class UrlConstants extends AppConstants {
 		return resources.getString(R.string.training_select);
 	}
 
+	public static String trainingsSelect() {
+		return resources.getString(R.string.trainings_select);
+	}
+
 	public static String trainingSelectDate() {
 		return resources.getString(R.string.training_select_date);
 	}

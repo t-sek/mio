@@ -5,23 +5,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ac.neec.mio.R;
+import ac.neec.mio.consts.PermissionConstants;
+import ac.neec.mio.consts.SettingConstants;
 import ac.neec.mio.dao.ApiDao;
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.SQLiteDao;
 import ac.neec.mio.dao.Sourceable;
 import ac.neec.mio.exception.XmlParseException;
 import ac.neec.mio.exception.XmlReadException;
+import ac.neec.mio.group.Affiliation;
 import ac.neec.mio.group.Group;
+import ac.neec.mio.group.GroupFactory;
 import ac.neec.mio.group.GroupInfo;
 import ac.neec.mio.group.Member;
 import ac.neec.mio.group.Permission;
 import ac.neec.mio.http.HttpManager;
 import ac.neec.mio.http.listener.GroupResponseListener;
+import ac.neec.mio.training.framework.ProductDataFactory;
 import ac.neec.mio.ui.adapter.GroupInfoListAdapter;
 import ac.neec.mio.ui.adapter.GroupInfoListItem;
 import ac.neec.mio.ui.dialog.GroupSettingDialog;
 import ac.neec.mio.ui.dialog.LoadingDialog;
+import ac.neec.mio.ui.dialog.SelectionAlertDialog;
 import ac.neec.mio.ui.dialog.GroupSettingDialog.CallbackListener;
+import ac.neec.mio.ui.listener.AlertCallbackListener;
 import ac.neec.mio.user.User;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -44,9 +51,9 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 
 public class GroupDetailsActivity extends FragmentActivity implements
-		CallbackListener {
+		CallbackListener, Sourceable, AlertCallbackListener {
 
-	private static final int MESSAGE_GROUP_NAME = 20;
+	private static final int MESSAGE_UPDATE = 20;
 
 	public static final int INDEX_MEMBER = 0;
 	public static final int INDEX_ADD_MEMBER = 1;
@@ -54,7 +61,7 @@ public class GroupDetailsActivity extends FragmentActivity implements
 
 	public static final String PERMISSION_ID = "perm_id";
 
-	private GroupInfoListItem[] list = new GroupInfoListItem[3];
+	private List<GroupInfoListItem> list = new ArrayList<GroupInfoListItem>();
 
 	private TextView textGroupName;
 	private TextView textGroupId;
@@ -67,6 +74,18 @@ public class GroupDetailsActivity extends FragmentActivity implements
 	private SQLiteDao daoSql;
 	private Permission permission;
 
+	Handler handler = new Handler() {
+		public void handleMessage(Message message) {
+			switch (message.what) {
+			case MESSAGE_UPDATE:
+				update();
+				break;
+			default:
+				break;
+			}
+		};
+	};
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -74,45 +93,64 @@ public class GroupDetailsActivity extends FragmentActivity implements
 
 		Intent intent = getIntent();
 		String groupId = intent.getStringExtra("Group_Id");
-		// int permissionId = intent.getIntExtra(PERMISSION_ID, 0);
+		dao = DaoFacade.getApiDao(this);
 		daoSql = DaoFacade.getSQLiteDao();
-		// dao.selectGroup(groupId);
 		group = daoSql.selectGroup(groupId);
-		permission = daoSql.selectAffiliation(groupId).getPermition();
-		Log.d("activity", "permission " + permission.getName());
-		// permission = daoSql.selectPermission(permissionId);
+		if (group == null) {
+			dao.selectGroup(groupId);
+			permission = daoSql.selectPermission(PermissionConstants.notice());
+		} else {
+			Affiliation aff = daoSql.selectAffiliation(groupId);
+			permission = aff.getPermition();
+		}
 		initFindViews(groupId);
-		updateGroupName();
+		update();
 		setListItem();
 		setAdapter();
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		Log.d("avtivity", "flag " + settingShowFlag);
-		if (settingShowFlag) {
-			if (permission.getGroupInfoChange()) {
-				getMenuInflater().inflate(R.menu.group_details, menu);
-			}
-		}
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.action_edit:
-			showEditGroupSettingDialog();
-			break;
-		}
-		return true;
-	}
+	// @Override
+	// public boolean onCreateOptionsMenu(Menu menu) {
+	// Log.d("avtivity", "flag " + settingShowFlag);
+	// if (settingShowFlag) {
+	// if (permission.getGroupInfoChange()) {
+	// getMenuInflater().inflate(R.menu.group_details, menu);
+	// }
+	// }
+	// return true;
+	// }
+	//
+	// @Override
+	// public boolean onOptionsItemSelected(MenuItem item) {
+	// switch (item.getItemId()) {
+	// case R.id.action_edit:
+	// showEditGroupSettingDialog();
+	// break;
+	// }
+	// return true;
+	// }
 
 	private void showEditGroupSettingDialog() {
 		GroupSettingDialog dialog = new GroupSettingDialog(this,
 				GroupSettingDialog.EDIT_GROUP);
 		dialog.show(getSupportFragmentManager(), "");
 		dialog.setGroupId(group.getId());
+	}
+
+	private void showPendingDialog() {
+		SelectionAlertDialog dialog = new SelectionAlertDialog(this,
+				SettingConstants.messagePending(),
+				SettingConstants.messagePositive(),
+				SettingConstants.messageNegative(), true);
+		dialog.show(getFragmentManager(), "dialog");
+	}
+
+	private void showWithdrawalDialog() {
+		SelectionAlertDialog dialog = new SelectionAlertDialog(this,
+				SettingConstants.messageWithdrawal(),
+				SettingConstants.messagePositive(),
+				SettingConstants.messageNegative(), true);
+		dialog.show(getFragmentManager(), "dialog");
 	}
 
 	private void setAdapter() {
@@ -124,25 +162,40 @@ public class GroupDetailsActivity extends FragmentActivity implements
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				if (position == INDEX_MEMBER) {
-					if (permission.getMemberListView()) {
-						intentMember();
-					}
-				} else if (position == INDEX_ADD_MEMBER) {
-					if (permission.getMemberAddManage()) {
-						intentAddMember();
-					}
-				} else if (position == INDEX_INVITE_MEMBER) {
-					intentInviteMember();
+				String item = list.get(position).getOperation();
+				if (item.equals(SettingConstants.member())) {
+					intentMember();
+				} else if (item.equals(SettingConstants.groupInfoChange())) {
+					showEditGroupSettingDialog();
+				} else if (item.equals(SettingConstants.pending())) {
+					showPendingDialog();
+				} else if (item.equals(SettingConstants.withdrawal())) {
+					showWithdrawalDialog();
 				}
 			}
 		});
 	}
 
 	private void setListItem() {
-		list[INDEX_MEMBER] = new GroupInfoListItem("メンバー", null);
-		list[INDEX_ADD_MEMBER] = new GroupInfoListItem("加入申請", null);
-		list[INDEX_INVITE_MEMBER] = new GroupInfoListItem("メンバー招待", null);
+		if (permission.getGroupInfoChange()) {
+			list.add(new GroupInfoListItem(SettingConstants.groupInfoChange(),
+					null));
+		}
+		if (permission.getMemberListView()) {
+			list.add(new GroupInfoListItem(SettingConstants.member(), null));
+		}
+		if (permission.getPermissionChange()) {
+			// list.add(new GroupInfoListItem(SettingConstants
+			// .permissionChangeAdmin(), null));
+			list.add(new GroupInfoListItem(SettingConstants
+					.permissionChangeTrainer(), null));
+		}
+		if (!permission.getJoinStatus()) {
+			list.add(new GroupInfoListItem(SettingConstants.pending(), null));
+		} else {
+			list.add(new GroupInfoListItem(SettingConstants.withdrawal(), null));
+		}
+
 	}
 
 	private void initFindViews(String groupId) {
@@ -160,34 +213,7 @@ public class GroupDetailsActivity extends FragmentActivity implements
 		startActivity(intent);
 	}
 
-	private void intentAddMember() {
-		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-		alertDialogBuilder.setMessage("加入申請しますか？");
-		alertDialogBuilder.setPositiveButton("はい",
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dao.insertGroupAffiliation(user.getId(), group.getId(),
-								8, user.getPassword());
-					}
-				});
-		alertDialogBuilder.setNegativeButton("いいえ",
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-					}
-				});
-		alertDialogBuilder.setCancelable(true);
-		AlertDialog alertDialog = alertDialogBuilder.create();
-		alertDialog.show();
-
-	}
-
-	private void intentInviteMember() {
-
-	}
-
-	private void updateGroupName() {
+	private void update() {
 		if (group != null) {
 			textGroupName.setText(group.getGroupName());
 			textGroupComment.setText(group.getComment());
@@ -199,6 +225,62 @@ public class GroupDetailsActivity extends FragmentActivity implements
 		dao.updateGroup(id, name, comment);
 		// HttpManager.uploadEditGroup(getApplicationContext(), this, id, name,
 		// comment);
+	}
+
+	@Override
+	public void complete() {
+		GroupInfo info = null;
+		try {
+			info = dao.getResponse();
+		} catch (XmlParseException e) {
+			e.printStackTrace();
+		} catch (XmlReadException e) {
+			e.printStackTrace();
+		}
+		Log.d("activity", "group created" + info.getCreated());
+		Log.d("activity", "group created" + info.getUserId());
+		for (Member m : info.getMembers()) {
+			Log.d("activity", "group member" + m.getUserName());
+		}
+		group = new Group(info.getId(), info.getName(), null,
+				info.getComment(), info.getUserId(), info.getCreated());
+		Message message = new Message();
+		message.what = MESSAGE_UPDATE;
+		handler.sendMessage(message);
+	}
+
+	@Override
+	public void complete(InputStream response) {
+
+	}
+
+	@Override
+	public void complete(Bitmap image) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void incomplete() {
+
+	}
+
+	@Override
+	public void onNegativeSelected(String message) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onPositiveSelected(String message) {
+		if (message.equals(SettingConstants.messagePending())) {
+			dao.insertGroupPending(user.getId(), group.getId(),
+					user.getPassword());
+		} else if (message.equals(SettingConstants.messageWithdrawal())) {
+			dao.deleteGroupMember(user.getId(), group.getId(),
+					user.getPassword());
+		}
+		Log.d("activity", "group " + group);
 	}
 
 }

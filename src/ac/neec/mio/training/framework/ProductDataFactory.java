@@ -12,7 +12,7 @@ public abstract class ProductDataFactory {
 		return factoryMethod(number, time);
 	}
 
-	public ProductData create(int id, int trainingMenuId, int userId,
+	public ProductData create(int id, int trainingMenuId, String userId,
 			String date, String startTime, String playTime,
 			int targetHeartRate, int targetCal, int consumptionCal,
 			int heartRateAvg, int strange, double distance) {
@@ -97,7 +97,7 @@ public abstract class ProductDataFactory {
 	protected abstract ProductData factoryMethod(Number number, Time time);
 
 	protected abstract ProductData factoryMethod(int id, int trainingMenuId,
-			int userId, String date, String startTime, String playTime,
+			String userId, String date, String startTime, String playTime,
 			int targetHeartRate, int targetCal, int consumptionCal,
 			int heartRateAvg, int strange, double distance);
 

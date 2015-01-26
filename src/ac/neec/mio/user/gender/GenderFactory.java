@@ -61,7 +61,7 @@ public class GenderFactory extends ProductDataFactory {
 	}
 
 	@Override
-	protected ProductData factoryMethod(int id, int trainingMenuId, int userId,
+	protected ProductData factoryMethod(int id, int trainingMenuId, String userId,
 			String date, String startTime, String playTime,
 			int targetHeartRate, int targetCal, int consumptionCal,
 			int heartRateAvg, int strange, double distance) {

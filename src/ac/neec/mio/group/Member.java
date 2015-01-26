@@ -5,70 +5,87 @@ import java.io.Serializable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Member implements Parcelable {
+public class Member {
 
-	public static final String ID = "member_id";
-	public static final String NAME = "member_name";
-	
-	private String userId;
+//	public static final String ID = "member_id";
+//	public static final String NAME = "member_name";
+
+	// private String userId;
+	// private String userName;
+	// private String groupId;
+	// private int permitionId;
+
 	private String userName;
-	private String groupId;
-	private int permitionId;
+	private Affiliation affiliation;
 
-	public Member(String userId, String userName, String groupId,
-			int permitionId) {
-		this.userId = userId;
+	public Member(String userName, Affiliation affiliation) {
 		this.userName = userName;
-		this.groupId = groupId;
-		this.permitionId = permitionId;
-	}
-
-	private Member(final Parcel in) {
-		userId = in.readString();
-		userName = in.readString();
-		groupId = in.readString();
-		permitionId = in.readInt();
-	}
-
-	public String getUserId() {
-		return userId;
+		this.affiliation = affiliation;
 	}
 
 	public String getUserName() {
 		return userName;
 	}
 
-	public String getGroupId() {
-		return groupId;
+	public Affiliation getAffiliation() {
+		return affiliation;
 	}
 
-	public int getPermitionId() {
-		return permitionId;
-	}
+	// public Member(String userId, String userName, String groupId,
+	// int permitionId) {
+	// this.userId = userId;
+	// this.userName = userName;
+	// this.groupId = groupId;
+	// this.permitionId = permitionId;
+	// }
 
-	@Override
-	public int describeContents() {
-		return 0;
-	}
-
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(userId);
-		dest.writeString(userName);
-		dest.writeString(groupId);
-		dest.writeInt(permitionId);
-	}
-
-	public static final Parcelable.Creator<Member> CREATOR = new Creator<Member>() {
-
-		@Override
-		public Member[] newArray(int size) {
-			return new Member[size];
-		}
-
-		@Override
-		public Member createFromParcel(Parcel source) {
-			return new Member(source);
-		}
-	};
+	// private Member(final Parcel in) {
+	// userId = in.readString();
+	// userName = in.readString();
+	// groupId = in.readString();
+	// permitionId = in.readInt();
+	// }
+	//
+	// public String getUserId() {
+	// return userId;
+	// }
+	//
+	// public String getUserName() {
+	// return userName;
+	// }
+	//
+	// public String getGroupId() {
+	// return groupId;
+	// }
+	//
+	// public int getPermitionId() {
+	// return permitionId;
+	// }
+	//
+	// @Override
+	// public int describeContents() {
+	// return 0;
+	// }
+	//
+	// @Override
+	// public void writeToParcel(Parcel dest, int flags) {
+	// dest.writeString(userId);
+	// dest.writeString(userName);
+	// dest.writeString(groupId);
+	// dest.writeInt(permitionId);
+	// }
+	//
+	// public static final Parcelable.Creator<Member> CREATOR = new
+	// Creator<Member>() {
+	//
+	// @Override
+	// public Member[] newArray(int size) {
+	// return new Member[size];
+	// }
+	//
+	// @Override
+	// public Member createFromParcel(Parcel source) {
+	// return new Member(source);
+	// }
+	// };
 }

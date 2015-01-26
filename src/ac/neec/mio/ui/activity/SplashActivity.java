@@ -1,19 +1,15 @@
 package ac.neec.mio.ui.activity;
 
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URL;
 import java.util.List;
-
-import com.google.android.gms.internal.gr;
 
 import ac.neec.mio.R;
 import ac.neec.mio.consts.AppConstants;
+import ac.neec.mio.consts.PermissionConstants;
 import ac.neec.mio.dao.ApiDao;
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.SQLiteDao;
 import ac.neec.mio.dao.Sourceable;
-import ac.neec.mio.dao.item.api.SpoITApi;
 import ac.neec.mio.exception.SQLiteInsertException;
 import ac.neec.mio.exception.SQLiteTableConstraintException;
 import ac.neec.mio.exception.XmlParseException;
@@ -31,14 +27,10 @@ import ac.neec.mio.ui.listener.TimerCallbackListener;
 import ac.neec.mio.user.LoginState;
 import ac.neec.mio.user.User;
 import ac.neec.mio.user.UserInfo;
-import ac.neec.mio.user.bodily.weight.Weight;
-import ac.neec.mio.util.BitmapUtil;
 import ac.neec.mio.util.DateUtil;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -345,6 +337,32 @@ public class SplashActivity extends FragmentActivity implements
 		}
 	}
 
+	private void setMyGroupList(UserInfo info) {
+		daoSql.deleteAffiliation();
+		List<Affiliation> affiliations = info.getAffiliations();
+		List<Group> groups = info.getGroups();
+		for (int i = 0; i < affiliations.size(); i++) {
+			Log.e("activity", "permission "
+					+ affiliations.get(i).getPermition().getName());
+			if (affiliations.get(i).getPermition().getId() == PermissionConstants
+					.notice()) {
+				break;
+			}
+			try {
+				daoSql.insertAffiliation(affiliations.get(i).getGroupId(),
+						affiliations.get(i).getPermition().getId());
+				daoSql.insertGroup(groups.get(i).getId(), groups.get(i)
+						.getGroupName(), groups.get(i).getComment(), groups
+						.get(i).getUserId(), groups.get(i).getCreated());
+			} catch (SQLiteInsertException e) {
+				e.printStackTrace();
+			} catch (SQLiteTableConstraintException e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
+
 	@Override
 	public void complete() {
 		Log.d("activity", "complete");
@@ -403,21 +421,8 @@ public class SplashActivity extends FragmentActivity implements
 			UserInfo info = null;
 			try {
 				info = dao.getResponse();
-				Log.e("activity", "user name " + info.getName());
-				Log.e("activity", "user image "
-						+ info.getImageInfo().getImage());
 				daoSql.deleteGroup();
-				for (Group group : info.getGroups()) {
-					daoSql.insertGroup(group.getId(), group.getGroupName(),
-							group.getComment(), group.getUserId(),
-							group.getCreated());
-				}
-				daoSql.deleteAffiliation();
-				for (Affiliation aff : info.getAffiliations()) {
-					daoSql.insertAffiliation(aff.getGroupId(), aff
-							.getPermition().getId());
-					Log.d("activity", "aff " + aff.getPermition().getName());
-				}
+				setMyGroupList(info);
 			} catch (XmlParseException e) {
 				e.printStackTrace();
 				startAnimation();
@@ -426,12 +431,6 @@ public class SplashActivity extends FragmentActivity implements
 				e.printStackTrace();
 				startAnimation();
 				return;
-			} catch (SQLiteInsertException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SQLiteTableConstraintException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 			insertUserInfo(info);
 			downloadUserImage(info.getImageInfo().getSmallImage());

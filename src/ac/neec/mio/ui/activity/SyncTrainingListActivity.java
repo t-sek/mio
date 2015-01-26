@@ -355,12 +355,12 @@ public class SyncTrainingListActivity extends Activity implements Sourceable,
 	}
 
 	@Override
-	public void onNegativeSelected() {
+	public void onNegativeSelected(String message) {
 
 	}
 
 	@Override
-	public void onPositiveSelected() {
+	public void onPositiveSelected(String message) {
 		deleteTrainingAll();
 	}
 

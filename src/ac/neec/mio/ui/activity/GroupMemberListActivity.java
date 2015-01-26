@@ -97,14 +97,14 @@ public class GroupMemberListActivity extends Activity implements Sourceable {
 	}
 
 	private void setMemberList() {
-		int id = members.get(0).getPermitionId();
+		int id = members.get(0).getAffiliation().getPermition().getId();
 		Permission permission = daoSql.selectPermission(id);
 		if (!permission.getJoinStatus()) {
 			members.remove(0);
 		}
 		Iterator<Member> i = members.iterator();
 		while (i.hasNext()) {
-			id = i.next().getPermitionId();
+			id = i.next().getAffiliation().getPermition().getId();
 			permission = daoSql.selectPermission(id);
 			if (!permission.getJoinStatus()) {
 				i.remove();
@@ -123,8 +123,10 @@ public class GroupMemberListActivity extends Activity implements Sourceable {
 				GroupMemberInfoActivity.class);
 		List<Member> list = new ArrayList<Member>();
 		list.add(info);
-		intent.putExtra(Member.ID, info.getUserId());
-		intent.putExtra(Member.NAME, info.getUserName());
+		intent.putExtra("user_id", info.getAffiliation().getUserId());
+		intent.putExtra("user_name", info.getUserName());
+		intent.putExtra("permission_id", permission.getId());
+		intent.putExtra("group_id", group.getId());
 		startActivity(intent);
 	}
 

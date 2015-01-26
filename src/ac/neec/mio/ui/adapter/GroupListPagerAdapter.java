@@ -13,7 +13,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 public class GroupListPagerAdapter extends FragmentStatePagerAdapter {
 
 	private List<Fragment> fragments = new ArrayList<Fragment>();
-	private GroupListFragment groupList;
+	private List<SearchNotifyListener> groupList = new ArrayList<SearchNotifyListener>();
 
 	public GroupListPagerAdapter(FragmentManager fm) {
 		super(fm);
@@ -21,13 +21,16 @@ public class GroupListPagerAdapter extends FragmentStatePagerAdapter {
 	}
 
 	private void setFragments() {
-		groupList = new GroupListFragment();
-		fragments.add(new MyGroupListFragment());
-		fragments.add(groupList);
+		SearchNotifyListener my = new MyGroupListFragment();
+		SearchNotifyListener all = new GroupListFragment();
+		groupList.add(my);
+		groupList.add(all);
+		fragments.add((Fragment) my);
+		fragments.add((Fragment) all);
 	}
 
-	public SearchNotifyListener getSearchListener() {
-		return groupList.getListener();
+	public List<SearchNotifyListener> getSearchListener() {
+		return groupList;
 	}
 
 	@Override

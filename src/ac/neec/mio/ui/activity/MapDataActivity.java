@@ -116,7 +116,7 @@ public class MapDataActivity extends FragmentActivity implements Sourceable {
 			// drawMapLine(DBManager.selectTrainingLog(id));
 			drawMapLine(daoSql.selectTrainingLog(id));
 		} else if (trainingId != 0) {
-			dao.selectTrainingLog(user.getId(), trainingId);
+//			dao.selectTrainingLog(user.getId(), trainingId);
 		}
 		if (savedInstanceState != null && mapFragment == null) {
 			mapFragment = (SupportMapFragment) getSupportFragmentManager()

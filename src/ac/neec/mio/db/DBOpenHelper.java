@@ -225,7 +225,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 		while (cursor.moveToNext()) {
 			training = (Training) factory.create(cursor.getInt(indexId),
 					cursor.getInt(indexTrainingCategoryId),
-					cursor.getInt(indexUserId), cursor.getString(indexDate),
+					cursor.getString(indexUserId), cursor.getString(indexDate),
 					cursor.getString(indexStartTime),
 					cursor.getString(indexPlayTime),
 					cursor.getInt(indexTargetHeartRate),

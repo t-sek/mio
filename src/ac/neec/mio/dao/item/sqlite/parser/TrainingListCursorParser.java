@@ -35,7 +35,7 @@ public class TrainingListCursorParser extends CursorParser {
 		int indexDistance = c.getColumnIndex(distance());
 		while (c.moveToNext()) {
 			trainings.add((Training) factory.create(c.getInt(indexId),
-					c.getInt(indexTrainingCategoryId), c.getInt(indexUserId),
+					c.getInt(indexTrainingCategoryId), c.getString(indexUserId),
 					c.getString(indexDate), c.getString(indexStartTime),
 					c.getString(indexPlayTime), c.getInt(indexTargetHeartRate),
 					c.getInt(indexTargetCal), c.getInt(indexConsumptionCal),

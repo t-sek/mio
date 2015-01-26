@@ -45,7 +45,7 @@ public class GroupListActivity extends FragmentActivity implements Sourceable,
 	private List<Group> list = new ArrayList<Group>();
 	private ViewPager viewPager;
 	private EditText searchGroup;
-	private SearchNotifyListener listener;
+	private List<SearchNotifyListener> listeners;
 	private ApiDao dao;
 	private SQLiteDao daoSql;
 	private User user = User.getInstance();
@@ -60,7 +60,7 @@ public class GroupListActivity extends FragmentActivity implements Sourceable,
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		GroupListPagerAdapter adapter = new GroupListPagerAdapter(
 				getSupportFragmentManager());
-		listener = adapter.getSearchListener();
+		listeners = adapter.getSearchListener();
 		viewPager.setAdapter(adapter);
 		setSearchEdit();
 	}
@@ -82,7 +82,9 @@ public class GroupListActivity extends FragmentActivity implements Sourceable,
 				searchGroup.setVisibility(View.VISIBLE);
 			} else {
 				searchGroup.setVisibility(View.GONE);
-				listener.onSearchEnd();
+				for (SearchNotifyListener listener : listeners) {
+					listener.onSearchEnd();
+				}
 			}
 			break;
 		}
@@ -96,9 +98,14 @@ public class GroupListActivity extends FragmentActivity implements Sourceable,
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
 				if (!TextUtils.isEmpty(s.toString())) {
-					listener.onSearchText(s.toString());
+					for (SearchNotifyListener listener : listeners) {
+						listener.onSearchText(s.toString());
+					}
+
 				} else {
-					listener.onClear();
+					for (SearchNotifyListener listener : listeners) {
+						listener.onClear();
+					}
 				}
 			}
 
@@ -116,7 +123,6 @@ public class GroupListActivity extends FragmentActivity implements Sourceable,
 		// ImageSpan imageSpan = new ImageSpan(this,
 		// R.drawable.ic_action_search);
 		// ssb.setSpan(imageSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
 		// editSearch.setHint(ssb);
 
 	}
@@ -134,27 +140,15 @@ public class GroupListActivity extends FragmentActivity implements Sourceable,
 	}
 
 	private void setGroupList() {
-		listener.onUpdate();
-	}
-
-	private void setUser() {
-		UserInfo userInfo = null;
-		try {
-			userInfo = dao.getResponse();
-		} catch (XmlParseException e) {
-			e.printStackTrace();
-		} catch (XmlReadException e) {
-			e.printStackTrace();
+		for (SearchNotifyListener listener : listeners) {
+			listener.onUpdate();
 		}
-		affiliations = userInfo.getAffiliations();
 	}
 
 	@Override
 	public void notifyChenged(String groupId, String groupName, String comment) {
-		// HttpManager.uploadNewGroup(getApplicationContext(), this, id, name,
-		// comment);
-		dao.insertGroup(groupId, groupName, comment, DateUtil.nowDate(),
-				user.getId(), user.getPassword());
+		dao.insertGroup(groupId, groupName, comment, user.getId(),
+				user.getPassword());
 	}
 
 	@Override

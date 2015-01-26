@@ -11,14 +11,18 @@ public class GroupInfo implements Serializable {
 	private String id;
 	private String name;
 	private String comment;
+	private String userId;
+	private String created;
 	private int count;
 	private List<Member> members;
 
 	public GroupInfo(String id, String name, String comment, int count,
-			List<Member> members) {
+			String userId, String created, List<Member> members) {
 		this.id = id;
 		this.name = name;
 		this.comment = comment;
+		this.userId = userId;
+		this.created = created;
 		this.count = count;
 		this.members = members;
 	}
@@ -33,6 +37,14 @@ public class GroupInfo implements Serializable {
 
 	public String getComment() {
 		return comment;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public String getCreated() {
+		return created;
 	}
 
 	public int getCount() {

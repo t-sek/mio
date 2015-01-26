@@ -93,7 +93,7 @@ public class TrainingDataFragment extends TopBaseFragment implements
 			handler.sendMessage(setMessage(MESSAGE_PROGRESS_GONE));
 			return;
 		}
-		dao.selectTraining(user.getId(), DateUtil.getDate(date));
+//		dao.selectTraining(user.getId(), DateUtil.getDate(date));
 		progress.setProgress(date - DATE_NUM * (date / DATE_NUM));
 		date++;
 	}

@@ -108,7 +108,7 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 						+ DateUtil.timeJapaneseFormat(training.getStartTime()));
 		daoSql = DaoFacade.getSQLiteDao();
 		dao = DaoFacade.getApiDao(this);
-		dao.selectTrainingPlay(user.getId(), training.getTrainingId());
+//		dao.selectTrainingPlay(user.getId(), training.getTrainingId());
 	}
 
 	@Override
@@ -302,7 +302,7 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 				e.printStackTrace();
 			}
 			handler.sendMessage(setMessage(MESSAGE_PLAY));
-			dao.selectTrainingLog(user.getId(), training.getTrainingId());
+//			dao.selectTrainingLog(user.getId(), training.getTrainingId());
 		} else {
 			try {
 				trainingLog = dao.getResponse();

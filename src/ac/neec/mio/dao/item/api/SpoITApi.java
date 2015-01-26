@@ -19,14 +19,14 @@ public class SpoITApi {
 		sb.append(userId + section());
 		sb.append(password);
 		sb.append(urlFoot());
-		return sb.toString();
+		return validateUrl(sb.toString());
 	}
 
 	public static String selectImage(String image) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(urlSelectImage());
 		sb.append(image);
-		return sb.toString();
+		return validateUrl(sb.toString());
 	}
 
 	public static String selectWeight(String userId, String password,
@@ -39,7 +39,7 @@ public class SpoITApi {
 		sb.append(date2 + section());
 		sb.append(password);
 		sb.append(urlFoot());
-		return sb.toString();
+		return validateUrl(sb.toString());
 	}
 
 	public static String insertUser(String userId, String name, String birth,
@@ -57,7 +57,7 @@ public class SpoITApi {
 		sb.append(password + section());
 		sb.append(weight);
 		sb.append(urlFoot());
-		return sb.toString();
+		return validateUrl(sb.toString());
 	}
 
 	public static String updateUser(String userId, String name, String birth,
@@ -72,7 +72,7 @@ public class SpoITApi {
 		sb.append(mail + section());
 		sb.append(password);
 		sb.append(urlFoot());
-		return sb.toString();
+		return validateUrl(sb.toString());
 	}
 
 	public static String insertUserWeight(String userId, String password,
@@ -84,7 +84,7 @@ public class SpoITApi {
 		sb.append(weight + section());
 		sb.append(password);
 		sb.append(urlFoot());
-		return sb.toString();
+		return validateUrl(sb.toString());
 	}
 
 	public static String insertUserQuietHeartRate(String userId,
@@ -96,7 +96,7 @@ public class SpoITApi {
 		sb.append(quietHeartRate + section());
 		sb.append(password);
 		sb.append(urlFoot());
-		return sb.toString();
+		return validateUrl(sb.toString());
 	}
 
 	public static String insertUserImage() {
@@ -104,7 +104,7 @@ public class SpoITApi {
 		sb.append(urlHeadSSL());
 		sb.append(userAddImage());
 		sb.append(urlFoot());
-		return sb.toString();
+		return validateUrl(sb.toString());
 	}
 
 	public static List<NameValuePair> insertUserImagePostData(String userId,
@@ -113,7 +113,7 @@ public class SpoITApi {
 		List<NameValuePair> postData = new ArrayList<NameValuePair>();
 		postData.add(new BasicNameValuePair(postUserId(), userId));
 		postData.add(new BasicNameValuePair(postPassword(), password));
-//		postData.add(new BasicNameValuePair(postName(), name));
+		// postData.add(new BasicNameValuePair(postName(), name));
 		postData.add(new BasicNameValuePair(postType(), type));
 		postData.add(new BasicNameValuePair(postTmpName(), tmpName));
 		postData.add(new BasicNameValuePair(postError(), error));
@@ -135,7 +135,7 @@ public class SpoITApi {
 		sb.append(userInfo());
 		sb.append(userId + section());
 		sb.append(password + urlFoot());
-		return sb.toString();
+		return validateUrl(sb.toString());
 	}
 
 	public static String selectGroup(String groupId) {
@@ -153,7 +153,7 @@ public class SpoITApi {
 		sb.append(urlHeadSSL());
 		sb.append(permition());
 		sb.append(urlFoot());
-		return sb.toString();
+		return validateUrl(sb.toString());
 	}
 
 	public static String updateGroup(String groupId, String groupName,
@@ -165,7 +165,7 @@ public class SpoITApi {
 		sb.append(groupName + section());
 		sb.append(comment);
 		sb.append(urlFoot());
-		return sb.toString();
+		return validateUrl(sb.toString());
 	}
 
 	public static String insertGroupAffiliation(String userId, String groupId,
@@ -178,7 +178,7 @@ public class SpoITApi {
 		sb.append(permitionId + section());
 		sb.append(password);
 		sb.append(urlFoot());
-		return sb.toString();
+		return validateUrl(sb.toString());
 	}
 
 	public static String insertGroup(String groupId, String groupName,
@@ -193,7 +193,7 @@ public class SpoITApi {
 		sb.append(userId + section());
 		sb.append(password);
 		sb.append(urlFoot());
-		return sb.toString();
+		return validateUrl(sb.toString());
 	}
 
 	public static String selectTrainingId(String userId, String date) {
@@ -202,7 +202,7 @@ public class SpoITApi {
 		sb.append(trainingInsert());
 		sb.append(userId() + userId);
 		sb.append(date() + date);
-		return sb.toString();
+		return validateUrl(sb.toString());
 	}
 
 	public static String insertTraining(String userId, String password,
@@ -238,7 +238,7 @@ public class SpoITApi {
 		// sb.append(calorie() + calorie);
 		// sb.append(categoryId() + categoryId);
 		// sb.append(distance() + distance);
-		return sb.toString();
+		return validateUrl(sb.toString());
 	}
 
 	public static String insertTrainingLog(int trainingId, int heartRate,
@@ -256,7 +256,7 @@ public class SpoITApi {
 		sb.append(splitTime() + splitTime());
 		sb.append(trainingLogId() + trainingLogId);
 		sb.append(targetHeartRate() + targetHeartRate);
-		return sb.toString();
+		return validateUrl(sb.toString());
 	}
 
 	public static String insertTrainingPlay(int trainingId, int playId,
@@ -268,14 +268,7 @@ public class SpoITApi {
 		sb.append(palyId() + playId);
 		sb.append(trainingMenuId() + trainingMenuId);
 		sb.append(trainingTime() + trainingTime);
-		return sb.toString();
-	}
-
-	public static String selectTrainingAll(String userId) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(trainingSelectAll());
-		sb.append(userId() + userId);
-		return sb.toString();
+		return validateUrl(sb.toString());
 	}
 
 	public static String selectTraining(String userId, int trainingId,
@@ -287,33 +280,21 @@ public class SpoITApi {
 		sb.append(trainingId + section());
 		sb.append(password);
 		sb.append(urlFoot());
-		return sb.toString();
+		return validateUrl(sb.toString());
 	}
 
-	public static String selectTrainingDate(String userId, String date) {
+	public static String selectTraining(String userId, String date1,
+			String date2, int limit, int offset, String password) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(urlHead());
-		sb.append(trainingSelectDate());
-		sb.append(userId() + userId);
-		sb.append(date() + date);
-		return sb.toString();
-	}
-
-	public static String selectTrainingLog(String userId, int trainingId) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(urlHead());
-		sb.append(trainingSelectLog());
-		sb.append(userId() + userId);
-		sb.append(trainingId() + trainingId);
-		return sb.toString();
-	}
-
-	public static String selectTrainingPlay(String userId, int trainingId) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(urlHead());
-		sb.append(trainingSelectPlay());
-		sb.append(userId() + userId);
-		sb.append(trainingId() + trainingId);
+		sb.append(urlHeadSSL());
+		sb.append(trainingsSelect());
+		sb.append(userId + section());
+		sb.append(date1 + section());
+		sb.append(date2 + section());
+		sb.append(limit + section());
+		sb.append(offset + section());
+		sb.append(password);
+		sb.append(urlFoot());
 		return sb.toString();
 	}
 
@@ -322,7 +303,7 @@ public class SpoITApi {
 		sb.append(urlHeadSSL());
 		sb.append(categorySelectAll());
 		sb.append(urlFoot());
-		return sb.toString();
+		return validateUrl(sb.toString());
 	}
 
 	public static String selectTrainingMenu() {
@@ -330,7 +311,7 @@ public class SpoITApi {
 		sb.append(urlHeadSSL());
 		sb.append(menuSelectAll());
 		sb.append(urlFoot());
-		return sb.toString();
+		return validateUrl(sb.toString());
 	}
 
 	private static String validateUrl(String url) {

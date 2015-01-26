@@ -154,30 +154,43 @@ public interface ApiDao {
 	 *            グループ名
 	 * @param comment
 	 *            コメント
-	 * @param date
-	 *            日付 yyyy-mm-dd形式
 	 * @param userId
 	 *            ユーザID
 	 * @param password
 	 *            パスワード
 	 */
 	void insertGroup(String groupId, String groupName, String comment,
-			String date, String userId, String password);
+			String userId, String password);
 
 	/**
-	 * グループに加入
+	 * グループに加入申請
 	 * 
 	 * @param userId
 	 *            ユーザID
 	 * @param groupId
 	 *            グループID
-	 * @param permitionId
-	 *            パーミッションID
 	 * @param password
 	 *            ユーザのパスワード
 	 */
-	void insertGroupAffiliation(String userId, String groupId, int permitionId,
-			String password);
+	void insertGroupPending(String userId, String groupId, String password);
+
+	/**
+	 * グループにトレーナーを追加
+	 * 
+	 * @param userId
+	 * @param groupId
+	 * @param password
+	 */
+	void insertGroupTrainer(String userId, String groupId, String password);
+
+	/**
+	 * グループにメンバーを追加
+	 * 
+	 * @param userId
+	 * @param groupId
+	 * @param password
+	 */
+	void insertGroupMember(String userId, String groupId, String password);
 
 	/**
 	 * グループ情報を編集
@@ -187,6 +200,15 @@ public interface ApiDao {
 	 * @param comment
 	 */
 	void updateGroup(String groupId, String groupName, String comment);
+
+	/**
+	 * グループからメンバーを退会
+	 * 
+	 * @param userId
+	 * @param groupId
+	 * @param password
+	 */
+	void deleteGroupMember(String userId, String groupId, String password);
 
 	/**
 	 * トレーニングログを登録
@@ -263,54 +285,24 @@ public interface ApiDao {
 			int calorie, int categoryId, double distance);
 
 	/**
-	 * トレーニングIDを取得
+	 * 指定した期間のトレーニングを取得
 	 * 
 	 * @param userId
 	 *            ユーザID
-	 * @param date
-	 *            日付 yyyy-mm-dd形式
-	 */
-	void selectTrainingId(String userId, String date);
-
-	/**
-	 * トレーニングログを取得
 	 * 
-	 * @param userId
-	 *            ユーザID
-	 * @param trainingId
-	 *            トレーニングID
+	 * @param date1
+	 *            開始日 yyyy-mm-dd形式
+	 * @param date2
+	 *            終了日 yyyy-mm-dd形式
+	 * @param limit
+	 *            取得数
+	 * @param offset
+	 *            開始点
+	 * @param password
+	 *            パスワード
 	 */
-	void selectTrainingLog(String userId, int trainingId);
-
-	/**
-	 * トレーニングプレイを取得
-	 * 
-	 * @param userId
-	 *            ユーザID
-	 * @param trainingId
-	 *            トレーニングID
-	 */
-	void selectTrainingPlay(String userId, int trainingId);
-
-	/**
-	 * 指定した日付のトレーニングを取得
-	 * 
-	 * @param userId
-	 *            ユーザID
-	 * @param date
-	 *            日付 yyyy-mm-dd形式
-	 */
-	void selectTraining(String userId, String date);
-
-	/**
-	 * 指定した日付のトレーニング数を取得
-	 * 
-	 * @param userId
-	 *            ユーザID
-	 * @param date
-	 *            日付 yyyy-mm-dd形式
-	 */
-	void selectTrainingNum(String userId, String date);
+	void selectTraining(String userId, String date1, String date2, int limit,
+			int offset, String password);
 
 	/**
 	 * トレーニングを取得
@@ -323,14 +315,6 @@ public interface ApiDao {
 	 *            パスワード
 	 */
 	void selectTraining(String userId, int trainingId, String password);
-
-	/**
-	 * ユーザの全トレーニングを取得
-	 * 
-	 * @param userId
-	 *            ユーザID
-	 */
-	void selectTrainingAll(String userId);
 
 	/**
 	 * トレーニングカテゴリーを取得

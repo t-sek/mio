@@ -47,7 +47,7 @@ public class GroupMemberListAdapter extends ArrayAdapter<Member> {
 		imageView.setImage(image);
 		TextView textId = (TextView) convertView
 				.findViewById(R.id.text_user_id);
-		 textId.setText(item.getUserId());
+		 textId.setText(item.getAffiliation().getUserId());
 		TextView textName = (TextView) convertView
 				.findViewById(R.id.text_user_name);
 		 textName.setText(item.getUserName());

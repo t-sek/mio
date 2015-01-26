@@ -17,13 +17,12 @@ import android.widget.TextView;
 public class GroupInfoListAdapter extends ArrayAdapter<GroupInfoListItem> {
 
 	private LayoutInflater inflater;
-	private GroupInfoListItem[] list;
+	private List<GroupInfoListItem> list;
 
 	public GroupInfoListAdapter(Context context, int resource,
 	// List<GroupInfoListItem> objects) {
-			GroupInfoListItem[] objects) {
+			List<GroupInfoListItem> objects) {
 		super(context, resource, objects);
-		list = new GroupInfoListItem[objects.length];
 		list = objects;
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -31,7 +30,7 @@ public class GroupInfoListAdapter extends ArrayAdapter<GroupInfoListItem> {
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
-		GroupInfoListItem group = list[position];
+		GroupInfoListItem group = list.get(position);
 		if (convertView == null) {
 			// convertView = inflater.inflate(R.layout.activity_group_list,
 			// null);
@@ -57,7 +56,6 @@ public class GroupInfoListAdapter extends ArrayAdapter<GroupInfoListItem> {
 
 	@Override
 	public int getCount() {
-//		return list.size();
-		return list.length;
+		return list.size();
 	}
 }
