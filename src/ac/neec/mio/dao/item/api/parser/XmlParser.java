@@ -29,12 +29,14 @@ public abstract class XmlParser {
 			xmlPullParser.setInput(bufferedInputStream, CHARSET);
 			parseXml();
 		} catch (XmlPullParserException e) {
+			e.printStackTrace();
 			throw new XmlParseException();
 		}
 	}
 
 	public void setResponse(InputStream response) {
 		this.response = response;
+		Log.d("parser", "response "+this.response);
 	}
 
 	public <T> T getXmlParseObject() throws XmlParseException, XmlReadException {

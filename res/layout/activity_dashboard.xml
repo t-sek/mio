@@ -5,14 +5,6 @@
     android:layout_height="match_parent"
     android:background="@color/theme" >
 
-    <ImageView
-        android:id="@+id/btn_measurement_setting"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:src="@drawable/heart" />
-
     <!--
          <TextView
         android:id="@+id/textView1"
@@ -37,6 +29,7 @@
         android:textSize="50sp" />
 
     <LinearLayout
+        android:id="@+id/linearLayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -53,6 +46,15 @@
             android:text="新規登録"
             android:textSize="15sp"
             android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/text_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="通信中です"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
 
         <Button
             android:id="@+id/btn_login"
@@ -76,5 +78,13 @@
             android:textSize="15sp"
             android:visibility="invisible" />
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/btn_measurement_setting"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/heart" />
 
 </RelativeLayout>

@@ -9,4 +9,5 @@ public interface Sourceable {
 	void complete(InputStream response);
 	void complete(Bitmap image);
 	void incomplete();
+	void progressUpdate(int value);
 }

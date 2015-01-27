@@ -207,7 +207,8 @@ public class TrainingFreeInsertActivity extends Activity implements Sourceable,
 		try {
 			trainingId = dao.getResponse();
 			daoFlag = 0;
-			dao.selectTraining(user.getId(), trainingId, user.getPassword());
+			dao.selectTraining(user.getId(), user.getId(), trainingId,
+					user.getPassword());
 			Log.d("activity", "trainingId " + trainingId);
 		} catch (XmlParseException e) {
 			e.printStackTrace();
@@ -315,6 +316,12 @@ public class TrainingFreeInsertActivity extends Activity implements Sourceable,
 
 	@Override
 	public void complete(Bitmap image) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void progressUpdate(int value) {
 		// TODO Auto-generated method stub
 
 	}

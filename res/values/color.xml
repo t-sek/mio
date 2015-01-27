@@ -18,5 +18,10 @@
     <color name="theme_red">#FF6347</color>
     <color name="setting_back_column">#20666666</color>
     <color name="setting_column">#98FFFFFF</color>
+    <color name="thickTheme">#997FC97E</color>
+    <color name="thinTheme">#457FC97E</color>
+    <color name="grayTheme">#e5ece5</color>
+    <color name="greenTheme">#805bdf5a</color>
+    <color name="whiteTheme">#FFFFFF</color>
 
 </resources>

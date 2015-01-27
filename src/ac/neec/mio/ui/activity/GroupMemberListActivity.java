@@ -167,4 +167,10 @@ public class GroupMemberListActivity extends Activity implements Sourceable {
 
 	}
 
+	@Override
+	public void progressUpdate(int value) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -15,13 +15,14 @@ import ac.neec.mio.dao.SQLiteDao;
 import ac.neec.mio.dao.Sourceable;
 import ac.neec.mio.exception.XmlParseException;
 import ac.neec.mio.exception.XmlReadException;
-import ac.neec.mio.group.Member;
 import ac.neec.mio.group.Permission;
 import ac.neec.mio.http.item.TrainingItem;
+import ac.neec.mio.taining.Training;
 import ac.neec.mio.ui.adapter.TrainingDateListAdapter;
 import ac.neec.mio.ui.dialog.SelectionAlertDialog;
 import ac.neec.mio.ui.listener.AlertCallbackListener;
 import ac.neec.mio.ui.listener.TrainingDataListCallbackListener;
+import ac.neec.mio.user.User;
 import ac.neec.mio.util.DateUtil;
 import android.app.Activity;
 import android.content.Intent;
@@ -63,8 +64,9 @@ public class GroupMemberInfoActivity extends Activity implements Sourceable,
 	private Permission permission;
 	private int date = 0;
 	private int dateNum = DATE_NUM;
+	private User user = User.getInstance();
 
-	private List<List<TrainingItem>> trainings = new ArrayList<List<TrainingItem>>();
+	private List<List<Training>> trainings = new ArrayList<List<Training>>();
 
 	Handler handler = new Handler() {
 		public void handleMessage(Message message) {
@@ -126,18 +128,9 @@ public class GroupMemberInfoActivity extends Activity implements Sourceable,
 			handler.sendMessage(setMessage(MESSAGE_PROGRESS_GONE));
 			return;
 		}
-//		dao.selectTraining(userId, DateUtil.getDate(date));
+		// dao.selectTraining(userId, DateUtil.getDate(date));
 		progress.setProgress(date - DATE_NUM * (date / DATE_NUM));
 		date++;
-	}
-
-	private void downloadTrainingData() {
-		for (int i = 0; i < 50; i++) {
-//			dao.selectTraining(userId, DateUtil.getDate(i));
-			// HttpManager.downloadTraining(getApplicationContext(), this,
-			// userId, 0, DateUtil.getDate(i));
-		}
-
 	}
 
 	private void initFindViews() {
@@ -153,7 +146,7 @@ public class GroupMemberInfoActivity extends Activity implements Sourceable,
 			buttonTrainer.setVisibility(View.INVISIBLE);
 			buttonNotice.setVisibility(View.INVISIBLE);
 		}
-		
+
 	}
 
 	private void setListener() {
@@ -204,11 +197,10 @@ public class GroupMemberInfoActivity extends Activity implements Sourceable,
 	}
 
 	private void intentDetailTrainingData(int groupPosition, int childPosition) {
-		TrainingItem item = trainings.get(groupPosition).get(childPosition);
+		Training item = trainings.get(groupPosition).get(childPosition);
 		Intent intent = new Intent(GroupMemberInfoActivity.this,
 				TrainingDataDetailActivity.class);
-		intent.putExtra(SQLConstants.trainingId(), item.getTrainingId());
-		intent.putExtra(SQLConstants.tableTraining(), item);
+		intent.putExtra(SQLConstants.trainingId(), item.getId());
 		startActivity(intent);
 	}
 
@@ -242,7 +234,7 @@ public class GroupMemberInfoActivity extends Activity implements Sourceable,
 		return message;
 	}
 
-	private void setTraining(List<TrainingItem> list) {
+	private void setTraining(List<Training> list) {
 		String nowDate = DateUtil.splitDate(list.get(0).getDate());
 		for (int i = 0; i < trainings.size(); i++) {
 			String date = DateUtil.splitDate(trainings.get(i).get(0).getDate());
@@ -260,7 +252,7 @@ public class GroupMemberInfoActivity extends Activity implements Sourceable,
 	public void complete() {
 		try {
 			if (dao.getResponse() instanceof List<?>) {
-				List<TrainingItem> list = null;
+				List<Training> list = null;
 				list = dao.getResponse();
 				if (list.size() == 0) {
 					selectTraining();
@@ -299,10 +291,16 @@ public class GroupMemberInfoActivity extends Activity implements Sourceable,
 	@Override
 	public void onPositiveSelected(String message) {
 		if (message.equals(SettingConstants.messageTrainer())) {
-			dao.insertGroupTrainer(userId, groupId, " ");
+			dao.insertGroupTrainer(user.getId(), userId, groupId, " ");
 		} else if (message.equals(SettingConstants.messageNotive())) {
-			dao.deleteGroupMember(userId, groupId, " ");
+			dao.deleteGroupMember(user.getId(), userId, groupId, " ");
 		}
+
+	}
+
+	@Override
+	public void progressUpdate(int value) {
+		// TODO Auto-generated method stub
 
 	}
 }

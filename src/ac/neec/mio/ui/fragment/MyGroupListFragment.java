@@ -203,4 +203,10 @@ public class MyGroupListFragment extends Fragment implements Sourceable,
 		// TODO Auto-generated method stub
 
 	}
+
+	@Override
+	public void progressUpdate(int value) {
+		// TODO Auto-generated method stub
+		
+	}
 }

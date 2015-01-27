@@ -43,10 +43,10 @@ public class GroupListAdapter extends ArrayAdapter<Group> implements
 			convertView = inflater.inflate(R.layout.item_group, null);
 		}
 
-//		Bitmap btm = group.getBitmap();
-//		ImageView gpImag = (ImageView) convertView
-//				.findViewById(R.id.Group_image);
-//		gpImag.setImageBitmap(btm);
+		// Bitmap btm = group.getBitmap();
+		// ImageView gpImag = (ImageView) convertView
+		// .findViewById(R.id.Group_image);
+		// gpImag.setImageBitmap(btm);
 
 		String id = group.getId();
 		TextView txstid = (TextView) convertView.findViewById(R.id.groupId);
@@ -55,6 +55,13 @@ public class GroupListAdapter extends ArrayAdapter<Group> implements
 		String name = group.getGroupName();
 		TextView txstName = (TextView) convertView.findViewById(R.id.groupName);
 		txstName.setText(String.valueOf(name));
+		if (position % 2 == 0) {
+			convertView.setBackgroundColor(getContext().getResources()
+					.getColor(R.color.grayTheme));
+		} else {
+			convertView.setBackgroundColor(getContext().getResources()
+					.getColor(R.color.greenTheme));
+		}
 
 		return convertView;
 	}

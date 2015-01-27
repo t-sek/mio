@@ -35,7 +35,6 @@ public class TopActivity extends FragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
 		adapter = new TopPagerAdapter(getSupportFragmentManager(), this,
 				R.id.pager_top);
 		ViewPager pager = (ViewPager) findViewById(R.id.pager_top);

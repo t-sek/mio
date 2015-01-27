@@ -26,6 +26,7 @@ import ac.neec.mio.exception.XmlParseException;
 import ac.neec.mio.exception.XmlReadException;
 import ac.neec.mio.util.DateUtil;
 import android.content.Context;
+import android.graphics.Bitmap;
 
 public class ApiItemDao extends HttpsDao {
 
@@ -132,35 +133,37 @@ public class ApiItemDao extends HttpsDao {
 	}
 
 	@Override
-	public void insertGroupPending(String userId, String groupId,
-			String password) {
-		String url = SpoITApi.insertGroupAffiliation(userId, groupId,
-				PermissionConstants.pending(), password);
+	public void insertGroupPending(String userId, String targetUserId,
+			String groupId, String password) {
+		String url = SpoITApi.insertGroupAffiliation(userId, targetUserId,
+				groupId, PermissionConstants.pending(), password);
 		parser = new GroupXmlParser();
 		executeApi(url);
 	}
 
 	@Override
-	public void insertGroupTrainer(String userId, String groupId,
-			String password) {
-		String url = SpoITApi.insertGroupAffiliation(userId, groupId,
-				PermissionConstants.trainer(), password);
+	public void insertGroupTrainer(String userId, String targetUserId,
+			String groupId, String password) {
+		String url = SpoITApi.insertGroupAffiliation(userId, targetUserId,
+				groupId, PermissionConstants.trainer(), password);
 		parser = new GroupXmlParser();
 		executeApi(url);
 	}
 
 	@Override
-	public void insertGroupMember(String userId, String groupId, String password) {
-		String url = SpoITApi.insertGroupAffiliation(userId, groupId,
-				PermissionConstants.member(), password);
+	public void insertGroupMember(String userId, String targetUserId,
+			String groupId, String password) {
+		String url = SpoITApi.insertGroupAffiliation(userId, targetUserId,
+				groupId, PermissionConstants.member(), password);
 		parser = new GroupXmlParser();
 		executeApi(url);
 	}
 
 	@Override
-	public void deleteGroupMember(String userId, String groupId, String password) {
-		String url = SpoITApi.insertGroupAffiliation(userId, groupId,
-				PermissionConstants.notice(), password);
+	public void deleteGroupMember(String userId, String targetUserId,
+			String groupId, String password) {
+		String url = SpoITApi.insertGroupAffiliation(userId, targetUserId,
+				groupId, PermissionConstants.notice(), password);
 		parser = new GroupXmlParser();
 		executeApi(url);
 	}
@@ -225,18 +228,21 @@ public class ApiItemDao extends HttpsDao {
 	}
 
 	@Override
-	public void selectTraining(String userId, int trainingId, String password) {
-		String url = SpoITApi.selectTraining(userId, trainingId, password);
-		// parser = new TrainingXmlParser();
+	public void selectTraining(String userId, String targetUserId,
+			int trainingId, String password) {
+		String url = SpoITApi.selectTraining(userId, targetUserId, trainingId,
+				password);
 		parser = new TrainingInfoXmlParser();
 		executeApi(url);
 	}
 
 	@Override
-	public void selectTraining(String userId, String date1, String date2,
-			int limit, int offset, String password) {
-		String url = SpoITApi.selectTraining(userId, date1, date2, limit, offset, password);
+	public void selectTraining(String userId, String targetUserId,
+			String date1, String date2, int limit, int offset, String password) {
+		String url = SpoITApi.selectTraining(userId, targetUserId, date1,
+				date2, limit, offset, password);
 		parser = new TrainingsXmlParser();
+		executeApi(url);
 	}
 
 	@Override

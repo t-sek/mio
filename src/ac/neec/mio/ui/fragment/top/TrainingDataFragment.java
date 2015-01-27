@@ -12,14 +12,13 @@ import ac.neec.mio.dao.SQLiteDao;
 import ac.neec.mio.dao.Sourceable;
 import ac.neec.mio.exception.XmlParseException;
 import ac.neec.mio.exception.XmlReadException;
-import ac.neec.mio.http.item.TrainingItem;
+import ac.neec.mio.taining.Training;
 import ac.neec.mio.ui.activity.SyncTrainingListActivity;
 import ac.neec.mio.ui.activity.TrainingDataDetailActivity;
 import ac.neec.mio.ui.activity.TrainingFreeInsertActivity;
 import ac.neec.mio.ui.adapter.TrainingDateListAdapter;
 import ac.neec.mio.ui.listener.TrainingDataListCallbackListener;
 import ac.neec.mio.user.User;
-import ac.neec.mio.util.DateUtil;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -34,8 +33,6 @@ import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.readystatesoftware.viewbadger.BadgeView;
 
@@ -49,8 +46,8 @@ public class TrainingDataFragment extends TopBaseFragment implements
 
 	private View view;
 	private ExpandableListView listView;
-	private ProgressBar progress;
-	private Button buttonInsert;
+	// private ProgressBar progress;
+	private ImageButton buttonInsert;
 	private TrainingDateListAdapter adapter;
 	private User user = User.getInstance();
 	private int date = 0;
@@ -61,7 +58,7 @@ public class TrainingDataFragment extends TopBaseFragment implements
 	private ImageButton buttonSync;
 	private BadgeView badge;
 
-	private List<List<TrainingItem>> trainings = new ArrayList<List<TrainingItem>>();
+	private List<List<Training>> trainings = new ArrayList<List<Training>>();
 
 	Handler handler = new Handler() {
 		public void handleMessage(Message message) {
@@ -70,33 +67,34 @@ public class TrainingDataFragment extends TopBaseFragment implements
 				update();
 				break;
 			case MESSAGE_PROGRESS_GONE:
-				progressGone();
+				// progressGone();
 			default:
 				break;
 			}
 		};
 	};
 
-	private void progressGone() {
-		progress.setVisibility(View.GONE);
-		progress.setProgress(0);
-	}
+	// private void progressGone() {
+	// progress.setVisibility(View.GONE);
+	// progress.setProgress(0);
+	// }
 
 	private void update() {
 		adapter.notifyDataSetChanged();
-		selectTraining();
 	}
 
-	private void selectTraining() {
-		if (date > dateNum) {
-			dateNum += date;
-			handler.sendMessage(setMessage(MESSAGE_PROGRESS_GONE));
-			return;
-		}
-//		dao.selectTraining(user.getId(), DateUtil.getDate(date));
-		progress.setProgress(date - DATE_NUM * (date / DATE_NUM));
-		date++;
-	}
+	// private void selectTraining() {
+	// if (date > dateNum) {
+	// dateNum += date;
+	// handler.sendMessage(setMessage(MESSAGE_PROGRESS_GONE));
+	// return;
+	// }
+	// // dao.selectTraining(user.getId(), DateUtil.getDate(date));
+	// dao.selectTraining(user.getId(), DateUtil.getDate(DATE_NUM),
+	// DateUtil.nowDate(), 1000000, 0, user.getPassword());
+	// progress.setProgress(date - DATE_NUM * (date / DATE_NUM));
+	// date++;
+	// }
 
 	@Override
 	public void onResume() {
@@ -114,14 +112,14 @@ public class TrainingDataFragment extends TopBaseFragment implements
 		dao = DaoFacade.getApiDao(this);
 		daoSql = DaoFacade.getSQLiteDao();
 		init();
-		selectTraining();
+		dao.selectTraining(user.getId(), user.getId(), "2015-01-06",
+				"2015-01-26", 1000000, 1, user.getPassword());
 		// progressGone();
 		return view;
 	}
 
 	private void reload() {
 		date = 0;
-		selectTraining();
 	}
 
 	private void initSync() {
@@ -144,7 +142,7 @@ public class TrainingDataFragment extends TopBaseFragment implements
 	}
 
 	private void init() {
-		progress = (ProgressBar) view.findViewById(R.id.progress);
+		// progress = (ProgressBar) view.findViewById(R.id.progress);
 		listView = (ExpandableListView) view
 				.findViewById(R.id.list_training_data);
 		adapter = new TrainingDateListAdapter(getActivity(), trainings, this);
@@ -158,7 +156,7 @@ public class TrainingDataFragment extends TopBaseFragment implements
 				return false;
 			}
 		});
-		buttonInsert = (Button) view.findViewById(R.id.button_insert);
+		buttonInsert = (ImageButton) view.findViewById(R.id.button_insert);
 		buttonInsert.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -169,11 +167,10 @@ public class TrainingDataFragment extends TopBaseFragment implements
 	}
 
 	private void intentDetailTrainingData(int groupPosition, int childPosition) {
-		TrainingItem item = trainings.get(groupPosition).get(childPosition);
+		Training item = trainings.get(groupPosition).get(childPosition);
 		Intent intent = new Intent(getActivity(),
 				TrainingDataDetailActivity.class);
-		intent.putExtra(SQLConstants.trainingId(), item.getTrainingId());
-		intent.putExtra(SQLConstants.tableTraining(), item);
+		intent.putExtra(SQLConstants.trainingId(), item.getId());
 		startActivity(intent);
 	}
 
@@ -196,6 +193,36 @@ public class TrainingDataFragment extends TopBaseFragment implements
 		return message;
 	}
 
+	private void updateTraining(List<Training> training) {
+		String lastDate = null;
+		List<Training> lastTraining = new ArrayList<Training>();
+		Log.d("fragment", "training size " + training.size());
+		for (Training t : training) {
+			if (t.getDate().equals(lastDate)) {
+				lastTraining.add(t);
+			} else {
+				trainings.add(lastTraining);
+				lastTraining.clear();
+				lastTraining.add(t);
+			}
+			lastDate = t.getDate();
+			adapter.notifyDataSetChanged();
+		}
+		handler.sendMessage(setMessage(MESSAGE_UPDATE));
+		// String nowDate = DateUtil.splitDate(training.get(0).getDate());
+		// for (int i = 0; i < trainings.size(); i++) {
+		// String date = DateUtil.splitDate(trainings.get(i).get(0).getDate());
+		// if (date.compareTo(nowDate) < 0) {
+		// trainings.add(i, training);
+		// adapter.notifyDataSetChanged();
+		// return;
+		// }
+		// }
+		// trainings.add(trainings.size(), training);
+		// handler.sendMessage(setMessage(MESSAGE_UPDATE));
+
+	}
+
 	@Override
 	public String getTitle() {
 		return TITLE;
@@ -208,9 +235,9 @@ public class TrainingDataFragment extends TopBaseFragment implements
 
 	@Override
 	public void complete() {
-		List<TrainingItem> list = null;
+		List<Training> training = null;
 		try {
-			list = dao.getResponse();
+			training = dao.getResponse();
 		} catch (XmlParseException e) {
 			e.printStackTrace();
 			return;
@@ -218,21 +245,7 @@ public class TrainingDataFragment extends TopBaseFragment implements
 			e.printStackTrace();
 			return;
 		}
-		if (list.size() == 0) {
-			selectTraining();
-			return;
-		}
-		String nowDate = DateUtil.splitDate(list.get(0).getDate());
-		for (int i = 0; i < trainings.size(); i++) {
-			String date = DateUtil.splitDate(trainings.get(i).get(0).getDate());
-			if (date.compareTo(nowDate) < 0) {
-				trainings.add(i, list);
-				adapter.notifyDataSetChanged();
-				return;
-			}
-		}
-		trainings.add(trainings.size(), list);
-		handler.sendMessage(setMessage(MESSAGE_UPDATE));
+		updateTraining(training);
 	}
 
 	@Override
@@ -251,5 +264,10 @@ public class TrainingDataFragment extends TopBaseFragment implements
 	public void complete(Bitmap image) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void progressUpdate(int value) {
+		Log.d("activity", "value " + value);
 	}
 }

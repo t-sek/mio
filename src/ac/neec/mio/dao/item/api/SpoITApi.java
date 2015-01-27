@@ -9,8 +9,8 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
 public class SpoITApi {
-	// 指定した日付のトレーニング数
-	// http://anninsuika.com/mioapi/TrainingInfo.php?func=Select&option=Date&user=testid&date=2014-09-26
+
+	private static final String BLANK = "%20";
 
 	public static String selectUser(String userId, String password) {
 		StringBuilder sb = new StringBuilder();
@@ -168,12 +168,14 @@ public class SpoITApi {
 		return validateUrl(sb.toString());
 	}
 
-	public static String insertGroupAffiliation(String userId, String groupId,
-			int permitionId, String password) {
+	public static String insertGroupAffiliation(String userId,
+			String targetUserId, String groupId, int permitionId,
+			String password) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(urlHeadSSL());
 		sb.append(affiliationEdit());
 		sb.append(userId + section());
+		sb.append(targetUserId + section());
 		sb.append(groupId + section());
 		sb.append(permitionId + section());
 		sb.append(password);
@@ -271,31 +273,33 @@ public class SpoITApi {
 		return validateUrl(sb.toString());
 	}
 
-	public static String selectTraining(String userId, int trainingId,
-			String password) {
+	public static String selectTraining(String userId, String targetUserId,
+			int trainingId, String password) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(urlHeadSSL());
 		sb.append(trainingSelect());
 		sb.append(userId + section());
+		sb.append(targetUserId + section());
 		sb.append(trainingId + section());
 		sb.append(password);
 		sb.append(urlFoot());
 		return validateUrl(sb.toString());
 	}
 
-	public static String selectTraining(String userId, String date1,
-			String date2, int limit, int offset, String password) {
+	public static String selectTraining(String userId, String targetUserId,
+			String date1, String date2, int limit, int offset, String password) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(urlHeadSSL());
 		sb.append(trainingsSelect());
 		sb.append(userId + section());
+		sb.append(targetUserId + section());
 		sb.append(date1 + section());
 		sb.append(date2 + section());
 		sb.append(limit + section());
 		sb.append(offset + section());
 		sb.append(password);
 		sb.append(urlFoot());
-		return sb.toString();
+		return validateUrl(sb.toString());
 	}
 
 	public static String selectTrainingCategory() {
@@ -315,7 +319,7 @@ public class SpoITApi {
 	}
 
 	private static String validateUrl(String url) {
-		return url.replaceAll(" ", "%20");
+		return url.replaceAll(" ", BLANK);
 	}
 
 }

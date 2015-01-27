@@ -6,12 +6,11 @@ import java.util.List;
 import ac.neec.mio.R;
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.SQLiteDao;
-import ac.neec.mio.db.DBManager;
 import ac.neec.mio.http.item.TrainingItem;
+import ac.neec.mio.taining.Training;
 import ac.neec.mio.ui.listener.TrainingDataListCallbackListener;
 import ac.neec.mio.util.DateUtil;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,13 +21,13 @@ public class TrainingDateListAdapter extends BaseExpandableListAdapter {
 
 	private Context context;
 	private TrainingDataListCallbackListener listener;
-	private List<List<TrainingItem>> trainings = new ArrayList<List<TrainingItem>>();
+	private List<List<Training>> trainings = new ArrayList<List<Training>>();
 
 	private int currentHourPosition = 0;
 	private SQLiteDao dao;
 
 	public TrainingDateListAdapter(Context context,
-			List<List<TrainingItem>> trainings,
+			List<List<Training>> trainings,
 			TrainingDataListCallbackListener listener) {
 		this.context = context;
 		this.trainings = trainings;
@@ -105,9 +104,9 @@ public class TrainingDateListAdapter extends BaseExpandableListAdapter {
 	public View getChildView(int groupPosition, int childPosition,
 			boolean isLastChild, View convertView, ViewGroup parent) {
 		View view = getChildGenericView();
-		TrainingItem item = trainings.get(groupPosition).get(childPosition);
-		String trainingName = dao.selectTrainingCategory(item.getCategoryId())
-				.getTrainingCategoryName();
+		Training item = trainings.get(groupPosition).get(childPosition);
+		String trainingName = dao.selectTrainingCategory(
+				item.getCategoryId()).getTrainingCategoryName();
 		TextView textTrainingName = (TextView) view
 				.findViewById(R.id.txt_training_name);
 		textTrainingName.setText(trainingName);

@@ -43,7 +43,7 @@ public class GroupMemberListAdapter extends ArrayAdapter<Member> {
 		CircleImageView imageView = (CircleImageView) convertView
 				.findViewById(R.id.img_profile);
 		Bitmap image = BitmapFactory.decodeResource(resources,
-				R.drawable.profile_normal);
+				R.drawable.ic_person_black_48dp);
 		imageView.setImage(image);
 		TextView textId = (TextView) convertView
 				.findViewById(R.id.text_user_id);

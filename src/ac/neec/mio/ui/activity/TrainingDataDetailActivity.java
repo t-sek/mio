@@ -16,8 +16,11 @@ import ac.neec.mio.exception.XmlReadException;
 import ac.neec.mio.http.item.TrainingItem;
 import ac.neec.mio.http.item.TrainingLogItem;
 import ac.neec.mio.http.item.TrainingPlayItem;
+import ac.neec.mio.taining.TrainingInfo;
 import ac.neec.mio.taining.category.TrainingCategory;
 import ac.neec.mio.taining.menu.TrainingMenu;
+import ac.neec.mio.taining.play.TrainingPlay;
+import ac.neec.mio.training.log.TrainingLog;
 import ac.neec.mio.user.User;
 import ac.neec.mio.util.CalorieUtil;
 import ac.neec.mio.util.ColorUtil;
@@ -54,14 +57,17 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 		void onResponsePlay();
 	}
 
-	private static final int MESSAGE_LOG = 1;
-	private static final int MESSAGE_PLAY = 2;
+	private static final int MESSAGE_UPDATE = 0;
 
 	private CallbackListener listener;
 
-	private static TrainingItem training;
-	private static TrainingLogItem trainingLog;
-	private static List<TrainingPlayItem> trainingPlays = new ArrayList<TrainingPlayItem>();
+	// private static TrainingItem training;
+	// private static TrainingLogItem trainingLog;
+	// private static List<TrainingPlayItem> trainingPlays = new
+	// ArrayList<TrainingPlayItem>();
+	private static TrainingInfo training;
+	private static List<TrainingLog> logs = new ArrayList<TrainingLog>();
+	private static List<TrainingPlay> plays = new ArrayList<TrainingPlay>();
 	private static User user = User.getInstance();
 	private ApiDao dao;
 	private SQLiteDao daoSql;
@@ -70,11 +76,8 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 	Handler handler = new Handler() {
 		public void handleMessage(Message message) {
 			switch (message.what) {
-			case MESSAGE_LOG:
-				updateLog();
-				break;
-			case MESSAGE_PLAY:
-				updatePlay();
+			case MESSAGE_UPDATE:
+				update();
 				break;
 			default:
 				break;
@@ -82,11 +85,10 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 		};
 	};
 
-	private void updatePlay() {
+	private void update() {
+		logs = training.getLogs();
+		plays = training.getPlays();
 		listener.onResponsePlay();
-	}
-
-	private void updateLog() {
 		listener.onResponseLog();
 	}
 
@@ -101,14 +103,19 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 			listener = f.getListener();
 		}
 		Intent intent = getIntent();
-		training = (TrainingItem) intent.getSerializableExtra(SQLConstants
-				.tableTraining());
+		// training = (TrainingItem) intent.getSerializableExtra(SQLConstants
+		// .tableTraining());
+		int trainingId = intent.getIntExtra(SQLConstants.trainingId(), 0);
+		dao.selectTraining(user.getId(), user.getId(), trainingId,
+				user.getPassword());
 		getActionBar().setTitle(
-				DateUtil.japaneseFormat(training.getDate()) + " "
-						+ DateUtil.timeJapaneseFormat(training.getStartTime()));
+				DateUtil.japaneseFormat(training.getTraining().getDate())
+						+ " "
+						+ DateUtil.timeJapaneseFormat(training.getTraining()
+								.getStartTime()));
 		daoSql = DaoFacade.getSQLiteDao();
 		dao = DaoFacade.getApiDao(this);
-//		dao.selectTrainingPlay(user.getId(), training.getTrainingId());
+		// dao.selectTrainingPlay(user.getId(), training.getTrainingId());
 	}
 
 	@Override
@@ -130,7 +137,8 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 	private void intentMapData() {
 		Intent intent = new Intent(TrainingDataDetailActivity.this,
 				MapDataActivity.class);
-		intent.putExtra(SQLConstants.trainingId(), training.getTrainingId());
+		intent.putExtra(SQLConstants.trainingId(), training.getTraining()
+				.getId());
 		startActivity(intent);
 		// finish();
 	}
@@ -192,10 +200,10 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 
 		private void setLineGraph() {
 			graph.setLineDotTouchListener(this);
-			graph.setLineDotLmit(trainingLog.getSize());
-			graph.setTargetValue(training.getTargetHeartRate());
-			for (int i = 0; i < trainingLog.getSize(); i++) {
-				graph.addLineDot(trainingLog.getHeartRate(i));
+			graph.setLineDotLmit(logs.size());
+			graph.setTargetValue(training.getTraining().getTargetHrartRate());
+			for (int i = 0; i < logs.size(); i++) {
+				graph.addLineDot(logs.get(i).getHeartRate());
 			}
 			graph.calucurateAverageValue();
 			graph.notifyDataSetChenged();
@@ -203,22 +211,22 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 
 		private void setColorBar() {
 			ColorBarItem item;
-			for (TrainingPlayItem playItem : trainingPlays) {
+			for (TrainingPlay play : plays) {
 				// String name = DBManager.selectTrainingMenuName(playItem
 				// .getTrainingMenuId());
-				String name = daoSql.selectTrainingMenuName(playItem
+				String name = daoSql.selectTrainingMenuName(play
 						.getTrainingMenuId());
 				String color = null;
 				// TrainingMenu menu = DBManager.selectTrainingMenu(playItem
 				// .getTrainingMenuId());
-				TrainingMenu menu = daoSql.selectTrainingMenu(playItem
+				TrainingMenu menu = daoSql.selectTrainingMenu(play
 						.getTrainingMenuId());
 				if (menu != null) {
 					color = menu.getColor();
 				} else {
 					color = ColorUtil.DEFAULT_COLOR;
 				}
-				item = new ColorBarItem(playItem.getTrainingTime(), name, color);
+				item = new ColorBarItem(play.getTrainingTime(), name, color);
 				colorbar.addBarItem(item);
 			}
 
@@ -228,13 +236,15 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 			// TrainingCategory category = DBManager
 			// .selectTrainingCategory(training.getCategoryId());
 			TrainingCategory category = daoSql.selectTrainingCategory(training
-					.getCategoryId());
+					.getTraining().getCategoryId());
 			textDetailName.setText(category.getTrainingCategoryName());
 			String time = TimeUtil.integerToString(Integer.valueOf(training
-					.getPlayTime()));
+					.getTraining().getPlayTime()));
 			textDetailTime.setText(time);
-			textDetailCalorie.setText(String.valueOf(training.getCal()));
-			textDetailDistance.setText(String.valueOf(training.getDistance()));
+			textDetailCalorie.setText(String.valueOf(training.getTraining()
+					.getCalorie()));
+			textDetailDistance.setText(String.valueOf(training.getTraining()
+					.getDistance()));
 		}
 
 		protected CallbackListener getListener() {
@@ -243,18 +253,17 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 
 		@Override
 		public void onTouch(int index, LineDot dot) {
-			textDatasHeartRate.setText(String.valueOf(trainingLog
-					.getHeartRate(index)));
-			textDatasTime.setText(trainingLog.getTime(index));
+			textDatasHeartRate.setText(String.valueOf(logs.get(index)
+					.getHeartRate()));
+			textDatasTime.setText(logs.get(index).getTime());
 			int time;
 			try {
-				time = TimeUtil.stringToInteger(trainingLog.getTime(index));
+				time = TimeUtil.stringToInteger(logs.get(index).getTime());
 			} catch (Exception e) {
-				time = Integer.valueOf(trainingLog.getTime(index));
+				time = Integer.valueOf(logs.get(index).getTime());
 			}
-			textDatasCalorie
-					.setText(String.valueOf(CalorieUtil.calcPlayItemCalorie(
-							trainingPlays, user.getWeight(), time)));
+			textDatasCalorie.setText(String.valueOf(CalorieUtil
+					.calcPlayCalorie(plays, user.getWeight(), time)));
 		}
 
 		@Override
@@ -264,12 +273,12 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 
 		@Override
 		public void onResponsePlay() {
-			if (trainingPlays.size() != 0) {
+			if (plays.size() != 0) {
 				// TrainingMenu menu =
 				// DBManager.selectTrainingMenu(trainingPlays
 				// .get(0).getTrainingMenuId());
-				TrainingMenu menu = daoSql.selectTrainingMenu(trainingPlays
-						.get(0).getTrainingMenuId());
+				TrainingMenu menu = daoSql.selectTrainingMenu(plays.get(0)
+						.getTrainingMenuId());
 				if (menu != null) {
 					textDetailMets.setText(String.valueOf(menu.getMets()));
 				}
@@ -292,28 +301,14 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 
 	@Override
 	public void complete() {
-		if (!playSelect) {
-			playSelect = true;
-			try {
-				trainingPlays = dao.getResponse();
-			} catch (XmlParseException e) {
-				e.printStackTrace();
-			} catch (XmlReadException e) {
-				e.printStackTrace();
-			}
-			handler.sendMessage(setMessage(MESSAGE_PLAY));
-//			dao.selectTrainingLog(user.getId(), training.getTrainingId());
-		} else {
-			try {
-				trainingLog = dao.getResponse();
-			} catch (XmlParseException e) {
-				e.printStackTrace();
-			} catch (XmlReadException e) {
-				e.printStackTrace();
-			}
-			handler.sendMessage(setMessage(MESSAGE_LOG));
+		try {
+			training = dao.getResponse();
+		} catch (XmlParseException e) {
+			e.printStackTrace();
+		} catch (XmlReadException e) {
+			e.printStackTrace();
 		}
-
+		handler.sendMessage(setMessage(MESSAGE_UPDATE));
 	}
 
 	@Override
@@ -330,6 +325,12 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 
 	@Override
 	public void complete(Bitmap image) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void progressUpdate(int value) {
 		// TODO Auto-generated method stub
 
 	}

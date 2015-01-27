@@ -2,7 +2,10 @@ package ac.neec.mio.ui.activity;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import com.google.android.gms.internal.bu;
 
 import ac.neec.mio.R;
 import ac.neec.mio.consts.PermissionConstants;
@@ -15,40 +18,32 @@ import ac.neec.mio.exception.XmlParseException;
 import ac.neec.mio.exception.XmlReadException;
 import ac.neec.mio.group.Affiliation;
 import ac.neec.mio.group.Group;
-import ac.neec.mio.group.GroupFactory;
 import ac.neec.mio.group.GroupInfo;
 import ac.neec.mio.group.Member;
 import ac.neec.mio.group.Permission;
-import ac.neec.mio.http.HttpManager;
-import ac.neec.mio.http.listener.GroupResponseListener;
-import ac.neec.mio.training.framework.ProductDataFactory;
 import ac.neec.mio.ui.adapter.GroupInfoListAdapter;
 import ac.neec.mio.ui.adapter.GroupInfoListItem;
 import ac.neec.mio.ui.dialog.GroupSettingDialog;
-import ac.neec.mio.ui.dialog.LoadingDialog;
-import ac.neec.mio.ui.dialog.SelectionAlertDialog;
 import ac.neec.mio.ui.dialog.GroupSettingDialog.CallbackListener;
+import ac.neec.mio.ui.dialog.SelectionAlertDialog;
 import ac.neec.mio.ui.listener.AlertCallbackListener;
 import ac.neec.mio.user.User;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import com.android.volley.VolleyError;
 
 public class GroupDetailsActivity extends FragmentActivity implements
 		CallbackListener, Sourceable, AlertCallbackListener {
@@ -66,6 +61,7 @@ public class GroupDetailsActivity extends FragmentActivity implements
 	private TextView textGroupName;
 	private TextView textGroupId;
 	private TextView textGroupComment;
+	private Button buttonNotice;
 	private Group group;
 	private User user = User.getInstance();
 	private boolean settingShowFlag = false;
@@ -73,6 +69,7 @@ public class GroupDetailsActivity extends FragmentActivity implements
 	private ApiDao dao;
 	private SQLiteDao daoSql;
 	private Permission permission;
+	private String groupId;
 
 	Handler handler = new Handler() {
 		public void handleMessage(Message message) {
@@ -92,7 +89,7 @@ public class GroupDetailsActivity extends FragmentActivity implements
 		setContentView(R.layout.activity_group_details);
 
 		Intent intent = getIntent();
-		String groupId = intent.getStringExtra("Group_Id");
+		groupId = intent.getStringExtra("Group_Id");
 		dao = DaoFacade.getApiDao(this);
 		daoSql = DaoFacade.getSQLiteDao();
 		group = daoSql.selectGroup(groupId);
@@ -103,32 +100,12 @@ public class GroupDetailsActivity extends FragmentActivity implements
 			Affiliation aff = daoSql.selectAffiliation(groupId);
 			permission = aff.getPermition();
 		}
-		initFindViews(groupId);
+		initFindViews();
 		update();
 		setListItem();
 		setAdapter();
+		setInfoAdapter();
 	}
-
-	// @Override
-	// public boolean onCreateOptionsMenu(Menu menu) {
-	// Log.d("avtivity", "flag " + settingShowFlag);
-	// if (settingShowFlag) {
-	// if (permission.getGroupInfoChange()) {
-	// getMenuInflater().inflate(R.menu.group_details, menu);
-	// }
-	// }
-	// return true;
-	// }
-	//
-	// @Override
-	// public boolean onOptionsItemSelected(MenuItem item) {
-	// switch (item.getItemId()) {
-	// case R.id.action_edit:
-	// showEditGroupSettingDialog();
-	// break;
-	// }
-	// return true;
-	// }
 
 	private void showEditGroupSettingDialog() {
 		GroupSettingDialog dialog = new GroupSettingDialog(this,
@@ -176,6 +153,20 @@ public class GroupDetailsActivity extends FragmentActivity implements
 		});
 	}
 
+	private void setInfoAdapter() {
+		ListView infoView = (ListView) findViewById(R.id.list_info);
+		LinearLayout layout = (LinearLayout) findViewById(R.id.infoLayout);
+		if (!permission.getGroupNews()) {
+			layout.setVisibility(View.INVISIBLE);
+			return;
+		}
+		ArrayList<String> infoList = new ArrayList<String>();
+		Collections.reverse(infoList);
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_1, infoList);
+		infoView.setAdapter(adapter);
+	}
+
 	private void setListItem() {
 		if (permission.getGroupInfoChange()) {
 			list.add(new GroupInfoListItem(SettingConstants.groupInfoChange(),
@@ -185,24 +176,35 @@ public class GroupDetailsActivity extends FragmentActivity implements
 			list.add(new GroupInfoListItem(SettingConstants.member(), null));
 		}
 		if (permission.getPermissionChange()) {
-			// list.add(new GroupInfoListItem(SettingConstants
-			// .permissionChangeAdmin(), null));
 			list.add(new GroupInfoListItem(SettingConstants
 					.permissionChangeTrainer(), null));
 		}
 		if (!permission.getJoinStatus()) {
 			list.add(new GroupInfoListItem(SettingConstants.pending(), null));
-		} else {
-			list.add(new GroupInfoListItem(SettingConstants.withdrawal(), null));
 		}
 
 	}
 
-	private void initFindViews(String groupId) {
+	private void initFindViews() {
 		textGroupId = (TextView) findViewById(R.id.text_group_id);
 		textGroupId.setText(groupId);
 		textGroupName = (TextView) findViewById(R.id.text_group_name);
 		textGroupComment = (TextView) findViewById(R.id.text_group_comment);
+		buttonNotice = (Button) findViewById(R.id.button_notice);
+		if (permission.getJoinStatus()) {
+			buttonNotice.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+				}
+			});
+		} else {
+			buttonNotice.setVisibility(View.INVISIBLE);
+		}
+	}
+
+	private void deleteGroupMember() {
+		dao.deleteGroupMember(user.getId(), user.getId(), groupId,
+				user.getPassword());
 	}
 
 	private void intentMember() {
@@ -274,13 +276,18 @@ public class GroupDetailsActivity extends FragmentActivity implements
 	@Override
 	public void onPositiveSelected(String message) {
 		if (message.equals(SettingConstants.messagePending())) {
-			dao.insertGroupPending(user.getId(), group.getId(),
+			dao.insertGroupPending(user.getId(), user.getId(), group.getId(),
 					user.getPassword());
 		} else if (message.equals(SettingConstants.messageWithdrawal())) {
-			dao.deleteGroupMember(user.getId(), group.getId(),
+			dao.deleteGroupMember(user.getId(), user.getId(), group.getId(),
 					user.getPassword());
 		}
-		Log.d("activity", "group " + group);
+	}
+
+	@Override
+	public void progressUpdate(int value) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

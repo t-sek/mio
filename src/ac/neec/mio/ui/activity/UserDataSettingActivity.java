@@ -337,4 +337,10 @@ public class UserDataSettingActivity extends Activity implements
 
 	}
 
+	@Override
+	public void progressUpdate(int value) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

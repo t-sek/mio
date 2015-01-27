@@ -136,7 +136,7 @@ public class ResultActivity extends Activity implements Sourceable {
 						.valueOf(TimeUtil.stringToInteger(training
 								.getPlayTime())),
 				training.getTargetHrartRate(), training.getTargetCal(),
-				training.getHeartRateAvg(), "0", training.getConsumptionCal(),
+				training.getHeartRateAvg(), "0", training.getCalorie(),
 				trainingCategory.getTrainingCategoryId(), training
 						.getDistance());
 	}
@@ -249,8 +249,7 @@ public class ResultActivity extends Activity implements Sourceable {
 						.get(0).getTrainingMenuId());
 				textDetailMets.setText(String.valueOf(menu.getMets()));
 			}
-			textDetailCalorie.setText(String.valueOf(training
-					.getConsumptionCal()));
+			textDetailCalorie.setText(String.valueOf(training.getCalorie()));
 			textDetailDistance.setText(String.valueOf(training.getDistance()));
 
 		}
@@ -358,5 +357,11 @@ public class ResultActivity extends Activity implements Sourceable {
 	public void complete(Bitmap image) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void progressUpdate(int value) {
+		// TODO Auto-generated method stub
+		
 	}
 }

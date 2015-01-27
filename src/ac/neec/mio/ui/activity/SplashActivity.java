@@ -28,6 +28,7 @@ import ac.neec.mio.user.LoginState;
 import ac.neec.mio.user.User;
 import ac.neec.mio.user.UserInfo;
 import ac.neec.mio.util.DateUtil;
+import ac.neec.mio.util.TimeUtil;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -55,7 +56,10 @@ public class SplashActivity extends FragmentActivity implements
 	private static final int FLAG_USER = 4;
 	private static final int FLAG_PERM = 5;
 	private static final int MESSAGE_INTENT = 1;
+	private static final int MESSAGE_UPDATE = 6;
 	private static final int WEIT_TIME = 100;
+
+	private static final String SECTION = ".";
 
 	private TimerManager manager;
 	private TextView title;
@@ -63,6 +67,7 @@ public class SplashActivity extends FragmentActivity implements
 	private Button buttonSignUp;
 	private Button buttonLogin;
 	private Button buttonFacebookLogin;
+	private TextView textMessage;
 	private ApiDao dao;
 	private SQLiteDao daoSql;
 	private int daoFlag;
@@ -70,6 +75,7 @@ public class SplashActivity extends FragmentActivity implements
 	private Bundle bundle;
 	private Login login;
 	private Bitmap image;
+	private int sectionCount;
 
 	Handler handler = new Handler() {
 		public void handleMessage(Message message) {
@@ -77,6 +83,8 @@ public class SplashActivity extends FragmentActivity implements
 			case MESSAGE_INTENT:
 				animationHeart();
 				break;
+			case MESSAGE_UPDATE:
+				updateTime((String) message.obj);
 			default:
 				break;
 			}
@@ -98,14 +106,9 @@ public class SplashActivity extends FragmentActivity implements
 		AppConstants.setContext(getApplicationContext());
 		dao = DaoFacade.getApiDao(this);
 		daoSql = DaoFacade.getSQLiteDao();
-		downloadTrainingCategory();
-		// dao.insertUserImage(getApplicationContext(), "noppoid", "cccccc",
-		// "test.jpg", "image/jpg", user.getImageUri(), 0, 200);
-		// dao.insertUserImage(getApplicationContext(), "testid", "testid",
-		// "name",
-		// "image/png", "/var/tmp/", 0, 100);
-		// startAnimation();
-		manager = new TimerManager(this, 5000);
+		// downloadTrainingCategory();
+		startAnimation();
+		manager = new TimerManager(this);
 		manager.start();
 	}
 
@@ -115,6 +118,7 @@ public class SplashActivity extends FragmentActivity implements
 		buttonSignUp = (Button) findViewById(R.id.btn_sign_up);
 		buttonLogin = (Button) findViewById(R.id.btn_login);
 		buttonFacebookLogin = (Button) findViewById(R.id.btn_facebook_login);
+		textMessage = (TextView) findViewById(R.id.text_message);
 	}
 
 	private void setListeners() {
@@ -146,6 +150,8 @@ public class SplashActivity extends FragmentActivity implements
 	}
 
 	private void animationHeart() {
+		manager.stop();
+		textMessage.setText("完了!");
 		Animation anim = AnimationUtils.loadAnimation(getApplicationContext(),
 				R.anim.title_heart);
 		anim.setAnimationListener(this);
@@ -179,6 +185,38 @@ public class SplashActivity extends FragmentActivity implements
 		// finish();
 	}
 
+	private void updateTime(String time) {
+		String text = null;
+		switch (daoFlag) {
+		case FLAG_CATEGORY:
+			text = "トレーニング情報を取得中";
+			break;
+		case FLAG_MENU:
+			text = "トレーニング情報を取得中";
+			break;
+		case FLAG_USER:
+			text = "ユーザー情報を取得中";
+			break;
+		case FLAG_PERM:
+			text = "ユーザー情報を取得中";
+			break;
+		default:
+			break;
+		}
+		int nowTime = Integer.valueOf(TimeUtil.stringToSec(time));
+		StringBuilder sb = new StringBuilder();
+		sb.append(text);
+		for (int i = 0; i <= sectionCount; i++) {
+			sb.append(SECTION);
+		}
+		if (sectionCount >= 4) {
+			sectionCount = 0;
+		} else {
+			sectionCount++;
+		}
+		textMessage.setText(sb.toString());
+	}
+
 	private void downloadTrainingCategory() {
 		daoFlag = FLAG_CATEGORY;
 		dao.selectTrainingCategory();
@@ -196,7 +234,11 @@ public class SplashActivity extends FragmentActivity implements
 	}
 
 	private void downloadUserImage(String image) {
-		dao.selectImage(image);
+		if (image != null) {
+			dao.selectImage(image);
+		} else {
+			startAnimation();
+		}
 	}
 
 	private void downloadPermition() {
@@ -246,6 +288,10 @@ public class SplashActivity extends FragmentActivity implements
 
 	@Override
 	public void onUpdate(String time) {
+		Message message = new Message();
+		message.what = MESSAGE_UPDATE;
+		message.obj = time;
+		handler.sendMessage(message);
 	}
 
 	@Override
@@ -342,8 +388,6 @@ public class SplashActivity extends FragmentActivity implements
 		List<Affiliation> affiliations = info.getAffiliations();
 		List<Group> groups = info.getGroups();
 		for (int i = 0; i < affiliations.size(); i++) {
-			Log.e("activity", "permission "
-					+ affiliations.get(i).getPermition().getName());
 			if (affiliations.get(i).getPermition().getId() == PermissionConstants
 					.notice()) {
 				break;
@@ -366,77 +410,46 @@ public class SplashActivity extends FragmentActivity implements
 	@Override
 	public void complete() {
 		Log.d("activity", "complete");
-		manager.stop();
-		switch (daoFlag) {
-		case FLAG_CATEGORY:
-			List<TrainingCategory> category;
-			try {
+		try {
+			switch (daoFlag) {
+			case FLAG_CATEGORY:
+				List<TrainingCategory> category;
 				category = dao.getResponse();
-			} catch (XmlParseException e) {
-				e.printStackTrace();
-				startAnimation();
-				return;
-			} catch (XmlReadException e) {
-				e.printStackTrace();
-				startAnimation();
-				return;
-			}
-			insertTrainingCategory(category);
-			downloadTrainingMenu();
-			break;
-		case FLAG_MENU:
-			List<TrainingMenu> menu;
-			try {
+				insertTrainingCategory(category);
+				downloadTrainingMenu();
+				break;
+			case FLAG_MENU:
+				List<TrainingMenu> menu;
 				menu = dao.getResponse();
-			} catch (XmlParseException e) {
-				startAnimation();
-				e.printStackTrace();
-				return;
-			} catch (XmlReadException e) {
-				e.printStackTrace();
-				startAnimation();
-				return;
-			}
-			insertTrainingMenu(menu);
-			downloadPermition();
-			break;
-		case FLAG_PERM:
-			List<Permission> perm = null;
-			try {
+				insertTrainingMenu(menu);
+				downloadPermition();
+				break;
+			case FLAG_PERM:
+				List<Permission> perm = null;
 				perm = dao.getResponse();
-			} catch (XmlParseException e) {
-				e.printStackTrace();
-				startAnimation();
-				return;
-			} catch (XmlReadException e) {
-				e.printStackTrace();
-				startAnimation();
-				return;
-			}
-			insertPermition(perm);
-			downloadUserInfo();
-			// startAnimation();
-			break;
-		case FLAG_USER:
-			UserInfo info = null;
-			try {
+				insertPermition(perm);
+				downloadUserInfo();
+				// startAnimation();
+				break;
+			case FLAG_USER:
+				Log.d("activity", "user ");
+				UserInfo info = null;
 				info = dao.getResponse();
 				daoSql.deleteGroup();
 				setMyGroupList(info);
-			} catch (XmlParseException e) {
-				e.printStackTrace();
-				startAnimation();
-				return;
-			} catch (XmlReadException e) {
-				e.printStackTrace();
-				startAnimation();
-				return;
+				insertUserInfo(info);
+				downloadUserImage(info.getImageInfo().getSmallImage());
+				break;
+			default:
+				break;
 			}
-			insertUserInfo(info);
-			downloadUserImage(info.getImageInfo().getSmallImage());
-			break;
-		default:
-			break;
+		} catch (XmlParseException e) {
+			startAnimation();
+			return;
+		} catch (XmlReadException e) {
+			startAnimation();
+			return;
+
 		}
 	}
 
@@ -453,5 +466,10 @@ public class SplashActivity extends FragmentActivity implements
 	public void complete(Bitmap image) {
 		user.setImage(image);
 		startAnimation();
+	}
+
+	@Override
+	public void progressUpdate(int value) {
+		Log.d("activity", "value " + value);
 	}
 }

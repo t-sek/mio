@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
+    android:background="@color/whiteTheme"
     android:layout_height="fill_parent" >
 
     <LinearLayout
@@ -9,54 +10,128 @@
 
         <ImageView
             android:id="@+id/Group_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:src="@drawable/icon_group" />
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:orientation="vertical" >
 
             <TextView
                 android:id="@+id/text_group_id"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TextView"
-                android:textSize="20dp" />
+                android:layout_height="40dp"
+                android:text=""
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/text_group_name"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="no name"
-                android:textSize="40dp" />
-
-            <TextView
-                android:id="@+id/text_group_comment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="no comment"
-                android:textSize="20dp" />
+                android:layout_height="60dp"
+                android:text=""
+                android:textSize="40sp" />
         </LinearLayout>
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/manegerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/linearLayout1"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/maneger"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/theme"
+            android:text="管理者名"
+            android:textSize="15sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/managerName"
+                android:layout_width="0sp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Name"
+                android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/text_group_comment"
+                android:layout_width="0sp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="3"
+                android:text="comment"
+                android:textSize="15sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/operationLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/manegerLayout"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/operationText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/theme"
+            android:text="メニュー"
+            android:textSize="15sp" />
+
+        <ListView
+            android:id="@+id/Group_operation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </ListView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/infoLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/operationLayout"
+        android:layout_marginTop="10dp"
+        android:background="@color/grayTheme"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/text_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/theme"
+            android:text="おしらせ" />
+
+        <ListView
+            android:id="@+id/list_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/whiteTheme" >
+        </ListView>
+    </LinearLayout>
+
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/button_notice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="26dp"
-        android:text="Button"
-        android:visibility="invisible" />
-
-    <ListView
-        android:id="@+id/Group_operation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true" >
-    </ListView>
+        android:text="退会" />
 
 </RelativeLayout>

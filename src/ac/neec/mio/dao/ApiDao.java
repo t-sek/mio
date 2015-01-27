@@ -167,30 +167,45 @@ public interface ApiDao {
 	 * 
 	 * @param userId
 	 *            ユーザID
+	 * @param targetUserId
+	 *            対象ユーザID
 	 * @param groupId
 	 *            グループID
 	 * @param password
-	 *            ユーザのパスワード
+	 *            パスワード
 	 */
-	void insertGroupPending(String userId, String groupId, String password);
+	void insertGroupPending(String userId, String targetUserId, String groupId,
+			String password);
 
 	/**
 	 * グループにトレーナーを追加
 	 * 
 	 * @param userId
+	 *            ユーザID
+	 * @param targetUserId
+	 *            対象ユーザID
 	 * @param groupId
+	 *            グループID
 	 * @param password
+	 *            パスワード
 	 */
-	void insertGroupTrainer(String userId, String groupId, String password);
+	void insertGroupTrainer(String userId, String targetUserId, String groupId,
+			String password);
 
 	/**
 	 * グループにメンバーを追加
 	 * 
 	 * @param userId
+	 *            ユーザID
+	 * @param targetUserId
+	 *            対象ユーザID
 	 * @param groupId
+	 *            グループID
 	 * @param password
+	 *            パスワード
 	 */
-	void insertGroupMember(String userId, String groupId, String password);
+	void insertGroupMember(String userId, String targetUserId, String groupId,
+			String password);
 
 	/**
 	 * グループ情報を編集
@@ -205,10 +220,16 @@ public interface ApiDao {
 	 * グループからメンバーを退会
 	 * 
 	 * @param userId
+	 *            ユーザID
+	 * @param targetUserId
+	 *            対象ユーザID
 	 * @param groupId
+	 *            グループID
 	 * @param password
+	 *            パスワード
 	 */
-	void deleteGroupMember(String userId, String groupId, String password);
+	void deleteGroupMember(String userId, String targetUserId, String groupId,
+			String password);
 
 	/**
 	 * トレーニングログを登録
@@ -289,7 +310,8 @@ public interface ApiDao {
 	 * 
 	 * @param userId
 	 *            ユーザID
-	 * 
+	 * @param targetUserId
+	 *            対象ユーザID
 	 * @param date1
 	 *            開始日 yyyy-mm-dd形式
 	 * @param date2
@@ -301,20 +323,23 @@ public interface ApiDao {
 	 * @param password
 	 *            パスワード
 	 */
-	void selectTraining(String userId, String date1, String date2, int limit,
-			int offset, String password);
+	void selectTraining(String userId, String targetUserId, String date1,
+			String date2, int limit, int offset, String password);
 
 	/**
 	 * トレーニングを取得
 	 * 
 	 * @param userId
 	 *            ユーザID
+	 * @param targetUserId
+	 *            対象ユーザID
 	 * @param trainingId
 	 *            トレーニングID
 	 * @param password
 	 *            パスワード
 	 */
-	void selectTraining(String userId, int trainingId, String password);
+	void selectTraining(String userId, String targetUserId, int trainingId,
+			String password);
 
 	/**
 	 * トレーニングカテゴリーを取得

@@ -133,7 +133,7 @@ public class SyncTrainingListActivity extends Activity implements Sourceable,
 		}
 		for (Training training : trainings) {
 			String category = daoSql.selectTrainingCategory(
-					training.getTrainingCategoryId()).getTrainingCategoryName();
+					training.getCategoryId()).getTrainingCategoryName();
 			list.add(new SyncTrainingItem(training.getId(), training.getDate(),
 					category));
 		}
@@ -172,8 +172,8 @@ public class SyncTrainingListActivity extends Activity implements Sourceable,
 						.valueOf(TimeUtil.stringToInteger(training
 								.getPlayTime())),
 				training.getTargetHrartRate(), training.getTargetCal(),
-				training.getHeartRateAvg(), "0", training.getConsumptionCal(),
-				training.getTrainingCategoryId(), training.getDistance());
+				training.getHeartRateAvg(), "0", training.getCalorie(),
+				training.getCategoryId(), training.getDistance());
 		trainings.remove(0);
 	}
 
@@ -374,5 +374,11 @@ public class SyncTrainingListActivity extends Activity implements Sourceable,
 	public void complete(Bitmap image) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void progressUpdate(int value) {
+		// TODO Auto-generated method stub
+		
 	}
 }

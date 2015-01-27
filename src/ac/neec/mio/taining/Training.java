@@ -5,31 +5,31 @@ import ac.neec.mio.training.framework.ProductData;
 public class Training extends ProductData {
 
 	private int id;
-	private int trainingCategoryId;
+	private int categoryId;
 	private String userId;
 	private String date;
 	private String startTime;
 	private String playTime;
 	private int targetHeartRate;
 	private int targetCal;
-	private int consumptionCal;
+	private int calorie;
 	private int heartRateAvg;
 	private int strange;
 	private double distance;
 
-	protected Training(int id, int trainingCategoryId, String userId, String date,
+	protected Training(int id, int categoryId, String userId, String date,
 			String startTime, String playTime, int targetHeartRate,
-			int targetCal, int consumptionCal, int heartRateAvg, int strange,
+			int targetCal, int calorie, int heartRateAvg, int strange,
 			double distance) {
 		this.id = id;
-		this.trainingCategoryId = trainingCategoryId;
+		this.categoryId = categoryId;
 		this.userId = userId;
 		this.date = date;
 		this.startTime = startTime;
 		this.playTime = playTime;
 		this.targetHeartRate = targetHeartRate;
 		this.targetCal = targetCal;
-		this.consumptionCal = consumptionCal;
+		this.calorie = calorie;
 		this.heartRateAvg = heartRateAvg;
 		this.strange = strange;
 		this.distance = distance;
@@ -39,8 +39,8 @@ public class Training extends ProductData {
 		return id;
 	}
 
-	public int getTrainingCategoryId() {
-		return trainingCategoryId;
+	public int getCategoryId() {
+		return categoryId;
 	}
 
 	public String getUserId() {
@@ -67,8 +67,8 @@ public class Training extends ProductData {
 		return targetCal;
 	}
 
-	public int getConsumptionCal() {
-		return consumptionCal;
+	public int getCalorie() {
+		return calorie;
 	}
 
 	public int getHeartRateAvg() {

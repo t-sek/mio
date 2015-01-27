@@ -174,4 +174,10 @@ public class GroupListActivity extends FragmentActivity implements Sourceable,
 
 	}
 
+	@Override
+	public void progressUpdate(int value) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
