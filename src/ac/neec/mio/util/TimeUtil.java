@@ -97,6 +97,10 @@ public class TimeUtil {
 		return String.valueOf(time);
 	}
 
+	public static int timeToSec(int min, int sec) {
+		return min * 60 + sec;
+	}
+
 	public static String minToSec(String min) {
 		int time = Integer.valueOf(min);
 		time *= 60;

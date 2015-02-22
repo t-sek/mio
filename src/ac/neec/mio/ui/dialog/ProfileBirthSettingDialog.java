@@ -15,6 +15,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.sek.drumpicker.DrumPicker;
 import com.sek.drumpicker.DrumPickerListener;
@@ -29,6 +30,8 @@ public class ProfileBirthSettingDialog extends DialogFragment implements
 	private ProfileBirthCallbackListener listener;
 	private Dialog dialog;
 	private Button buttonDecided;
+	private TextView textTitle;
+	private String title;
 	private User user = User.getInstance();
 	private DrumPicker pickerYear;
 	private DrumPicker pickerMonth;
@@ -59,6 +62,12 @@ public class ProfileBirthSettingDialog extends DialogFragment implements
 
 	public ProfileBirthSettingDialog(ProfileBirthCallbackListener listener) {
 		this.listener = listener;
+	}
+
+	public ProfileBirthSettingDialog(ProfileBirthCallbackListener listener,
+			String title) {
+		this.listener = listener;
+		this.title = title;
 	}
 
 	@Override
@@ -109,6 +118,10 @@ public class ProfileBirthSettingDialog extends DialogFragment implements
 				dismiss();
 			}
 		});
+		textTitle = (TextView) dialog.findViewById(R.id.title);
+		if (title != null) {
+			textTitle.setText(title);
+		}
 		pickerYear = (DrumPicker) dialog.findViewById(R.id.picker_year);
 		pickerMonth = (DrumPicker) dialog.findViewById(R.id.picker_month);
 		pickerDay = (DrumPicker) dialog.findViewById(R.id.picker_day);

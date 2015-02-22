@@ -150,7 +150,9 @@
         </activity>
         <activity android:name=".ui.activity.GroupMemberInfoActivity" >
         </activity>
-        <activity android:name=".ui.activity.TrainingFreeInsertActivity" >
+        <activity
+            android:name=".ui.activity.TrainingFreeInsertActivity"
+            android:label="@string/title_activity_training_free_insert" >
         </activity>
         <activity
             android:name=".ui.activity.SyncTrainingListActivity"
@@ -160,6 +162,7 @@
             android:name=".ui.activity.WeightGraphActivity"
             android:label="@string/title_activity_weight_graph" >
         </activity>
+        <activity android:name=".ui.activity.GroupPermissionChangeActivity" />
     </application>
 
 </manifest>

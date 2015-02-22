@@ -42,7 +42,7 @@ public class TopPagerAdapter extends FragmentPagerAdapter implements
 		this.id = id;
 		setContents();
 	}
-	
+
 	@Override
 	public Fragment getItem(int position) {
 		return fragments.get(position);
@@ -108,13 +108,10 @@ public class TopPagerAdapter extends FragmentPagerAdapter implements
 	}
 
 	public void setContents() {
-		// fragments.add(new DashBoardFragment());
 		fragments.add(new TrainingDataFragment());
 		TopBaseFragment fragmentMeasurement = new MeasurementFragment();
 		fragments.add(fragmentMeasurement);
 		fragments.add(new ProfileFragment());
-		// fragments.add(new DeviceInfoFragment(listener));
-
 		for (TopBaseFragment fragment : fragments) {
 			contents.add(fragment.getTitle());
 		}

@@ -1,13 +1,19 @@
 package ac.neec.mio.dao.item.sqlite.parser;
 
 import static ac.neec.mio.consts.SQLConstants.*;
+import ac.neec.mio.framework.ProductDataFactory;
 import ac.neec.mio.group.Permission;
 import ac.neec.mio.group.GroupFactory;
-import ac.neec.mio.training.framework.ProductDataFactory;
 import android.database.Cursor;
 
+/**
+ * 権限を解析するクラス
+ */
 public class PermissionCursorParser extends CursorParser {
 
+	/**
+	 * 権限
+	 */
 	private Permission permission;
 
 	public PermissionCursorParser(Cursor c) {
@@ -46,6 +52,9 @@ public class PermissionCursorParser extends CursorParser {
 		c.close();
 	}
 
+	/**
+	 * @return Permission型
+	 */
 	@Override
 	public Permission getObject() {
 		return permission;

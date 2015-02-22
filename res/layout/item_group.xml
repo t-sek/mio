@@ -4,16 +4,16 @@
     android:layout_marginLeft="10dp"
     android:orientation="horizontal" >
 
-    <ImageView
+    <com.sek.circleimageview.CircleImageView
         android:id="@+id/Group_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="80sp"
+        android:layout_height="80sp"
         android:layout_gravity="center"
         android:src="@drawable/icon_group" />
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginLeft="10dp"
         android:orientation="vertical" >
 
@@ -33,5 +33,17 @@
             android:textColor="@android:color/black"
             android:textSize="30dp" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/text_permission"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="10sp"
+        android:gravity="right"
+        android:text="加入"
+        android:textColor="@android:color/holo_red_light"
+        android:textStyle="bold"
+        android:visibility="invisible" />
 
 </LinearLayout>

@@ -28,6 +28,10 @@ import ac.neec.mio.util.DateUtil;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+/**
+ * WebAPI接続URL・XML解析クラス生成を実装するクラス
+ *
+ */
 public class ApiItemDao extends HttpsDao {
 
 	private XmlParser parser;
@@ -42,76 +46,58 @@ public class ApiItemDao extends HttpsDao {
 	}
 
 	@Override
-	public void selectUser(Context context, String userId, String password) {
+	public void selectUser(String userId, String password) {
 		String url = SpoITApi.selectUser(userId, password);
-		parser = new UserInfoXmlParser(context);
-		// parser = new PrintXmlParser();
+		parser = new UserInfoXmlParser();
 		executeApi(url);
 	}
 
 	@Override
-	public void selectWeight(Context context, String userId, String password,
-			String date1, String date2) {
+	public void selectWeight(String userId, String password, String date1,
+			String date2) {
 		String url = SpoITApi.selectWeight(userId, password, date1, date2);
 		parser = new UserWeightsXmlParser();
-		// parser = new PrintXmlParser();
 		executeApi(url);
 	}
 
 	@Override
-	public void insertUser(Context context, String userId, String name,
-			String birth, String gender, String height, String mail,
-			String password, String weight) {
+	public void insertUser(String userId, String name, String birth,
+			String gender, String height, String mail, String password) {
 		String url = SpoITApi.insertUser(userId, name, birth, gender, height,
-				mail, password, weight);
-		parser = new UserInfoXmlParser(context);
+				mail, password);
+		parser = new UserInfoXmlParser();
 		executeApi(url);
 	}
 
 	@Override
-	public void insertUserImage(Context context, String userId,
-			String password, String name, String type, String tmpName,
-			int error, int size) {
+	public void insertUserImage(String userId, String password, String filePath) {
 		String url = SpoITApi.insertUserImage();
 		parser = new PrintXmlParser();
-		List<NameValuePair> postData = SpoITApi.insertUserImagePostData(userId,
-				password, name, type, tmpName, String.valueOf(error),
-				String.valueOf(size));
-		executePostImage(url, postData);
-		// JSONArray json = null;
-		// try {
-		// json = new Image(userId, password, name, type, tmpName, error, size)
-		// .getJson();
-		// } catch (ImagePostMessageException e) {
-		// e.printStackTrace();
-		// }
-		// // Log.d("dao", "json " + json.toString());
-		// executePostImageApi(url, json);
+		executePostImage(url, filePath);
 	}
 
 	@Override
-	public void updateUser(Context context, String userId, String name,
-			String birth, String height, String mail, String password) {
+	public void updateUser(String userId, String name, String birth,
+			String height, String mail, String password) {
 		String url = SpoITApi.updateUser(userId, name, birth, height, mail,
 				password);
-		parser = new UserInfoXmlParser(context);
+		parser = new UserInfoXmlParser();
 		executeApi(url);
 	}
 
 	@Override
-	public void updateUserWeight(Context context, String userId,
-			String password, String weight) {
+	public void updateUserWeight(String userId, String password, String weight) {
 		String url = SpoITApi.insertUserWeight(userId, password, weight);
-		parser = new UserInfoXmlParser(context);
+		parser = new UserInfoXmlParser();
 		executeApi(url);
 	}
 
 	@Override
-	public void updateUserQuietHeartRate(Context context, String userId,
-			String password, String quietHeartRate) {
+	public void updateUserQuietHeartRate(String userId, String password,
+			String quietHeartRate) {
 		String url = SpoITApi.insertUserQuietHeartRate(userId, password,
 				quietHeartRate);
-		parser = new UserInfoXmlParser(context);
+		parser = new UserInfoXmlParser();
 		executeApi(url);
 	}
 
@@ -160,6 +146,15 @@ public class ApiItemDao extends HttpsDao {
 	}
 
 	@Override
+	public void insertGroupAdmin(String userId, String targetUserId,
+			String groupId, String password) {
+		String url = SpoITApi.insertGroupAffiliation(userId, targetUserId,
+				groupId, PermissionConstants.groupAdmin(), password);
+		parser = new GroupXmlParser();
+		executeApi(url);
+	}
+
+	@Override
 	public void deleteGroupMember(String userId, String targetUserId,
 			String groupId, String password) {
 		String url = SpoITApi.insertGroupAffiliation(userId, targetUserId,
@@ -197,6 +192,13 @@ public class ApiItemDao extends HttpsDao {
 	}
 
 	@Override
+	public void deleteGroup(String groupId, String userId, String password) {
+		String url = SpoITApi.deleteGroup(groupId, userId, password);
+		parser = new PrintXmlParser();
+		executeApi(url);
+	}
+
+	@Override
 	public void insertTrainingLog(int trainingId, int heartRate, double disX,
 			double disY, String time, String lapTime, String splitTime,
 			int trainingLogId, int targetHeartRate) {
@@ -207,10 +209,10 @@ public class ApiItemDao extends HttpsDao {
 	}
 
 	@Override
-	public void insertTrainingPlay(int trainingId, int playId,
-			int trainingMenuId, String trainingTime) {
-		String url = SpoITApi.insertTrainingPlay(trainingId, playId,
-				trainingMenuId, trainingTime);
+	public void insertTrainingPlay(String userId, int trainingId, int playId,
+			int trainingMenuId, int trainingTime, String password) {
+		String url = SpoITApi.insertTrainingPlay(userId, trainingId, playId,
+				trainingMenuId, trainingTime, password);
 		parser = new TrainingPlayXmlParser();
 		executeApi(url);
 	}
@@ -277,10 +279,6 @@ public class ApiItemDao extends HttpsDao {
 
 	private void executeApi(String url) {
 		super.execute(url);
-	}
-
-	private void executePostImageApi(String url, JSONArray json) {
-		super.executePostImage(url, json);
 	}
 
 	private void executeImageApi(String url) {

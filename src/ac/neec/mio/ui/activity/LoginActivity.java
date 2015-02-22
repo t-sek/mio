@@ -4,14 +4,13 @@ import java.io.InputStream;
 
 import ac.neec.mio.R;
 import ac.neec.mio.consts.ErrorConstants;
+import ac.neec.mio.consts.MessageConstants;
 import ac.neec.mio.dao.ApiDao;
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.Sourceable;
 import ac.neec.mio.exception.XmlParseException;
 import ac.neec.mio.exception.XmlReadException;
-import ac.neec.mio.http.HttpManager;
-import ac.neec.mio.http.listener.HttpUserResponseListener;
-import ac.neec.mio.training.framework.ProductDataFactory;
+import ac.neec.mio.framework.ProductDataFactory;
 import ac.neec.mio.ui.dialog.LoadingDialog;
 import ac.neec.mio.user.User;
 import ac.neec.mio.user.UserInfo;
@@ -30,19 +29,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
-
 public class LoginActivity extends Activity implements Sourceable {
 
 	private static final int MESSAGE_TOAST = 1;
 	private static final int MESSAGE_NETWORK_ERROR = 2;
+	private static final int MESSAGE_VALIDATE = 3;
 
 	private EditText editId;
 	private EditText editPass;
 	private Button buttonLogin;
 	private String id;
 	private User user = User.getInstance();
-	private LoadingDialog dialogLoading = new LoadingDialog();
+	private LoadingDialog dialogLoading = new LoadingDialog(
+			MessageConstants.login());
 	private ApiDao dao;
 
 	private Handler handler = new Handler() {
@@ -58,7 +57,13 @@ public class LoginActivity extends Activity implements Sourceable {
 				Toast.makeText(getApplicationContext(),
 						ErrorConstants.networkError(), Toast.LENGTH_SHORT)
 						.show();
-
+				break;
+			case MESSAGE_VALIDATE:
+				dialogLoading.dismiss();
+				Toast.makeText(getApplicationContext(),
+						ErrorConstants.scriptValidate(), Toast.LENGTH_SHORT)
+						.show();
+				break;
 			default:
 				break;
 			}
@@ -96,8 +101,8 @@ public class LoginActivity extends Activity implements Sourceable {
 
 	private void downloadLoginInfo() {
 		dialogLoading.show(getFragmentManager(), "");
-		dao.selectUser(getApplicationContext(), editId.getText().toString(),
-				editPass.getText().toString());
+		dao.selectUser(editId.getText().toString(), editPass.getText()
+				.toString());
 	}
 
 	private void intentTop() {
@@ -123,7 +128,7 @@ public class LoginActivity extends Activity implements Sourceable {
 		user.setName(info.getName());
 		user.setPassword(editPass.getText().toString());
 		user.setMail(info.getMail());
-		user.setBirth(DateUtil.japaneseFormat(info.getBirth()));
+		user.setBirth(info.getBirth());
 		ProductDataFactory factory = new GenderFactory();
 		Gender g = (Gender) factory.create(info.getGender().getGender());
 		user.setGender(g.getGender());
@@ -135,22 +140,21 @@ public class LoginActivity extends Activity implements Sourceable {
 	@Override
 	public void complete() {
 		dialogLoading.dismiss();
-		UserInfo user = null;
+		UserInfo userInfo = null;
 		try {
-			user = dao.getResponse();
+			userInfo = dao.getResponse();
+			Log.d("activity", "user " + userInfo);
 		} catch (XmlParseException e) {
 			e.printStackTrace();
 		} catch (XmlReadException e) {
 			e.printStackTrace();
 		}
-		Log.d("activity", "user " + user.getName());
-		Log.d("activity", "user " + user.getUserId());
-		if (user == null || user.getUserId() == null) {
+		if (userInfo == null || userInfo.getUserId() == null) {
 			Message message = new Message();
 			message.what = MESSAGE_TOAST;
 			handler.sendMessage(message);
 		} else {
-			setUserInfo(user);
+			setUserInfo(userInfo);
 			intentTop();
 		}
 	}
@@ -163,20 +167,16 @@ public class LoginActivity extends Activity implements Sourceable {
 	}
 
 	@Override
-	public void complete(InputStream response) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void complete(Bitmap image) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void progressUpdate(int value) {
-		// TODO Auto-generated method stub
-		
+	public void validate() {
+		Message message = new Message();
+		message.what = MESSAGE_VALIDATE;
+		handler.sendMessage(message);
 	}
+
 }

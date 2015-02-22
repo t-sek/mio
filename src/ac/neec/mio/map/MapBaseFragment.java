@@ -26,12 +26,31 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+/**
+ * マップを使用するクラス
+ *
+ */
 public class MapBaseFragment extends BaseFragment implements
 		OnConnectionFailedListener, ConnectionCallbacks, LocationListener {
+	/**
+	 * マップ
+	 */
 	protected GoogleMap map;
+	/**
+	 * 経路の位置情報リスト
+	 */
 	protected ArrayList<LatLng> markerPoints;
+	/**
+	 * ロケーションクライアント
+	 */
 	protected LocationClient locationClient = null;
+	/**
+	 * 最新の位置情報
+	 */
 	protected LatLng lastLocation;
+	/**
+	 * 更新時間、更新距離、精度を設定
+	 */
 	protected static final LocationRequest REQUEST = LocationRequest.create()
 			.setInterval(5000)
 			// 5 seconds
@@ -47,9 +66,13 @@ public class MapBaseFragment extends BaseFragment implements
 			locationClient.disconnect();
 		}
 	}
-	
-	
 
+	/**
+	 * ロケーションリスナーを設定する
+	 * 
+	 * @param context
+	 *            コンテキスト
+	 */
 	protected void setLocationListener(Context context) {
 		// LocationManagerを取得
 		LocationManager locationManager = (LocationManager) getActivity()
@@ -64,9 +87,6 @@ public class MapBaseFragment extends BaseFragment implements
 		criteria.setSpeedRequired(true);
 		// ロケーションプロバイダの取得
 		String provider = locationManager.getBestProvider(criteria, true);
-		// LocationListenerを登録
-		// locationManager.requestLocationUpdates(provider, 0, 0,
-		// (android.location.LocationListener) this);
 		locationManager = (LocationManager) getActivity().getSystemService(
 				getActivity().LOCATION_SERVICE);
 		locationClient = new LocationClient(context, this, this);// OnConnectionFailedListener
@@ -76,31 +96,38 @@ public class MapBaseFragment extends BaseFragment implements
 		}
 
 	}
-	
-	protected void moveThisPosition(Location location){
-		// 現在地に移動
+
+	/**
+	 * 指定した位置に移動する
+	 * 
+	 * @param location
+	 *            指定位置
+	 */
+	protected void moveThisPosition(Location location) {
 		CameraPosition cameraPos = new CameraPosition.Builder()
 				.target(new LatLng(location.getLatitude(), location
 						.getLongitude())).zoom(17.0f).bearing(0).build();
-		map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPos));
+		if (map != null) {
+			map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPos));
+		}
 	}
 
 	@Override
 	public void onLocationChanged(Location location) {
 		moveThisPosition(location);
+		if (map == null) {
+			return;
+		}
 		// 線をひく
 		if (lastLocation == null) {
-			 lastLocation = new LatLng(location.getLatitude(),
-			 location.getLongitude());
-//			lastLocation = new LatLng(43.0675, 141.350784);
+			lastLocation = new LatLng(location.getLatitude(),
+					location.getLongitude());
 			// 現在地にマーカーをうつ
 			MarkerOptions options = new MarkerOptions();
 			options.position(new LatLng(location.getLatitude(), location
 					.getLongitude()));
 			BitmapDescriptor icon = BitmapDescriptorFactory
 					.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
-			// BitmapDescriptor icon =
-			// BitmapDescriptorFactory.fromResource(R.drawable.ic_logo);
 			options.icon(icon);
 			map.addMarker(options);
 		}
@@ -130,36 +157,26 @@ public class MapBaseFragment extends BaseFragment implements
 	@Override
 	public void notifyValue(int value) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void notifyCalorie(int value) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void notifyRestUpdate() {
 		// TODO Auto-generated method stub
-		
 	}
-
-
 
 	@Override
 	public void notifyTime(String value) {
 		// TODO Auto-generated method stub
-		
 	}
-
-
 
 	@Override
 	public void trainingId(int trainingId, int categoryId) {
 		// TODO Auto-generated method stub
-		
 	}
-	
 
 }

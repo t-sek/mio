@@ -1,12 +1,15 @@
 package ac.neec.mio.ui.dialog;
 
+import com.google.android.gms.internal.co;
+
 import ac.neec.mio.R;
+import ac.neec.mio.filter.JapaneseInputFilter;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
+import android.text.InputFilter;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -29,6 +32,8 @@ public class GroupSettingDialog extends DialogFragment {
 	private EditText editName;
 	private EditText editComment;
 	private String groupId;
+	private String groupName;
+	private String comment;
 
 	public interface CallbackListener {
 		void notifyChenged(String groupId, String groupName, String comment);
@@ -43,6 +48,11 @@ public class GroupSettingDialog extends DialogFragment {
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		dialog = new Dialog(getActivity());
 		setDialog();
+		Bundle bundle = getArguments();
+		if (bundle != null) {
+			groupName = bundle.getString("group_name");
+			comment = bundle.getString("comment");
+		}
 		initFindViews();
 		setListeners();
 		return dialog;
@@ -62,16 +72,20 @@ public class GroupSettingDialog extends DialogFragment {
 	}
 
 	private void initFindViews() {
+		InputFilter[] filters = new InputFilter[] { new JapaneseInputFilter() };
 		textTitle = (TextView) dialog.findViewById(R.id.dialog_group_title);
 		textTitle.setText(tag);
 		buttonDecided = (Button) dialog.findViewById(R.id.btn_dialog_decided);
 		editId = (EditText) dialog.findViewById(R.id.edit_group_id);
+		editId.setFilters(filters);
 		if (tag.equals(EDIT_GROUP)) {
 			editId.setHint(groupId);
 			editId.setFocusableInTouchMode(false);
 		}
 		editName = (EditText) dialog.findViewById(R.id.edit_group_name);
+		editName.setText(groupName);
 		editComment = (EditText) dialog.findViewById(R.id.edit_group_comment);
+		editComment.setText(comment);
 	}
 
 	private void checkInsertData() {

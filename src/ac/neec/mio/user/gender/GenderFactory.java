@@ -2,18 +2,13 @@ package ac.neec.mio.user.gender;
 
 import java.sql.Time;
 
+import ac.neec.mio.framework.ProductData;
+import ac.neec.mio.framework.ProductDataFactory;
 import ac.neec.mio.group.Permission;
-import ac.neec.mio.training.framework.ProductData;
-import ac.neec.mio.training.framework.ProductDataFactory;
 import ac.neec.mio.user.bodily.weight.Weight;
 import android.graphics.Bitmap;
 
 public class GenderFactory extends ProductDataFactory {
-
-	@Override
-	protected ProductData factoryMethod(Number number, Time time) {
-		return null;
-	}
 
 	@Override
 	protected ProductData factoryMethod(int trainingCategotyId,
@@ -28,21 +23,8 @@ public class GenderFactory extends ProductDataFactory {
 	}
 
 	@Override
-	protected ProductData factoryMethod(float height, Weight weight,
-			int quietHeartRate) {
-		return null;
-	}
-
-	@Override
 	protected ProductData factoryMethod(String gender) {
 		return new Gender(gender);
-	}
-
-	@Override
-	protected ProductData factoryMethod(int trainingMenuId, String endTime,
-			int playTime) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

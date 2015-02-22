@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,25 +33,20 @@ public class GroupInfoListAdapter extends ArrayAdapter<GroupInfoListItem> {
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		GroupInfoListItem group = list.get(position);
 		if (convertView == null) {
-			// convertView = inflater.inflate(R.layout.activity_group_list,
-			// null);
 			convertView = inflater.inflate(R.layout.item_group_list, null);
 		}
-
-		// Bitmap btm = group.getIcon();
-		// ImageView gpImag =
-		// (ImageView)convertView.findViewById(R.id.icon_View);
-		// gpImag.setImageBitmap(btm);
 		String name = group.getOperation();
 		TextView textName = (TextView) convertView
 				.findViewById(R.id.group_Operation);
 		textName.setText(String.valueOf(name));
-		// if (position == 0) {
-		// TextView textCount = (TextView) convertView
-		// .findViewById(R.id.text_item_count);
-		// textCount.setText(String.valueOf(count));
-		// }
-
+		if (group.getNum() == 0) {
+			convertView.findViewById(R.id.layout_num).setVisibility(
+					View.INVISIBLE);
+		} else {
+			TextView textNum = (TextView) convertView
+					.findViewById(R.id.text_num);
+			textNum.setText(String.valueOf(group.getNum()));
+		}
 		return convertView;
 	}
 

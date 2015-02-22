@@ -144,4 +144,10 @@ public class QuietHeartRateMeasurementActivity extends BleConnectBaseActivity
 
 	}
 
+	@Override
+	protected void bleConnectTimeout() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

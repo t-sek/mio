@@ -1,8 +1,7 @@
 package ac.neec.mio.ui.dialog;
 
-import static ac.neec.mio.util.SignUpConstants.*;
+import static ac.neec.mio.consts.SignUpConstants.*;
 import ac.neec.mio.R;
-import ac.neec.mio.http.HttpManager;
 import ac.neec.mio.ui.listener.CallbackListener;
 import ac.neec.mio.ui.picker.DrumPicker;
 import ac.neec.mio.user.User;
@@ -48,6 +47,8 @@ public class ProfileBodilySelectDialog extends PickerBaseDialog {
 
 	public interface ProfileBodilyCallbackListener {
 		void dataChanged();
+
+		void dataChanged(String data);
 	}
 
 	public ProfileBodilySelectDialog() {
@@ -143,6 +144,7 @@ public class ProfileBodilySelectDialog extends PickerBaseDialog {
 					} else {
 						user.setWeight(DEFAULT_WEIGHT);
 					}
+					listener.dataChanged(selectedData);
 					break;
 				case QUIET_HEART_RATE:
 					textDialogTitle.setText(quietHeartRate());

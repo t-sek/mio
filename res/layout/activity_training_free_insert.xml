@@ -6,8 +6,6 @@
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
         android:background="@color/theme"
         android:dividerPadding="20dp"
         android:orientation="vertical"
@@ -21,13 +19,13 @@
             android:padding="10dp" >
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="実施日"
                 android:textColor="@color/setting_column" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp" >
 
@@ -70,6 +68,10 @@
                     android:text="日"
                     android:textColor="@android:color/white" />
             </LinearLayout>
+
+            <View
+                android:layout_width="200sp"
+                android:layout_height="1sp" />
         </TableRow>
 
         <TableRow
@@ -91,6 +93,33 @@
                 android:layout_marginLeft="20dp"
                 android:text="カテゴリー"
                 android:textColor="@android:color/white" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/training_bar"
+            android:layout_marginBottom="5dp"
+            android:background="@color/setting_back_column"
+            android:padding="10dp" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="メニュー"
+                android:textColor="@color/setting_column" />
+
+            <com.koba.androidrtchart.ColorBar
+                android:id="@+id/colorbar"
+                android:layout_width="match_parent"
+                android:layout_height="40sp"
+                android:layout_span="3" />
+
+            <ImageButton
+                android:id="@+id/button_training_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@null"
+                android:src="@drawable/ic_action_new" />
         </TableRow>
 
         <TableRow
@@ -236,7 +265,7 @@
                     android:id="@+id/text_distance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="2"
+                    android:text="0"
                     android:textColor="@android:color/white" />
 
                 <TextView

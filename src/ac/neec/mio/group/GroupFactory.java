@@ -4,22 +4,19 @@ import static ac.neec.mio.util.PermissionUtil.getBool;
 
 import java.sql.Time;
 
-import ac.neec.mio.training.framework.ProductData;
-import ac.neec.mio.training.framework.ProductDataFactory;
+import ac.neec.mio.framework.ProductData;
+import ac.neec.mio.framework.ProductDataFactory;
 import ac.neec.mio.user.bodily.weight.Weight;
 import android.graphics.Bitmap;
 
+/**
+ * Groupクラスを生成するクラス
+ */
 public class GroupFactory extends ProductDataFactory {
 
 	@Override
-	protected ProductData factoryMethod(Number number, Time time) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected ProductData factoryMethod(int id, int trainingMenuId, String userId,
-			String date, String startTime, String playTime,
+	protected ProductData factoryMethod(int id, int trainingMenuId,
+			String userId, String date, String startTime, String playTime,
 			int targetHeartRate, int targetCal, int consumptionCal,
 			int heartRateAvg, int strange, double distance) {
 		// TODO Auto-generated method stub
@@ -42,21 +39,7 @@ public class GroupFactory extends ProductDataFactory {
 	}
 
 	@Override
-	protected ProductData factoryMethod(float height, Weight weight,
-			int quietHeartRate) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	protected ProductData factoryMethod(String gender) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected ProductData factoryMethod(int trainingMenuId, String endTime,
-			int playTime) {
 		// TODO Auto-generated method stub
 		return null;
 	}

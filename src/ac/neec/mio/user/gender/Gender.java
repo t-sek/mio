@@ -1,12 +1,12 @@
 package ac.neec.mio.user.gender;
 
-import ac.neec.mio.training.framework.ProductData;
+import ac.neec.mio.framework.ProductData;
 
 public class Gender extends ProductData {
 
-	public static final String MALE = "man";
-	public static final String FEMALE = "woman";
-	public static final String OTHER = "other";
+	public static final String MALE = "男性";
+	public static final String FEMALE = "女性";
+	public static final String OTHER = "そうでもない";
 
 	private String gender = MALE;
 

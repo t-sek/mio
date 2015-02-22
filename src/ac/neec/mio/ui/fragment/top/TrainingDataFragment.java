@@ -12,13 +12,15 @@ import ac.neec.mio.dao.SQLiteDao;
 import ac.neec.mio.dao.Sourceable;
 import ac.neec.mio.exception.XmlParseException;
 import ac.neec.mio.exception.XmlReadException;
-import ac.neec.mio.taining.Training;
+import ac.neec.mio.training.Training;
 import ac.neec.mio.ui.activity.SyncTrainingListActivity;
 import ac.neec.mio.ui.activity.TrainingDataDetailActivity;
 import ac.neec.mio.ui.activity.TrainingFreeInsertActivity;
 import ac.neec.mio.ui.adapter.TrainingDateListAdapter;
 import ac.neec.mio.ui.listener.TrainingDataListCallbackListener;
+import ac.neec.mio.ui.view.BadgeView;
 import ac.neec.mio.user.User;
+import ac.neec.mio.util.DateUtil;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -29,19 +31,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ImageButton;
-
-import com.readystatesoftware.viewbadger.BadgeView;
 
 public class TrainingDataFragment extends TopBaseFragment implements
 		Sourceable, TrainingDataListCallbackListener {
 	public static final String TITLE = "データログ";
 	private static final int MESSAGE_UPDATE = 1;
 	private static final int MESSAGE_PROGRESS_GONE = 2;
-	private static final int DATE_NUM = 20;
+	private static final int DATE_NUM = 50;
 	public static final int REQUEST_CODE = 20;
 
 	private View view;
@@ -50,13 +49,13 @@ public class TrainingDataFragment extends TopBaseFragment implements
 	private ImageButton buttonInsert;
 	private TrainingDateListAdapter adapter;
 	private User user = User.getInstance();
-	private int date = 0;
-	private int dateNum = DATE_NUM;
+	private int dateNum;
 	private ApiDao dao;
 	private SQLiteDao daoSql;
 	// private static boolean created;
 	private ImageButton buttonSync;
 	private BadgeView badge;
+	private int num;
 
 	private List<List<Training>> trainings = new ArrayList<List<Training>>();
 
@@ -64,7 +63,7 @@ public class TrainingDataFragment extends TopBaseFragment implements
 		public void handleMessage(Message message) {
 			switch (message.what) {
 			case MESSAGE_UPDATE:
-				update();
+				updateTraining((List<Training>) message.obj);
 				break;
 			case MESSAGE_PROGRESS_GONE:
 				// progressGone();
@@ -74,35 +73,9 @@ public class TrainingDataFragment extends TopBaseFragment implements
 		};
 	};
 
-	// private void progressGone() {
-	// progress.setVisibility(View.GONE);
-	// progress.setProgress(0);
-	// }
-
-	private void update() {
-		adapter.notifyDataSetChanged();
-	}
-
-	// private void selectTraining() {
-	// if (date > dateNum) {
-	// dateNum += date;
-	// handler.sendMessage(setMessage(MESSAGE_PROGRESS_GONE));
-	// return;
-	// }
-	// // dao.selectTraining(user.getId(), DateUtil.getDate(date));
-	// dao.selectTraining(user.getId(), DateUtil.getDate(DATE_NUM),
-	// DateUtil.nowDate(), 1000000, 0, user.getPassword());
-	// progress.setProgress(date - DATE_NUM * (date / DATE_NUM));
-	// date++;
-	// }
-
 	@Override
-	public void onResume() {
-		super.onResume();
-		initSync();
-		if (listView != null) {
-			// reload();
-		}
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 	}
 
 	@Override
@@ -111,15 +84,10 @@ public class TrainingDataFragment extends TopBaseFragment implements
 		view = inflater.inflate(R.layout.fragment_training_data, null);
 		dao = DaoFacade.getApiDao(this);
 		daoSql = DaoFacade.getSQLiteDao();
+		dao.selectTraining(user.getId(), user.getId(), user.getBirth(),
+				DateUtil.nowDate(), dateNum, 0, user.getPassword());
 		init();
-		dao.selectTraining(user.getId(), user.getId(), "2015-01-06",
-				"2015-01-26", 1000000, 1, user.getPassword());
-		// progressGone();
 		return view;
-	}
-
-	private void reload() {
-		date = 0;
 	}
 
 	private void initSync() {
@@ -142,10 +110,10 @@ public class TrainingDataFragment extends TopBaseFragment implements
 	}
 
 	private void init() {
-		// progress = (ProgressBar) view.findViewById(R.id.progress);
 		listView = (ExpandableListView) view
 				.findViewById(R.id.list_training_data);
-		adapter = new TrainingDateListAdapter(getActivity(), trainings, this);
+		adapter = new TrainingDateListAdapter(getActivity(), trainings, this,
+				R.color.theme);
 		listView.setAdapter(adapter);
 		listView.setEmptyView(view.findViewById(R.id.empty));
 		listView.setOnChildClickListener(new OnChildClickListener() {
@@ -187,40 +155,33 @@ public class TrainingDataFragment extends TopBaseFragment implements
 		getActivity().startActivity(intent);
 	}
 
-	private Message setMessage(int msg) {
+	private Message setMessage(int msg, List<Training> training) {
 		Message message = new Message();
+		if (training != null) {
+			message.obj = training;
+		}
 		message.what = msg;
 		return message;
 	}
 
-	private void updateTraining(List<Training> training) {
-		String lastDate = null;
-		List<Training> lastTraining = new ArrayList<Training>();
-		Log.d("fragment", "training size " + training.size());
-		for (Training t : training) {
-			if (t.getDate().equals(lastDate)) {
-				lastTraining.add(t);
-			} else {
-				trainings.add(lastTraining);
-				lastTraining.clear();
-				lastTraining.add(t);
-			}
-			lastDate = t.getDate();
-			adapter.notifyDataSetChanged();
+	private void updateTraining(List<Training> trainings) {
+		if (trainings.size() == 0) {
+			return;
 		}
-		handler.sendMessage(setMessage(MESSAGE_UPDATE));
-		// String nowDate = DateUtil.splitDate(training.get(0).getDate());
-		// for (int i = 0; i < trainings.size(); i++) {
-		// String date = DateUtil.splitDate(trainings.get(i).get(0).getDate());
-		// if (date.compareTo(nowDate) < 0) {
-		// trainings.add(i, training);
-		// adapter.notifyDataSetChanged();
-		// return;
-		// }
-		// }
-		// trainings.add(trainings.size(), training);
-		// handler.sendMessage(setMessage(MESSAGE_UPDATE));
-
+		String lastDate = trainings.get(0).getDate();
+		List<Training> lastTraining = new ArrayList<Training>();
+		for (Training training : trainings) {
+			if (training.getDate().equals(lastDate)) {
+				lastTraining.add(training);
+			} else {
+				this.trainings.add(lastTraining);
+				lastTraining = new ArrayList<Training>();
+				lastTraining.add(training);
+			}
+			lastDate = training.getDate();
+		}
+		this.trainings.add(lastTraining);
+		adapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -245,17 +206,12 @@ public class TrainingDataFragment extends TopBaseFragment implements
 			e.printStackTrace();
 			return;
 		}
-		updateTraining(training);
+		// updateTraining(training);
+		handler.sendMessage(setMessage(MESSAGE_UPDATE, training));
 	}
 
 	@Override
 	public void incomplete() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void complete(InputStream response) {
 		// TODO Auto-generated method stub
 
 	}
@@ -267,7 +223,9 @@ public class TrainingDataFragment extends TopBaseFragment implements
 	}
 
 	@Override
-	public void progressUpdate(int value) {
-		Log.d("activity", "value " + value);
+	public void validate() {
+		// TODO Auto-generated method stub
+		
 	}
+
 }

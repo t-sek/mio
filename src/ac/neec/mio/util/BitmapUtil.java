@@ -1,15 +1,16 @@
 package ac.neec.mio.util;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 
-import android.content.ContentResolver;
-import android.content.Context;
+import ac.neec.mio.exception.ImageFileNotFoundException;
 import android.content.res.Resources;
-import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -21,14 +22,40 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.util.Log;
 
 public class BitmapUtil {
 
 	public static Drawable bitmapToDrawable(Resources res, Bitmap image) {
 		return new BitmapDrawable(res, image);
+	}
+
+	public static byte[] bitmapToBlob(Bitmap image) {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		if (image == null) {
+			return null;
+		}
+		image.compress(CompressFormat.PNG, 100, baos);
+		byte[] blob = baos.toByteArray();
+		return blob;
+	}
+
+	public static Bitmap fileToBitmap(File file)
+			throws ImageFileNotFoundException {
+		FileInputStream fis;
+		try {
+			fis = new FileInputStream(file);
+		} catch (FileNotFoundException e) {
+			throw new ImageFileNotFoundException();
+		}
+		return BitmapFactory.decodeStream(fis);
+	}
+
+	public static Bitmap blobToBitmap(byte[] image) {
+		if (image != null) {
+			return BitmapFactory.decodeByteArray(image, 0, image.length);
+		}
+		return null;
 	}
 
 	public static Bitmap streamToBitmap(InputStream image) {
@@ -50,7 +77,6 @@ public class BitmapUtil {
 			}
 		}
 		return BitmapFactory.decodeByteArray(b, 0, b.length);
-		// return BitmapFactory.decodeStream(image);
 	}
 
 	public static Bitmap rectImage(Bitmap image) {

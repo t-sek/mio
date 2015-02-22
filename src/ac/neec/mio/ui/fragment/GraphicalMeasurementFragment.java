@@ -3,8 +3,7 @@ package ac.neec.mio.ui.fragment;
 import java.util.Random;
 
 import ac.neec.mio.R;
-import ac.neec.mio.db.DBManager;
-import ac.neec.mio.taining.Training;
+import ac.neec.mio.training.Training;
 import ac.neec.mio.ui.dialog.TargetHeartRateSettingDislog;
 import ac.neec.mio.ui.listener.MeasurementCallbackListener;
 import ac.neec.mio.ui.listener.TargetHeartRateSettingListener;
@@ -34,10 +33,7 @@ public class GraphicalMeasurementFragment extends MeasurementBaseFragment
 	private RateMeter rateMeter;
 	private ChangeLogger logger;
 	private ImageButton buttonTargetHeartRateSetting;
-
 	private MeasurementCallbackListener listener;
-
-	private int testCalorie = 0;
 	private int targetHeartRate = DEFAULT_TARGET_HEART_RATE;
 
 	@Override
@@ -47,7 +43,6 @@ public class GraphicalMeasurementFragment extends MeasurementBaseFragment
 				container, false);
 		init(view);
 		setTachoMeter();
-
 		return view;
 	}
 
@@ -64,7 +59,6 @@ public class GraphicalMeasurementFragment extends MeasurementBaseFragment
 
 	private void showTargetHeartRateSetting() {
 		int targetValue = rateMeter.getMeterTargetValue();
-		Log.e("activity", "targetValue " + targetValue);
 		new TargetHeartRateSettingDislog(this, targetValue).show(getActivity()
 				.getSupportFragmentManager(), "dialog");
 	}
@@ -128,7 +122,6 @@ public class GraphicalMeasurementFragment extends MeasurementBaseFragment
 
 	@Override
 	public void onDecided(int targetHeartRate) {
-		Log.e("activity", "onDecided targetValue " + targetHeartRate);
 		this.targetHeartRate = targetHeartRate;
 		listener.onUpdateTargetHeartRate(targetHeartRate);
 		rateMeter.meterTargetSetting(targetHeartRate);
@@ -152,6 +145,6 @@ public class GraphicalMeasurementFragment extends MeasurementBaseFragment
 	@Override
 	public void onDialogCancel() {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

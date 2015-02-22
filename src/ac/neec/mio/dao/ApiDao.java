@@ -5,21 +5,26 @@ import ac.neec.mio.exception.XmlReadException;
 import ac.neec.mio.group.Permission;
 import android.content.Context;
 
+/**
+ * WebAPIに接続するインターフェース
+ *
+ */
 public interface ApiDao {
 	/**
-	 * ユーザ情報を取得
+	 * ユーザ情報を取得する
 	 * 
 	 * @param userId
 	 *            ユーザID
 	 * @param password
 	 *            パスワード
 	 */
-	void selectUser(Context context, String userId, String password);
+	void selectUser(String userId, String password);
 
 	/**
-	 * ユーザの体重の推移を取得
+	 * ユーザの体重の推移を取得する
 	 * 
 	 * @param context
+	 *            コンテキスト
 	 * @param userId
 	 *            ユーザID
 	 * @param password
@@ -29,11 +34,10 @@ public interface ApiDao {
 	 * @param date2
 	 *            終了日 yy-mm-dd形式
 	 */
-	void selectWeight(Context context, String userId, String password,
-			String date1, String date2);
+	void selectWeight(String userId, String password, String date1, String date2);
 
 	/**
-	 * ユーザを登録
+	 * ユーザを登録する
 	 * 
 	 * @param userId
 	 *            ユーザID
@@ -52,38 +56,28 @@ public interface ApiDao {
 	 * @param weight
 	 *            体重
 	 */
-	void insertUser(Context context, String userId, String name, String birth,
-			String gender, String height, String mail, String password,
-			String weight);
+	void insertUser(String userId, String name, String birth, String gender,
+			String height, String mail, String password);
 
 	/**
-	 * ユーザのプロフィール画像を追加
+	 * ユーザのプロフィール画像を追加する
 	 * 
 	 * @param context
+	 *            コンテキスト
 	 * @param userId
 	 *            ユーザID
 	 * @param password
 	 *            パスワード
-	 * @param name
-	 *            画像名
-	 * @param type
-	 *            タイプ
-	 * @param tmpName
-	 *            タグ名
-	 * @param error
-	 *            エラーコード(基本0でOK)
-	 * @param size
-	 *            サイズ
+	 * @param filePath
+	 *            ファイルパス
 	 */
-	void insertUserImage(Context context, String userId, String password,
-			String name, String type, String tmpName, int error, int size);
+	void insertUserImage(String userId, String password, String filePath);
 
 	/**
-	 * ユーザ情報を編集
+	 * ユーザ情報を編集する
 	 * 
 	 * @param userId
 	 *            ユーザID
-	 * 
 	 * @param name
 	 *            名前
 	 * @param birth
@@ -93,38 +87,37 @@ public interface ApiDao {
 	 * @param mail
 	 *            メールアドレス
 	 */
-	void updateUser(Context context, String userId, String name, String birth,
-			String height, String mail, String password);
+	void updateUser(String userId, String name, String birth, String height,
+			String mail, String password);
 
 	/**
-	 * ユーザ情報の体重を追加
+	 * ユーザ情報の体重を追加する
 	 * 
 	 * @param userId
 	 *            ユーザID
 	 * @param weight
 	 *            体重
 	 */
-	void updateUserWeight(Context context, String userId, String password,
-			String weight);
+	void updateUserWeight(String userId, String password, String weight);
 
 	/**
-	 * ユーザ情報の安静時心拍数を追加
+	 * ユーザ情報の安静時心拍数を追加する
 	 * 
 	 * @param userId
 	 *            ユーザID
 	 * @param heartRate
 	 *            安静時心拍数
 	 */
-	void updateUserQuietHeartRate(Context context, String userId,
-			String password, String heartRate);
+	void updateUserQuietHeartRate(String userId, String password,
+			String heartRate);
 
 	/**
-	 * 全グループを取得
+	 * 全グループを取得する
 	 */
 	void selectGroupAll();
 
 	/**
-	 * 所属している全グループを取得
+	 * 所属している全グループを取得する
 	 * 
 	 * @param userId
 	 *            ユーザID
@@ -134,19 +127,20 @@ public interface ApiDao {
 	void selectMyGroupAll(String userId, String password);
 
 	/**
-	 * グループ情報を取得
+	 * グループ情報を取得する
 	 * 
 	 * @param groupId
+	 *            グループID
 	 */
 	void selectGroup(String groupId);
 
 	/**
-	 * パーミッション情報を取得
+	 * パーミッション情報を取得する
 	 */
 	void selectPermition();
 
 	/**
-	 * グループを登録
+	 * グループを登録する
 	 * 
 	 * @param groupId
 	 *            グループID
@@ -163,7 +157,7 @@ public interface ApiDao {
 			String userId, String password);
 
 	/**
-	 * グループに加入申請
+	 * グループに加入申請する
 	 * 
 	 * @param userId
 	 *            ユーザID
@@ -178,7 +172,7 @@ public interface ApiDao {
 			String password);
 
 	/**
-	 * グループにトレーナーを追加
+	 * グループにトレーナーを追加する
 	 * 
 	 * @param userId
 	 *            ユーザID
@@ -193,7 +187,7 @@ public interface ApiDao {
 			String password);
 
 	/**
-	 * グループにメンバーを追加
+	 * グループにメンバーを追加する
 	 * 
 	 * @param userId
 	 *            ユーザID
@@ -208,7 +202,22 @@ public interface ApiDao {
 			String password);
 
 	/**
-	 * グループ情報を編集
+	 * グループに管理者を追加する
+	 * 
+	 * @param userId
+	 *            ユーザID
+	 * @param targetUserId
+	 *            対象ユーザID
+	 * @param groupId
+	 *            グループID
+	 * @param password
+	 *            パスワード
+	 */
+	void insertGroupAdmin(String userId, String targetUserId, String groupId,
+			String password);
+
+	/**
+	 * グループ情報を編集する
 	 * 
 	 * @param groupId
 	 * @param groupName
@@ -217,7 +226,7 @@ public interface ApiDao {
 	void updateGroup(String groupId, String groupName, String comment);
 
 	/**
-	 * グループからメンバーを退会
+	 * グループからメンバーを退会する
 	 * 
 	 * @param userId
 	 *            ユーザID
@@ -232,7 +241,19 @@ public interface ApiDao {
 			String password);
 
 	/**
-	 * トレーニングログを登録
+	 * グループを削除する
+	 * 
+	 * @param groupId
+	 *            グループID
+	 * @param userId
+	 *            ユーザID
+	 * @param password
+	 *            パスワード
+	 */
+	void deleteGroup(String groupId, String userId, String password);
+
+	/**
+	 * トレーニングログを登録する
 	 * 
 	 * @param trainingId
 	 *            トレーニングID
@@ -258,8 +279,10 @@ public interface ApiDao {
 			int trainingLogId, int targetHeartRate);
 
 	/**
-	 * トレーニングプレイを登録
+	 * トレーニングプレイを登録する
 	 * 
+	 * @param userId
+	 *            ユーザID
 	 * @param trainingId
 	 *            トレーニングID
 	 * @param playId
@@ -268,12 +291,14 @@ public interface ApiDao {
 	 *            トレーニングメニューID
 	 * @param trainingTime
 	 *            トレーニングプレイ時間
+	 * @param password
+	 *            パスワード
 	 */
-	void insertTrainingPlay(int trainingId, int playId, int trainingMenuId,
-			String trainingTime);
+	void insertTrainingPlay(String userId, int trainingId, int playId,
+			int trainingMenuId, int trainingTime, String password);
 
 	/**
-	 * トレーニングを登録
+	 * トレーニングを登録する
 	 * 
 	 * @param userId
 	 *            ユーザID
@@ -306,7 +331,7 @@ public interface ApiDao {
 			int calorie, int categoryId, double distance);
 
 	/**
-	 * 指定した期間のトレーニングを取得
+	 * 指定した期間のトレーニングを取得する
 	 * 
 	 * @param userId
 	 *            ユーザID
@@ -327,7 +352,7 @@ public interface ApiDao {
 			String date2, int limit, int offset, String password);
 
 	/**
-	 * トレーニングを取得
+	 * トレーニングを取得する
 	 * 
 	 * @param userId
 	 *            ユーザID
@@ -342,17 +367,17 @@ public interface ApiDao {
 			String password);
 
 	/**
-	 * トレーニングカテゴリーを取得
+	 * トレーニングカテゴリーを取得する
 	 */
 	void selectTrainingCategory();
 
 	/**
-	 * トレーニングメニューを取得
+	 * トレーニングメニューを取得する
 	 */
 	void selectTrainingMenu();
 
 	/**
-	 * 画像を取得
+	 * 画像を取得する
 	 * 
 	 * @param image
 	 *            サーバーに保存されている画像名
@@ -360,7 +385,8 @@ public interface ApiDao {
 	void selectImage(String image);
 
 	/**
-	 * テスト用
+	 * テスト用メソッド<br>
+	 * 取得したXMLをログに出力する
 	 * 
 	 * @param url
 	 */
@@ -378,7 +404,7 @@ public interface ApiDao {
 	<T> T getResponse() throws XmlParseException, XmlReadException;
 
 	/**
-	 * キャンセル
+	 * 中断する
 	 */
 	void cancel();
 }

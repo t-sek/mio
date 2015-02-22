@@ -4,13 +4,12 @@ import java.io.InputStream;
 
 import ac.neec.mio.R;
 import ac.neec.mio.consts.ErrorConstants;
+import ac.neec.mio.consts.MessageConstants;
 import ac.neec.mio.dao.ApiDao;
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.Sourceable;
 import ac.neec.mio.exception.XmlParseException;
 import ac.neec.mio.exception.XmlReadException;
-import ac.neec.mio.http.HttpManager;
-import ac.neec.mio.http.listener.HttpUserResponseListener;
 import ac.neec.mio.ui.dialog.LoadingDialog;
 import ac.neec.mio.user.User;
 import ac.neec.mio.user.UserInfo;
@@ -30,12 +29,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
-
 public class UserSignUpConfActivity extends Activity implements Sourceable {
 
 	private static final int MESSAGE_USER_ERROR = 1;
 	private static final int MESSAGE_NETWORK_ERROR = 4;
+	private static final int MESSAGE_VALIDATE = 5;
 	private static final int DAO_UPDATE_USER = 2;
 	private static final int DAO_UPDATE_HEART_RATE = 3;
 
@@ -50,7 +48,8 @@ public class UserSignUpConfActivity extends Activity implements Sourceable {
 	private Button buttonSignUp;
 
 	private User user = User.getInstance();
-	private LoadingDialog dialogLoading = new LoadingDialog();
+	private LoadingDialog dialogLoading = new LoadingDialog(
+			MessageConstants.add());
 	private ApiDao dao;
 	private int daoFlag;
 
@@ -59,13 +58,19 @@ public class UserSignUpConfActivity extends Activity implements Sourceable {
 			switch (message.what) {
 			case MESSAGE_USER_ERROR:
 				dialogLoading.dismiss();
-				Toast.makeText(getApplicationContext(), "登録に失敗しました",
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(),
+						ErrorConstants.signUp(), Toast.LENGTH_SHORT).show();
 				break;
 			case MESSAGE_NETWORK_ERROR:
 				dialogLoading.dismiss();
 				Toast.makeText(getApplicationContext(),
 						ErrorConstants.networkError(), Toast.LENGTH_SHORT)
+						.show();
+				break;
+			case MESSAGE_VALIDATE:
+				dialogLoading.dismiss();
+				Toast.makeText(getApplicationContext(),
+						ErrorConstants.scriptValidate(), Toast.LENGTH_SHORT)
 						.show();
 				break;
 			default:
@@ -107,18 +112,12 @@ public class UserSignUpConfActivity extends Activity implements Sourceable {
 
 	private void uploadUserInfo() {
 		dialogLoading.show(getFragmentManager(), "");
-		// HttpManager.uploadUserInfo(this, this, user.getId(), user.getName(),
-		// DateUtil.dateFormat(User.getInstance().getBirth()),
-		// user.getGender(), String.valueOf(Math.round(user.getHeight())),
-		// user.getMail(), user.getPassword(),
-		// BodilyUtil.weightToRound(user.getWeight()));
-		Log.d("activity", "birth " + User.getInstance().getBirth());
-		dao.insertUser(getApplicationContext(), user.getId(),
+		dao.insertUser(user.getId(),
 				user.getName(),
 				// DateUtil.dateFormat(User.getInstance().getBirth()),
 				user.getBirth(), user.getGender(),
 				String.valueOf(Math.round(user.getHeight())), user.getMail(),
-				user.getPassword(), BodilyUtil.weightToRound(user.getWeight()));
+				user.getPassword());
 		daoFlag = DAO_UPDATE_USER;
 	}
 
@@ -147,36 +146,6 @@ public class UserSignUpConfActivity extends Activity implements Sourceable {
 		finish();
 	}
 
-	// @Override
-	// public void responseUserInfo(UserInfo user) {
-	// dialogLoading.dismiss();
-	// if (user != null) {
-	// if (user.getUserId().equals(this.user.getId())) {
-	// HttpManager.uploadUserQuietHeartRate(getApplicationContext(),
-	// this, user.getUserId(), textQuietHeartRate.getText()
-	// .toString());
-	// this.user.login();
-	// intentTop();
-	// }
-	// } else {
-	// Message message = new Message();
-	// message.what = MESSAGE_USER_ERROR;
-	// handler.sendMessage(message);
-	// }
-	// }
-	//
-	// @Override
-	// public void responseQuietHeartRate(int heartRate) {
-	// dialogLoading.dismiss();
-	// Log.d("activiity", "heartRate " + heartRate);
-	// if (heartRate != 0) {
-	// } else {
-	// Message message = new Message();
-	// message.what = MESSAGE_USER_ERROR;
-	// handler.sendMessage(message);
-	// }
-	// }
-
 	@Override
 	public void complete() {
 		switch (daoFlag) {
@@ -194,9 +163,9 @@ public class UserSignUpConfActivity extends Activity implements Sourceable {
 					// HttpManager.uploadUserQuietHeartRate(
 					// getApplicationContext(), this, info.getUserId(),
 					// textQuietHeartRate.getText().toString());
-					dao.updateUserQuietHeartRate(getApplicationContext(),
-							info.getUserId(), this.user.getPassword(),
-							textQuietHeartRate.getText().toString());
+					dao.updateUserQuietHeartRate(info.getUserId(), this.user
+							.getPassword(), textQuietHeartRate.getText()
+							.toString());
 					daoFlag = DAO_UPDATE_HEART_RATE;
 					this.user.login();
 					intentTop();
@@ -216,6 +185,8 @@ public class UserSignUpConfActivity extends Activity implements Sourceable {
 			} catch (XmlReadException e) {
 				e.printStackTrace();
 			}
+			dao.updateUserWeight(user.getId(), user.getPassword(),
+					BodilyUtil.weightToRound(user.getWeight()));
 			if (heartRate != 0) {
 			} else {
 				Message message = new Message();
@@ -237,20 +208,15 @@ public class UserSignUpConfActivity extends Activity implements Sourceable {
 	}
 
 	@Override
-	public void complete(InputStream response) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void complete(Bitmap image) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void progressUpdate(int value) {
-		// TODO Auto-generated method stub
-		
+	public void validate() {
+		Message message = new Message();
+		message.what = MESSAGE_VALIDATE;
+		handler.sendMessage(message);
 	}
 }

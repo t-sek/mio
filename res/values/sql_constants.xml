@@ -11,8 +11,6 @@
 
     <!-- table -->
     <string name="table_user">user</string>
-    <string name="table_heart_rate">heart_rate</string>
-    <string name="table_heart_rate_log">heart_rate_log</string>
     <string name="table_training">training</string>
     <string name="table_training_category">training_category</string>
     <string name="table_training_menu">training_menu</string>
@@ -21,6 +19,7 @@
     <string name="table_training_log">training_log</string>
     <string name="table_permission">permission</string>
     <string name="table_group">my_group</string>
+    <string name="table_group_member">my_group_member</string>
     <string name="table_affiliation">affiliation</string>
     <!-- column -->
     <string name="column_user_id">user_id</string>
@@ -77,5 +76,6 @@
     <string name="column_group_id">group_id</string>
     <string name="column_comment">comment</string>
     <string name="column_created">created</string>
+    <string name="column_image">image</string>
 
 </resources>

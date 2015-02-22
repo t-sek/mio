@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class DeviceSettingActivity extends BleDeviceScanBaseActivity implements
 		AlertCallbackListener {
@@ -70,9 +71,9 @@ public class DeviceSettingActivity extends BleDeviceScanBaseActivity implements
 		DeviceInfo device = devices.get(position);
 		DevicePreferenceManager.putDeviceAddress(device.getAddress());
 		DevicePreferenceManager.putDeviceName(device.getName());
-		// Toast.makeText(getApplicationContext(),
-		// DevicePreferenceManager.getDeviceAddress(), Toast.LENGTH_SHORT)
-		// .show();
+		Toast.makeText(getApplicationContext(),
+				DevicePreferenceManager.getDeviceName() + "に設定しました",
+				Toast.LENGTH_SHORT).show();
 	}
 
 	private void intentMeasurement() {

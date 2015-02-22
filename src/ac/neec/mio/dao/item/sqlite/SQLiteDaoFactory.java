@@ -7,6 +7,10 @@ import ac.neec.mio.dao.SQLiteDao;
 import ac.neec.mio.dao.Sourceable;
 import android.content.Context;
 
+/**
+ * SQLiteインスタンス生成を実装したクラス
+ *
+ */
 public class SQLiteDaoFactory implements DaoFactory {
 
 	@Override

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 public class DrumPicker extends android.widget.ScrollView {
-	private String TAG = DrumPicker.class.getSimpleName();
 
 	public DrumPicker(Context context, AttributeSet attrs) {
 		super(context, attrs);

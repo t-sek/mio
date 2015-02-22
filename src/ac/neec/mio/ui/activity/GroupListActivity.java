@@ -1,30 +1,35 @@
 package ac.neec.mio.ui.activity;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import ac.neec.mio.R;
+import ac.neec.mio.consts.ErrorConstants;
+import ac.neec.mio.consts.MessageConstants;
+import ac.neec.mio.consts.PermissionConstants;
 import ac.neec.mio.dao.ApiDao;
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.SQLiteDao;
 import ac.neec.mio.dao.Sourceable;
+import ac.neec.mio.exception.SQLiteInsertException;
+import ac.neec.mio.exception.SQLiteTableConstraintException;
 import ac.neec.mio.exception.XmlParseException;
 import ac.neec.mio.exception.XmlReadException;
 import ac.neec.mio.group.Affiliation;
 import ac.neec.mio.group.Group;
 import ac.neec.mio.group.GroupInfo;
-import ac.neec.mio.taining.Training;
 import ac.neec.mio.ui.adapter.GroupListPagerAdapter;
 import ac.neec.mio.ui.dialog.GroupSettingDialog;
 import ac.neec.mio.ui.dialog.GroupSettingDialog.CallbackListener;
+import ac.neec.mio.ui.dialog.LoadingDialog;
 import ac.neec.mio.ui.listener.SearchNotifyListener;
 import ac.neec.mio.user.User;
 import ac.neec.mio.user.UserInfo;
-import ac.neec.mio.util.DateUtil;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
@@ -35,12 +40,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class GroupListActivity extends FragmentActivity implements Sourceable,
 		CallbackListener {
 
-	private static final int FLAG_USER = 2;
-	private static final int FLAG_GROUP = 3;
+	private static final int MESSAGE_ADD_ERROR = 7;
+	private static final int MESSAGE_VALIDATE = 2;
 
 	private List<Group> list = new ArrayList<Group>();
 	private ViewPager viewPager;
@@ -50,6 +56,28 @@ public class GroupListActivity extends FragmentActivity implements Sourceable,
 	private SQLiteDao daoSql;
 	private User user = User.getInstance();
 	private List<Affiliation> affiliations = new ArrayList<Affiliation>();
+	private LoadingDialog dialog;
+	private boolean createGroup;
+
+	Handler handler = new Handler() {
+		public void handleMessage(Message message) {
+			switch (message.what) {
+			case MESSAGE_ADD_ERROR:
+				dialog.dismiss();
+				Toast.makeText(getApplicationContext(),
+						ErrorConstants.groupAdd(), Toast.LENGTH_SHORT).show();
+				break;
+			case MESSAGE_VALIDATE:
+				dialog.dismiss();
+				Toast.makeText(getApplicationContext(),
+						ErrorConstants.scriptValidate(), Toast.LENGTH_SHORT)
+						.show();
+				break;
+			default:
+				break;
+			}
+		};
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +85,7 @@ public class GroupListActivity extends FragmentActivity implements Sourceable,
 		setContentView(R.layout.activity_group_list);
 		dao = DaoFacade.getApiDao(this);
 		daoSql = DaoFacade.getSQLiteDao();
+		// dao.selectUser(user.getId(), user.getPassword());
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		GroupListPagerAdapter adapter = new GroupListPagerAdapter(
 				getSupportFragmentManager());
@@ -118,13 +147,33 @@ public class GroupListActivity extends FragmentActivity implements Sourceable,
 			public void afterTextChanged(Editable s) {
 			}
 		});
-		// SpannableStringBuilder ssb = (SpannableStringBuilder)
-		// editSearch.getText();
-		// ImageSpan imageSpan = new ImageSpan(this,
-		// R.drawable.ic_action_search);
-		// ssb.setSpan(imageSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		// editSearch.setHint(ssb);
 
+	}
+
+	private void setMyGroupList(UserInfo info) {
+		daoSql.deleteAffiliation();
+		daoSql.deleteGroup();
+		// List<Affiliation> affiliations = info.getAffiliations();
+		List<Group> groups = info.getGroups();
+		for (Group group : groups) {
+			int permissionId = group.getPermissionId();
+			if (permissionId != PermissionConstants.notice()
+					&& permissionId != PermissionConstants.pending()) {
+				Log.d("activity", "delete permission " + permissionId
+						+ " group " + group.getGroupName());
+				try {
+					daoSql.insertAffiliation(group.getId(),
+							group.getPermissionId());
+					daoSql.insertGroup(group.getId(), group.getGroupName(),
+							group.getComment(), group.getUserId(),
+							group.getCreated(), group.getPermissionId());
+				} catch (SQLiteInsertException e) {
+					e.printStackTrace();
+				} catch (SQLiteTableConstraintException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 	private void showNewGroupSettingDialog() {
@@ -147,25 +196,41 @@ public class GroupListActivity extends FragmentActivity implements Sourceable,
 
 	@Override
 	public void notifyChenged(String groupId, String groupName, String comment) {
+		createGroup = true;
 		dao.insertGroup(groupId, groupName, comment, user.getId(),
 				user.getPassword());
+		dialog = new LoadingDialog(MessageConstants.add());
+		dialog.show(getFragmentManager(), "dialog");
 	}
 
 	@Override
 	public void complete() {
-		setGroupList();
+		dialog.dismiss();
+		if (createGroup) {
+			GroupInfo group = null;
+			try {
+				group = dao.getResponse();
+			} catch (XmlParseException e) {
+				Message message = new Message();
+				message.what = MESSAGE_ADD_ERROR;
+				handler.sendMessage(message);
+				return;
+			} catch (XmlReadException e) {
+				Message message = new Message();
+				message.what = MESSAGE_ADD_ERROR;
+				handler.sendMessage(message);
+				return;
+			}
+			dao.insertGroupAdmin(user.getId(), user.getId(), group.getId(),
+					user.getPassword());
+			createGroup = false;
+		} else {
+			setGroupList();
+		}
 	}
 
 	@Override
 	public void incomplete() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void complete(InputStream response) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -175,9 +240,10 @@ public class GroupListActivity extends FragmentActivity implements Sourceable,
 	}
 
 	@Override
-	public void progressUpdate(int value) {
-		// TODO Auto-generated method stub
-		
+	public void validate() {
+		Message message = new Message();
+		message.what = MESSAGE_VALIDATE;
+		handler.sendMessage(message);
 	}
 
 }

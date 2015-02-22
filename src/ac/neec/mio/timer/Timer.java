@@ -2,17 +2,38 @@ package ac.neec.mio.timer;
 
 import android.util.Log;
 
+/**
+ * タイマーを実装したクラス
+ *
+ */
 public class Timer extends Watch implements Runnable {
 
+	/**
+	 * Timerクラスのインスタンス
+	 */
 	private static Timer instance = new Timer();
 
+	/**
+	 * 停止フラグ
+	 */
 	private boolean isStoped;
+	/**
+	 * 計測時間
+	 */
 	private long measurementTime = 0;
+	/**
+	 * ラップタイム
+	 */
 	private long lapStartTime = 0;
 
 	private Timer() {
 	}
 
+	/**
+	 * Timerクラスのインスタンスを取得する
+	 * 
+	 * @return インスタンス
+	 */
 	protected static Timer getInstance() {
 		return instance;
 	}

@@ -1,8 +1,8 @@
 package ac.neec.mio.ui.activity;
 
-import static ac.neec.mio.util.SignUpConstants.password;
-import static ac.neec.mio.util.SignUpConstants.userId;
+import static ac.neec.mio.consts.SignUpConstants.*;
 import ac.neec.mio.R;
+import ac.neec.mio.filter.JapaneseInputFilter;
 import ac.neec.mio.user.User;
 import ac.neec.mio.user.gender.Gender;
 import ac.neec.mio.util.DateUtil;
@@ -12,8 +12,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
-import android.support.v4.app.INotificationSideChannel.Stub;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -26,6 +26,7 @@ import android.widget.RadioGroup;
 
 import com.androidformenhancer.helper.ActivityFormHelper;
 import com.androidformenhancer.helper.FormHelper;
+import com.google.android.gms.plus.model.people.Person.Name;
 import com.sek.drumpicker.DrumPicker;
 import com.sek.drumpicker.DrumPickerListener;
 
@@ -82,11 +83,14 @@ public class UserSignUpActivity extends Activity implements DrumPickerListener,
 	}
 
 	private void initFindViews() {
+		InputFilter[] filters = new InputFilter[] { new JapaneseInputFilter() };
 		editId = (EditText) findViewById(R.id.edit_id);
+		editId.setFilters(filters);
 		editPass = (EditText) findViewById(R.id.edit_password);
 		editPassConf = (EditText) findViewById(R.id.edit_password_conf);
 		editName = (EditText) findViewById(R.id.edit_name);
 		editMail = (EditText) findViewById(R.id.edit_mail);
+		editMail.setFilters(filters);
 		pickerYaer = (DrumPicker) findViewById(R.id.picker_year);
 		pickerMonth = (DrumPicker) findViewById(R.id.picker_month);
 		pickerDay = (DrumPicker) findViewById(R.id.picker_day);
@@ -107,16 +111,13 @@ public class UserSignUpActivity extends Activity implements DrumPickerListener,
 		editName.addTextChangedListener(this);
 		editMail.setOnFocusChangeListener(this);
 		editMail.addTextChangedListener(this);
-
 		buttonIntent.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				checkGenderSelected();
 				checkEditMinValidate();
-				// checkValidate();
-				// if (checkValidatxe() || checkEditMinValidate()) {
-				// if (!helper.validate().hasError()) {
-				if (checkValidate()) {
+				if (checkValidate()
+						&& helper.validate().getAllErrors().size() == 0) {
 					storeUpUserData();
 					intentBodilySetting();
 				}
@@ -130,15 +131,11 @@ public class UserSignUpActivity extends Activity implements DrumPickerListener,
 		pickerYaer.setElements(getApplicationContext(), TAG_YEAR, years);
 		pickerYaer.setOnDrumPickerListener(this);
 		year = years[0];
-		// pickerYaer.setElementColor(DRUM_COLOR);
 		String[] months = new String[DateUtil.getMonths().length];
 		months = DateUtil.getMonths();
 		pickerMonth.setElements(getApplicationContext(), TAG_MONTH, months);
 		pickerMonth.setOnDrumPickerListener(this);
 		month = months[0];
-		// String[] day = new String[DateUtil.getDays().length];
-		// day = DateUtil.getDays();
-		// pickerDay.setElements(getApplicationContext(), TAG_DAY, day);
 		updateDay();
 		pickerDay.setOnDrumPickerListener(this);
 	}
@@ -154,11 +151,8 @@ public class UserSignUpActivity extends Activity implements DrumPickerListener,
 
 	private void setUserData() {
 		editId.setText(user.getId());
-		Log.d("activity", "id " + user.getId());
 		editName.setText(user.getName());
-		Log.d("activity", "id " + user.getName());
 		editMail.setText(user.getMail());
-		Log.d("activity", "id " + user.getMail());
 		String gender = user.getGender();
 		if (gender.equals(Gender.MALE)) {
 			radioGroup.check(male.getId());
@@ -205,6 +199,12 @@ public class UserSignUpActivity extends Activity implements DrumPickerListener,
 			errorBuilder.append(System.getProperty(NEW_LINE));
 			val = false;
 		}
+		Log.d("activity", "name " + editName.getText().toString());
+		if (editName.getText().toString().length() == 0) {
+			errorBuilder.append(name() + "は必ず入力してください");
+			errorBuilder.append(System.getProperty(NEW_LINE));
+			val = false;
+		}
 		return val;
 	}
 
@@ -236,12 +236,10 @@ public class UserSignUpActivity extends Activity implements DrumPickerListener,
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
-		// setUserData();
 	}
 
 	@Override
 	public void onFocusChange(View v, boolean hasFocus) {
-		Log.d("actiivty", "focus " + "has " + hasFocus + " v " + v.getId());
 		if (hasFocus) {
 			if (v.getId() == R.id.edit_id) {
 				focusEdit = v.getId();
@@ -262,45 +260,21 @@ public class UserSignUpActivity extends Activity implements DrumPickerListener,
 					user.setPassword(editPassConf.getText().toString());
 				}
 			}
-
 		}
 	}
 
 	@Override
 	public void beforeTextChanged(CharSequence s, int start, int count,
 			int after) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void onTextChanged(CharSequence s, int start, int before, int count) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void afterTextChanged(Editable s) {
 		storeUpUserData();
-		Log.d("activity", "s " + s);
-		// switch (focusEdit) {
-		// case R.id.edit_id:
-		// Log.d("activity", "id " + s);
-		// user.setId(s.toString());
-		// break;
-		// case R.id.edit_name:
-		// Log.d("activity", "name " + s);
-		// user.setName(s.toString());
-		// break;
-		// case R.id.edit_mail:
-		// Log.d("activity", "mail " + s);
-		// user.setMail(s.toString());
-		// break;
-		//
-		// default:
-		// break;
-		// }
-
 	}
 
 	@Override

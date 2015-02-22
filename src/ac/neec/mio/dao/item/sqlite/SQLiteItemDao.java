@@ -24,12 +24,24 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+/**
+ * SQLiteとの接続を行うクラス
+ *
+ */
 public abstract class SQLiteItemDao extends SQLiteOpenHelper implements
 		SQLiteDao, Buffer {
 
+	/**
+	 * データベースインスタンス
+	 */
 	private SQLiteDatabase db;
+	/**
+	 * コンテキスト
+	 */
 	private Context context;
-	private CursorParser parser;
+	/**
+	 * インサートエラーを保持しておくバッファ
+	 */
 	private RingBuffer buffer;
 
 	protected SQLiteItemDao() {
@@ -60,6 +72,7 @@ public abstract class SQLiteItemDao extends SQLiteOpenHelper implements
 				insert(item.getTableName(), item.getValues());
 			} catch (SQLiteInsertException e) {
 				e.printStackTrace();
+				buffer.set(item);
 			} catch (SQLiteTableConstraintException e) {
 				e.printStackTrace();
 			}
@@ -100,7 +113,7 @@ public abstract class SQLiteItemDao extends SQLiteOpenHelper implements
 	}
 
 	/**
-	 * データベースから検索条件にあうデータ取得
+	 * データベースから検索条件に一致するデータ取得
 	 * 
 	 * @param tableName
 	 *            テーブル名
@@ -116,6 +129,16 @@ public abstract class SQLiteItemDao extends SQLiteOpenHelper implements
 			String selectColumn, String criteria) {
 		String selection = selectColumn + " = ? ";
 		String[] selectionArgs = { criteria };
+		return db.query(tableName, selectColumns, selection, selectionArgs,
+				null, null, null);
+	}
+
+	protected Cursor select(String tableName, String[] selectColumns,
+			String selectColumn1, String selectColumn2, String criteria1,
+			String critetia2) {
+		String selection = selectColumn1 + " = ?" + " and " + selectColumn2
+				+ " = ?";
+		String[] selectionArgs = { criteria1, critetia2 };
 		return db.query(tableName, selectColumns, selection, selectionArgs,
 				null, null, null);
 	}

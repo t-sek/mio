@@ -6,10 +6,14 @@ import java.util.List;
 
 import ac.neec.mio.exception.XmlParseException;
 import ac.neec.mio.exception.XmlReadException;
-import ac.neec.mio.taining.menu.TrainingMenu;
-import ac.neec.mio.taining.menu.TrainingMenuFactory;
-import ac.neec.mio.training.framework.ProductDataFactory;
+import ac.neec.mio.framework.ProductDataFactory;
+import ac.neec.mio.training.menu.TrainingMenu;
+import ac.neec.mio.training.menu.TrainingMenuFactory;
 
+/**
+ * トレーニングメニューXMLを解析するクラス
+ *
+ */
 public class TrainingMenuXmlParser extends XmlParser {
 
 	private static final String MENU_ID = "training_menu_id";
@@ -18,14 +22,37 @@ public class TrainingMenuXmlParser extends XmlParser {
 	private static final String CATEGORY_ID = "category_id";
 	private static final String COLOR = "color";
 
+	/**
+	 * メニューリスト
+	 */
 	private List<TrainingMenu> menu;
+	/**
+	 * メニューID
+	 */
 	private int menuId;
+	/**
+	 * メッツ
+	 */
 	private float mets;
+	/**
+	 * メニュー名
+	 */
 	private String menuName;
+	/**
+	 * カテゴリー名
+	 */
 	private int categoryId;
+	/**
+	 * カラーコード
+	 */
 	private String color;
+	/**
+	 * TrainingMenuクラスを生成するファクトリークラス
+	 */
 	private ProductDataFactory factory;
-
+	/**
+	 * タグ名
+	 */
 	private String tagName;
 
 	@Override
@@ -67,6 +94,9 @@ public class TrainingMenuXmlParser extends XmlParser {
 		}
 	}
 
+	/**
+	 * @return TrainingMenu型のリスト
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	protected List<TrainingMenu> getParseObject() {

@@ -31,8 +31,15 @@ import com.facebook.UiLifecycleHelper;
 import com.facebook.android.Facebook;
 import com.facebook.model.GraphUser;
 
+/**
+ * facebookログインを行うクラス
+ *
+ */
 public class Login {
 
+	/**
+	 * facebookAPIキー
+	 */
 	private static final String API_KEY = SQLConstants.facebookApiKey();
 	private static final String NAME = "name";
 	private static final String GENDER = "gender";
@@ -44,9 +51,17 @@ public class Login {
 
 	private Activity activity;
 	private int type;
+	/**
+	 * ユーザ情報
+	 */
 	private User user = User.getInstance();
+	/**
+	 * コールバックリスナー
+	 */
 	private UserCallback listener;
-
+	/**
+	 * facebookAPIコールバックリスナー
+	 */
 	private Session.StatusCallback facebookCallback = new Session.StatusCallback() {
 		@SuppressWarnings("deprecation")
 		@Override
@@ -58,7 +73,6 @@ public class Login {
 						@Override
 						public void onCompleted(GraphUser user,
 								Response response) {
-							// it never gets here...
 							if (user != null) {
 								parseUserInfo(user.getInnerJSONObject());
 							}
@@ -70,10 +84,15 @@ public class Login {
 	public Login(Activity activity, int type, Bundle bundle) {
 		this.activity = activity;
 		this.type = type;
-		this.listener = listener;
 		initFacebook(bundle);
 	}
 
+	/**
+	 * プロフィール画像を取得する
+	 * 
+	 * @param userId
+	 *            facebookユーザID
+	 */
 	private void requestUserImage(String userId) {
 		// new Request(session, "/me/picture", null, HttpMethod.GET,
 		new Request(Session.getActiveSession(), "https://graph.facebook.com/"
@@ -84,6 +103,12 @@ public class Login {
 		}).executeAsync();
 	}
 
+	/**
+	 * facebookAPIから取得したJSONを解析する
+	 * 
+	 * @param response
+	 *            レスポンス
+	 */
 	private void parseUserInfo(JSONObject response) {
 		try {
 			requestUserImage(response.getString("id"));
@@ -128,6 +153,9 @@ public class Login {
 		return session;
 	}
 
+	/**
+	 * facebookAPIを初期化する
+	 */
 	private void initFacebook(Bundle savedInstanceState) {
 		uiHelper = new UiLifecycleHelper(activity, facebookCallback);
 		uiHelper.onCreate(savedInstanceState);
@@ -135,6 +163,9 @@ public class Login {
 
 	/**
 	 * facebookにログインする
+	 * 
+	 * @param session
+	 *            セッション
 	 */
 	private void facebookLogin(Session session) {
 		Session.setActiveSession(session);
@@ -154,6 +185,9 @@ public class Login {
 		}
 	}
 
+	/**
+	 * facebookからログアウトする
+	 */
 	public void logoutFacebook() {
 		Session session = Session.getActiveSession();
 		if (!session.isClosed()) {
@@ -167,7 +201,6 @@ public class Login {
 	 */
 	private void onSessionStateChange(Session session, SessionState state,
 			Exception exception) {
-		// final Session tempSession = session;
 		Log.d("login", "state:" + state.isOpened());
 		Log.d("login", "session:" + session.isOpened());
 		Log.d("login", "accessToken:" + session.getAccessToken());
@@ -184,9 +217,18 @@ public class Login {
 		}
 	}
 
+	/**
+	 * ダイアログ終了時に呼ばれる
+	 * 
+	 * @param requestCode
+	 *            リクエストコード
+	 * @param resultCode
+	 *            リザルトコート
+	 * @param data
+	 *            レスポンスデータ
+	 */
 	public void helperOnActivityResult(int requestCode, int resultCode,
 			Intent data) {
-		Log.d("activity", "name " + data.getStringExtra("name"));
 		uiHelper.onActivityResult(requestCode, resultCode, data);
 	}
 

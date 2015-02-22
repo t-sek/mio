@@ -1,6 +1,6 @@
 package ac.neec.mio.ui.dialog;
 
-import static ac.neec.mio.util.SignUpConstants.*;
+import static ac.neec.mio.consts.SignUpConstants.*;
 import ac.neec.mio.R;
 import ac.neec.mio.user.User;
 import android.app.Dialog;
@@ -46,14 +46,7 @@ public class UserDataSettingEditDialog extends DialogFragment {
 		dialog = new Dialog(getActivity());
 		setDialog();
 		init();
-		initValidationHelper();
 		return dialog;
-	}
-
-	private void initValidationHelper() {
-		// helper = new ActivityFormHelper(UserSignUpForm.class, this);
-		// helper.setOnFocusOutValidation();
-		// helper.setValidationErrorIconEnabled(false);
 	}
 
 	private void init() {

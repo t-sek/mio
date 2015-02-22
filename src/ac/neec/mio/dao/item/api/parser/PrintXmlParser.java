@@ -6,6 +6,10 @@ import ac.neec.mio.exception.XmlParseException;
 import ac.neec.mio.exception.XmlReadException;
 import android.util.Log;
 
+/**
+ * XMLファイルをログに出力する
+ *
+ */
 public class PrintXmlParser extends XmlParser {
 
 	private static final String TAG = "PrintXmlParser";

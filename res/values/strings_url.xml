@@ -2,50 +2,44 @@
 <resources>
 
     <string name="url_head">http://anninsuika.com/mioapi/</string>
-    <string name="url_head_ssl">https://anninsuika.com/Mio/api/</string>
+    <string name="url_head_ssl">https://anninsuika.com/Mio/</string>
     <string name="section">/</string>
     <string name="select_image">http://anninsuika.com/Mio/img/images/</string>
     <string name="url_foot">.xml</string>
     <!-- user -->
-    <string name="user_info">userinfo/</string>
-    <string name="user_add">useradd/</string>
-    <string name="user_edit">useredit/</string>
-    <string name="user_weight">weightadd/</string>
-    <string name="user_get_weight">getweight/</string>
-    <string name="user_quiet_heart_rate">quiethredit/</string>
-    <string name="user_add_image">adduserimage</string>
-    <string name="post_name">name</string>
-    <string name="post_type">type</string>
-    <string name="post_tmp_name">tmp_name</string>
-    <string name="post_error">error</string>
-    <string name="post_size">size</string>
-    <string name="post_user_id">userid</string>
-    <string name="post_password">pass</string>
+    <string name="user_info">api/userinfo/</string>
+    <string name="user_add">api/useradd/</string>
+    <string name="user_edit">api/useredit/</string>
+    <string name="user_weight">api/weightadd/</string>
+    <string name="user_get_weight">api/getweight/</string>
+    <string name="user_quiet_heart_rate">api/quiethredit/</string>
+    <string name="user_add_image">api/adduserimage</string>
 
     <!-- group -->
-    <string name="group_all">groupall</string>
-    <string name="group_info">groupinfo/</string>
-    <string name="group_add">groupadd/</string>
-    <string name="group_edit">groupedit/</string>
-    <string name="affiliation_edit">affiliationedit/</string>
-    <string name="permition">permition/</string>
+    <string name="group_all">api/groupall</string>
+    <string name="group_info">api/groupinfo/</string>
+    <string name="group_add">api/groupadd/</string>
+    <string name="group_edit">api/groupedit/</string>
+    <string name="group_delete">api/groupdelete/</string>
+    <string name="affiliation_edit">api/affiliationedit/</string>
+    <string name="permition">api/permition/</string>
 
     <!-- training -->
-    <string name="training_insert">addtraining/</string>
+    <string name="training_insert">api/addtraining/</string>
     <string name="training_insert_log">POST_TrainingLog.php?func=Insert</string>
-    <string name="training_insert_play">Play.php?func=Insert</string>
+    <string name="training_insert_play">api/addplay/</string>
     <string name="training_select_all">TrainingInfo.php?func=Select&amp;option=findAll</string>
-    <string name="training_select">findtraining/</string>
-    <string name="trainings_select">findtrainings/</string>
+    <string name="training_select">api/findtraining/</string>
+    <string name="trainings_select">api/findtrainings/</string>
     <string name="training_select_date">TrainingInfo.php?func=Select&amp;option=Date</string>
     <string name="training_select_log">GET_TrainingLog.php?func=Select</string>
     <string name="training_select_play">Play.php?func=Select</string>
 
     <!-- training category -->
-    <string name="category_select_all">getcategorys</string>
+    <string name="category_select_all">api/getcategorys</string>
     <!-- training menu -->
-    <string name="menu_select_all">getmenues</string>
-    <string name="menu_select">getmenues/</string>
+    <string name="menu_select_all">api/getmenues</string>
+    <string name="menu_select">api/getmenues/</string>
 
     <!-- column -->
     <string name="user">&amp;user=</string>
@@ -66,12 +60,5 @@
     <string name="lap">&amp;rap=</string>
     <string name="split">&amp;sprit=</string>
     <string name="num">&amp;num=</string>
-    <string name="log_target_heart_rate">&amp;th=</string>
-    <string name="calorie">&amp;cal=</string>
-    <string name="distance">&amp;dis=</string>
-    <string name="category_id">&amp;ctg=</string>
-    <string name="date">&amp;date=</string>
-    <string name="play_id">&amp;pid=</string>
-    <string name="training_time">&amp;tt=</string>
 
 </resources>

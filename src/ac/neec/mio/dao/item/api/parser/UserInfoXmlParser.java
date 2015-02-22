@@ -5,26 +5,28 @@ import java.util.List;
 
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.SQLiteDao;
+import ac.neec.mio.exception.XmlParseException;
+import ac.neec.mio.framework.ProductDataFactory;
 import ac.neec.mio.group.Affiliation;
 import ac.neec.mio.group.Group;
 import ac.neec.mio.group.GroupFactory;
 import ac.neec.mio.group.Permission;
 import ac.neec.mio.image.ImageInfo;
 import ac.neec.mio.image.ImageInfoFactory;
-import ac.neec.mio.training.framework.ProductDataFactory;
 import ac.neec.mio.user.UserInfo;
 import ac.neec.mio.user.gender.Gender;
 import ac.neec.mio.user.gender.GenderFactory;
 import ac.neec.mio.user.role.Role;
 import ac.neec.mio.user.role.RoleFactory;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Log;
 
+/**
+ * ユーザ情報XMLを解析するクラス
+ *
+ */
 public class UserInfoXmlParser extends XmlParser {
 
 	private static final String USER_TAG = "User";
+	private static final String WEIGHT_TAG = "Weight";
 	private static final String USER_ID = "username";
 	private static final String NAME = "name";
 	private static final String BIRTH = "age";
@@ -34,7 +36,7 @@ public class UserInfoXmlParser extends XmlParser {
 	private static final String AFF_TAG = "Affiliation";
 	private static final String GROUP_ID = "group_id";
 	private static final String PERMITION_ID = "permition_id";
-	private static final String GROUP_TAG = "Group";
+	private static final String GROUP_TAG = "Groups";
 	private static final String GROUP_NAME = "group_name";
 	private static final String GROUP_COMMENT = "group_comment";
 	private static final String CREATED = "created";
@@ -49,44 +51,130 @@ public class UserInfoXmlParser extends XmlParser {
 	private static final String UPDATED = "updated";
 	private static final String STATUS = "status";
 
-	private Context context;
+	/**
+	 * ユーザ情報
+	 */
 	private UserInfo user;
+	/**
+	 * タグ名
+	 */
 	private String tagName;
+	/**
+	 * ユーザ名
+	 */
 	private String name;
+	/**
+	 * ユーザID
+	 */
 	private String userId;
+	/**
+	 * 生年月日
+	 */
 	private String birth;
+	/**
+	 * 身長
+	 */
 	private float height;
+	/**
+	 * 体重
+	 */
 	private float weight;
+	/**
+	 * メールアドレス
+	 */
 	private String mail;
+	/**
+	 * 所属グループID
+	 */
 	private String groupId;
+	/**
+	 * 所属グループ名
+	 */
 	private String groupName;
+	/**
+	 * 所属グループコメント
+	 */
 	private String groupComment;
+	/**
+	 * アカウント作成日
+	 */
 	private String created;
+	/**
+	 * ID
+	 */
 	private int id;
+	/**
+	 * アイコン名
+	 */
 	private String imageFileName;
+	/**
+	 * アイコン名
+	 */
 	private String image;
+	/**
+	 * 大アイコン名
+	 */
 	private String bigImage;
+	/**
+	 * 小アイコン名
+	 */
 	private String smallImage;
+	/**
+	 * オリジナルアイコン名
+	 */
 	private String thumbImage;
+	/**
+	 * アイコン情報
+	 */
 	private ImageInfo imageInfo;
+	/**
+	 * プロフィール更新日
+	 */
 	private String updated;
+	/**
+	 * 所属グループ権限ID
+	 */
+	private int permissionId;
+	/**
+	 * アカウントステータス
+	 */
 	private int status;
+	/**
+	 * ロール
+	 */
 	private Role role;
+	/**
+	 * 所属グループ権限
+	 */
 	private Permission permission;
+	/**
+	 * 所属グループ権限リスト
+	 */
 	private List<Affiliation> affiliations;
+	/**
+	 * 所属グループリスト
+	 */
 	private List<Group> groups;
+	/**
+	 * Genderクラスを生成するファクトリークラス
+	 */
 	private ProductDataFactory genderFactory;
+	/**
+	 * Groupクラスを生成するファクトリークラス
+	 */
 	private ProductDataFactory groupFactory;
+	/**
+	 * ImageInfoクラスを生成するファクトリークラス
+	 */
 	private ProductDataFactory imageFactory;
+	/**
+	 * Roleクラスを生成するファクトリークラス
+	 */
 	private ProductDataFactory roleFactory;
+	/**
+	 * ローカルデータベースにアクセスするためのインスタンス
+	 */
 	private SQLiteDao dao;
-
-	public UserInfoXmlParser() {
-	}
-
-	public UserInfoXmlParser(Context context) {
-		this.context = context;
-	}
 
 	@Override
 	protected void startDocument() {
@@ -100,9 +188,13 @@ public class UserInfoXmlParser extends XmlParser {
 	}
 
 	@Override
-	protected void endDocument() {
-		user.setGroups(groups);
-		user.setAffiliations(affiliations);
+	protected void endDocument() throws XmlParseException {
+		try {
+			user.setGroups(groups);
+			user.setAffiliations(affiliations);
+		} catch (NullPointerException e) {
+			throw new XmlParseException();
+		}
 	}
 
 	@Override
@@ -117,19 +209,16 @@ public class UserInfoXmlParser extends XmlParser {
 					permission));
 		} else if (text.equals(GROUP_TAG)) {
 			groups.add((Group) new Group(groupId, groupName, null,
-					groupComment, userId, created));
+					groupComment, userId, created, permissionId));
 			created = null;
 		} else if (text.equals(IMAGE_TAG)) {
-			// imageInfo = (ImageInfo) imageFactory.create(id, imageFileName,
-			// userId, groupId, created, image, bigImage, smallImage,
-			// thumbImage);
-			user.setImageInfo((ImageInfo) imageFactory.create(id,
-					imageFileName, userId, groupId, created, image, bigImage,
-					smallImage, thumbImage));
-			created = null;
+			if (user.getImageInfo() == null) {
+				user.setImageInfo((ImageInfo) imageFactory.create(id,
+						imageFileName, userId, groupId, created, image,
+						bigImage, smallImage, thumbImage));
+				created = null;
+			}
 		} else if (text.equals(ROLE_TAG)) {
-			// role = (Role) roleFactory
-			// .create(id, name, created, updated, status);
 			user.setRole((Role) roleFactory.create(id, name, created, updated,
 					status));
 			name = null;
@@ -139,6 +228,8 @@ public class UserInfoXmlParser extends XmlParser {
 			user = new UserInfo(affiliations, groups, userId, name, birth,
 					(Gender) genderFactory.create(Gender.MALE), height, weight,
 					mail, imageInfo, role);
+		} else if (text.equals(WEIGHT_TAG)) {
+			user.setWeight(weight);
 		}
 	}
 
@@ -159,7 +250,7 @@ public class UserInfoXmlParser extends XmlParser {
 		} else if (tagName.equals(GROUP_ID)) {
 			groupId = text;
 		} else if (tagName.equals(PERMITION_ID)) {
-			int permissionId = Integer.valueOf(text);
+			permissionId = Integer.valueOf(text);
 			permission = dao.selectPermission(permissionId);
 		} else if (tagName.equals(GROUP_COMMENT)) {
 			groupComment = text;
@@ -190,6 +281,9 @@ public class UserInfoXmlParser extends XmlParser {
 		}
 	}
 
+	/**
+	 * @return UserInfo型
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public UserInfo getParseObject() {

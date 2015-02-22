@@ -1,13 +1,20 @@
 package ac.neec.mio.dao.item.sqlite.parser;
 
 import static ac.neec.mio.consts.SQLConstants.*;
-import ac.neec.mio.taining.menu.TrainingMenu;
-import ac.neec.mio.taining.menu.TrainingMenuFactory;
-import ac.neec.mio.training.framework.ProductDataFactory;
+import ac.neec.mio.framework.ProductDataFactory;
+import ac.neec.mio.training.menu.TrainingMenu;
+import ac.neec.mio.training.menu.TrainingMenuFactory;
 import android.database.Cursor;
 
+/**
+ * トレーニングメニューを解析するクラス
+ *
+ */
 public class TrainingMenuCursorParser extends CursorParser {
 
+	/**
+	 * トレーニングメニュー
+	 */
 	private TrainingMenu menu;
 
 	public TrainingMenuCursorParser(Cursor c) {
@@ -30,6 +37,9 @@ public class TrainingMenuCursorParser extends CursorParser {
 		c.close();
 	}
 
+	/**
+	 * @return TrainingMenu型
+	 */
 	@Override
 	public TrainingMenu getObject() {
 		return menu;

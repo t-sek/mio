@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.InputStream;
 
 import ac.neec.mio.R;
-import ac.neec.mio.http.DownloadCloudFile;
 import ac.neec.mio.ui.activity.DeviceSettingActivity;
 import ac.neec.mio.ui.activity.GroupListActivity;
 import ac.neec.mio.ui.activity.UserDataSettingActivity;
@@ -160,10 +159,6 @@ public class ProfileFragment extends TopBaseFragment implements
 					MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
 		}
 		return result;
-	}
-
-	private void downloadPicker(Uri uri) {
-		new DownloadCloudFile(this.getActivity(), uri).execute();
 	}
 
 	@Override

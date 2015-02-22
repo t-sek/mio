@@ -1,6 +1,6 @@
 package ac.neec.mio.user.bodily;
 
-import ac.neec.mio.training.framework.ProductData;
+import ac.neec.mio.framework.ProductData;
 import ac.neec.mio.user.bodily.weight.Weight;
 
 public class Bodily extends ProductData {

@@ -35,7 +35,19 @@ CREATE TABLE my_group
 	name text,
 	comment text,
 	user_id text,
-	created text
+	created text,
+	permission_id integer
+)
+/
+CREATE TABLE my_group_member
+(
+	id integer PRIMARY KEY AUTOINCREMENT,
+	group_id text,
+	user_id text,
+	name text,
+	permission_id integer,
+	image blob,
+	FOREIGN KEY(group_id) REFERENCES my_group(id)
 )
 /
 CREATE TABLE training

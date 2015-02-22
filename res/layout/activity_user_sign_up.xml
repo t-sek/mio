@@ -33,7 +33,7 @@
                 android:ems="15"
                 android:hint="@string/id_hint"
                 android:inputType="textEmailAddress"
-                android:maxLength="25" />
+                android:maxLength="20" />
 
             <EditText
                 android:id="@+id/edit_password"
@@ -43,7 +43,7 @@
                 android:ems="15"
                 android:hint="@string/pass_hint"
                 android:inputType="textPassword"
-                android:maxLength="25" />
+                android:maxLength="20" />
 
             <EditText
                 android:id="@+id/edit_password_conf"
@@ -53,7 +53,7 @@
                 android:ems="15"
                 android:hint="@string/pass_conf"
                 android:inputType="textPassword"
-                android:maxLength="25" />
+                android:maxLength="20" />
 
             <EditText
                 android:id="@+id/edit_name"
@@ -63,7 +63,7 @@
                 android:ems="15"
                 android:hint="@string/name_hint"
                 android:inputType="textPersonName"
-                android:maxLength="25" />
+                android:maxLength="20" />
 
             <EditText
                 android:id="@+id/edit_mail"
@@ -73,7 +73,7 @@
                 android:ems="15"
                 android:hint="@string/mailAdd"
                 android:inputType="textEmailAddress"
-                android:maxLength="25" />
+                android:maxLength="40" />
         </LinearLayout>
 
         <LinearLayout

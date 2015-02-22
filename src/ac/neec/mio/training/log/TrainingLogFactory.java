@@ -1,19 +1,14 @@
 package ac.neec.mio.training.log;
 
-import java.sql.Time;
-
+import ac.neec.mio.framework.ProductData;
+import ac.neec.mio.framework.ProductDataFactory;
 import ac.neec.mio.group.Permission;
-import ac.neec.mio.training.framework.ProductData;
-import ac.neec.mio.training.framework.ProductDataFactory;
-import ac.neec.mio.user.bodily.weight.Weight;
-import android.graphics.Bitmap;
 
+/**
+ * TrainingLogクラスを生成する
+ *
+ */
 public class TrainingLogFactory extends ProductDataFactory {
-
-	@Override
-	protected ProductData factoryMethod(Number number, Time time) {
-		return null;
-	}
 
 	@Override
 	protected ProductData factoryMethod(int trainingCategoryId,
@@ -29,19 +24,7 @@ public class TrainingLogFactory extends ProductDataFactory {
 	}
 
 	@Override
-	protected ProductData factoryMethod(float height, Weight weight,
-			int quietHeartRate) {
-		return null;
-	}
-
-	@Override
 	protected ProductData factoryMethod(String gender) {
-		return null;
-	}
-
-	@Override
-	protected ProductData factoryMethod(int trainingMenuId, String endTime,
-			int playTime) {
 		return null;
 	}
 
@@ -60,8 +43,8 @@ public class TrainingLogFactory extends ProductDataFactory {
 	}
 
 	@Override
-	protected ProductData factoryMethod(int id, int trainingMenuId, String userId,
-			String date, String startTime, String playTime,
+	protected ProductData factoryMethod(int id, int trainingMenuId,
+			String userId, String date, String startTime, String playTime,
 			int targetHeartRate, int targetCal, int consumptionCal,
 			int heartRateAvg, int strange, double distance) {
 		return null;

@@ -1,12 +1,13 @@
 package ac.neec.mio.ui.adapter;
 
-import static ac.neec.mio.util.SignUpConstants.*;
+import static ac.neec.mio.consts.SignUpConstants.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import ac.neec.mio.R;
 import ac.neec.mio.ble.DeviceInfo;
-import ac.neec.mio.taining.lap.LapItem;
+import ac.neec.mio.training.lap.LapItem;
 import ac.neec.mio.user.User;
 import ac.neec.mio.consts.PreferenceConstants;
 import android.content.Context;

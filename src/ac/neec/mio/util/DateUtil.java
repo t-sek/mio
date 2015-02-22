@@ -54,8 +54,11 @@ public class DateUtil {
 	 */
 	public static int getActualMaximum(int year, int month) {
 		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.YEAR, year);
-		cal.set(Calendar.MONTH, month);
+		cal.clear();
+		cal.set(year, month - 1, 1);
+		Log.d("util", "month " + month);
+		// cal.set(Calendar.YEAR, year);
+		// cal.set(Calendar.MONTH, month);
 		return cal.getActualMaximum(Calendar.DATE);
 	}
 
@@ -91,6 +94,11 @@ public class DateUtil {
 	public static String timeJapaneseFormat(String format) {
 		String[] time = format.split(":");
 		return time[0] + "時" + time[1] + "分";
+	}
+
+	public static String trainingTimeJapaneseFormat(String format) {
+		String[] time = format.split(":");
+		return time[1] + "時" + time[2] + "分";
 	}
 
 	public static String[] getSplitDate(String date) {

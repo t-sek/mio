@@ -3,17 +3,17 @@ package ac.neec.mio.user;
 import java.util.ArrayList;
 import java.util.List;
 
+import ac.neec.mio.framework.ProductDataFactory;
 import ac.neec.mio.group.Affiliation;
 import ac.neec.mio.group.Group;
 import ac.neec.mio.image.ImageInfo;
-import ac.neec.mio.training.framework.ProductDataFactory;
 import ac.neec.mio.user.gender.Gender;
 import ac.neec.mio.user.gender.GenderFactory;
 import ac.neec.mio.user.role.Role;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class UserInfo implements Parcelable {
+public class UserInfo {
 
 	private List<Affiliation> affiliations = new ArrayList<Affiliation>();
 	private List<Group> groups = new ArrayList<Group>();
@@ -43,16 +43,6 @@ public class UserInfo implements Parcelable {
 		this.role = role;
 	}
 
-	public UserInfo(final Parcel in) {
-		userId = in.readString();
-		name = in.readString();
-		birth = in.readString();
-		gender = createGender(in.readString());
-		height = in.readFloat();
-		weight = in.readFloat();
-		mail = in.readString();
-	}
-
 	private Gender createGender(String gender) {
 		ProductDataFactory factory = new GenderFactory();
 		return (Gender) factory.create(gender);
@@ -73,6 +63,10 @@ public class UserInfo implements Parcelable {
 
 	public void setRole(Role role) {
 		this.role = role;
+	}
+
+	public void setWeight(float weight) {
+		this.weight = weight;
 	}
 
 	public List<Affiliation> getAffiliations() {
@@ -118,34 +112,5 @@ public class UserInfo implements Parcelable {
 	public Role getRole() {
 		return role;
 	}
-
-	@Override
-	public int describeContents() {
-		return 0;
-	}
-
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(userId);
-		dest.writeString(name);
-		dest.writeString(birth);
-		dest.writeString(mail);
-		dest.writeString(gender.getGender());
-		dest.writeFloat(height);
-		dest.writeFloat(weight);
-	}
-
-	public static final Parcelable.Creator<UserInfo> CREATOR = new Creator<UserInfo>() {
-
-		@Override
-		public UserInfo[] newArray(int size) {
-			return new UserInfo[size];
-		}
-
-		@Override
-		public UserInfo createFromParcel(Parcel source) {
-			return new UserInfo(source);
-		}
-	};
 
 }

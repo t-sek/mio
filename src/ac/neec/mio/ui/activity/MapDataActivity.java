@@ -10,15 +10,9 @@ import ac.neec.mio.dao.ApiDao;
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.SQLiteDao;
 import ac.neec.mio.dao.Sourceable;
-import ac.neec.mio.db.DBManager;
 import ac.neec.mio.exception.XmlParseException;
 import ac.neec.mio.exception.XmlReadException;
-import ac.neec.mio.http.HttpManager;
-import ac.neec.mio.http.item.DateNumItem;
-import ac.neec.mio.http.item.TrainingItem;
-import ac.neec.mio.http.item.TrainingLogItem;
-import ac.neec.mio.http.item.TrainingPlayItem;
-import ac.neec.mio.http.listener.HttpResponseListener;
+import ac.neec.mio.training.TrainingInfo;
 import ac.neec.mio.training.log.TrainingLog;
 import ac.neec.mio.user.User;
 import ac.neec.mio.consts.SQLConstants;
@@ -33,7 +27,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -58,6 +51,7 @@ public class MapDataActivity extends FragmentActivity implements Sourceable {
 	private User user = User.getInstance();
 	private int trainingId;
 	private int id;
+	private String targetUserId;
 
 	private ApiDao dao;
 	private SQLiteDao daoSql;
@@ -81,7 +75,7 @@ public class MapDataActivity extends FragmentActivity implements Sourceable {
 			}
 		};
 	};
-
+	
 	private void showEmptyMessage() {
 		Toast.makeText(getApplicationContext(), "走行ルートがありません",
 				Toast.LENGTH_SHORT).show();
@@ -99,7 +93,6 @@ public class MapDataActivity extends FragmentActivity implements Sourceable {
 		super.onResume();
 		map = ((SupportMapFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.map)).getMap();
-		Log.d("activity", "map " + map);
 	}
 
 	@Override
@@ -112,11 +105,18 @@ public class MapDataActivity extends FragmentActivity implements Sourceable {
 		daoSql = DaoFacade.getSQLiteDao();
 		trainingId = getIntent().getIntExtra(SQLConstants.trainingId(), 0);
 		id = getIntent().getIntExtra(SQLConstants.id(), 0);
+		targetUserId = getIntent().getStringExtra("target_user_id");
+		Log.d("activity", "targetUserId "+targetUserId);
+		if (targetUserId == null) {
+			targetUserId = user.getId();
+		}
 		if (id != 0) {
 			// drawMapLine(DBManager.selectTrainingLog(id));
 			drawMapLine(daoSql.selectTrainingLog(id));
 		} else if (trainingId != 0) {
-//			dao.selectTrainingLog(user.getId(), trainingId);
+			dao.selectTraining(user.getId(), targetUserId, trainingId,
+					user.getPassword());
+			// dao.selectTrainingLog(user.getId(), trainingId);
 		}
 		if (savedInstanceState != null && mapFragment == null) {
 			mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -155,10 +155,6 @@ public class MapDataActivity extends FragmentActivity implements Sourceable {
 	}
 
 	private void drawMapLine(List<TrainingLog> list) {
-		for (TrainingLog trainingLog : list) {
-			Log.d("mapdata", "log " + trainingLog.getDisX());
-			Log.d("mapdata", "log " + trainingLog.getDisY());
-		}
 		if (list.size() == 0) {
 			return;
 		}
@@ -172,15 +168,6 @@ public class MapDataActivity extends FragmentActivity implements Sourceable {
 				last = trainingLog;
 			}
 		}
-	}
-
-	private void drawMapLine(TrainingLogItem logs) {
-		for (int i = 0; i < logs.getSize() - 1; i++) {
-			drawLine(logs.getDisX(i), logs.getDisY(i), logs.getDisX(i + 1),
-					logs.getDisY(i + 1));
-		}
-		addMapMarker(logs.getDisX(logs.getSize() - 1),
-				logs.getDisY(logs.getSize() - 1), 1);
 	}
 
 	private void addMapMarker(double disX, double disY, int position) {
@@ -208,18 +195,20 @@ public class MapDataActivity extends FragmentActivity implements Sourceable {
 
 	@Override
 	public void complete() {
-		TrainingLogItem item = null;
+		TrainingInfo training = null;
 		try {
-			item = dao.getResponse();
+			training = dao.getResponse();
 		} catch (XmlParseException e) {
 			e.printStackTrace();
 		} catch (XmlReadException e) {
 			e.printStackTrace();
 		}
-		if (item.getSize() != 0) {
-			moveThisPosition(item.getDisX(0), item.getDisY(0));
-			addMapMarker(item.getDisX(0), item.getDisY(0), 0);
-			drawMapLine(item);
+		List<TrainingLog> logs = training.getLogs();
+		if (logs.size() != 0) {
+			TrainingLog item = logs.get(0);
+			moveThisPosition(item.getDisX(), item.getDisY());
+			addMapMarker(item.getDisX(), item.getDisY(), 0);
+			drawMapLine(logs);
 		} else {
 			setMessage(MESSAGE_EMPTY, null);
 		}
@@ -231,20 +220,15 @@ public class MapDataActivity extends FragmentActivity implements Sourceable {
 	}
 
 	@Override
-	public void complete(InputStream response) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void complete(Bitmap image) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void progressUpdate(int value) {
+	public void validate() {
 		// TODO Auto-generated method stub
-		
+
 	}
+
 }

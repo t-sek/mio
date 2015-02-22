@@ -4,13 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static ac.neec.mio.consts.SQLConstants.*;
-import ac.neec.mio.taining.category.TrainingCategory;
-import ac.neec.mio.taining.category.TrainingCategoryFactory;
-import ac.neec.mio.training.framework.ProductDataFactory;
+import ac.neec.mio.framework.ProductDataFactory;
+import ac.neec.mio.training.category.TrainingCategory;
+import ac.neec.mio.training.category.TrainingCategoryFactory;
 import android.database.Cursor;
 
+/**
+ * トレーニングカテゴリーリストを解析するクラス
+ */
 public class TrainingCategoryListCursorParser extends CursorParser {
 
+	/**
+	 * カテゴリーリスト
+	 */
 	private List<TrainingCategory> list;
 
 	public TrainingCategoryListCursorParser(Cursor c) {
@@ -21,8 +27,7 @@ public class TrainingCategoryListCursorParser extends CursorParser {
 	protected void parse(Cursor c) {
 		ProductDataFactory factory = new TrainingCategoryFactory();
 		list = new ArrayList<TrainingCategory>();
-		int indexTrainingCategoryId = c
-				.getColumnIndex(trainingCategoryId());
+		int indexTrainingCategoryId = c.getColumnIndex(trainingCategoryId());
 		int indexTrainingCategoryName = c
 				.getColumnIndex(trainingCategoryName());
 		while (c.moveToNext()) {
@@ -32,6 +37,9 @@ public class TrainingCategoryListCursorParser extends CursorParser {
 		}
 	}
 
+	/**
+	 * @return TrainingCategory型のリスト
+	 */
 	@Override
 	public List<TrainingCategory> getObject() {
 		return list;

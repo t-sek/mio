@@ -5,37 +5,77 @@ import java.sql.Time;
 import ac.neec.mio.ui.listener.TimerCallbackListener;
 import ac.neec.mio.util.TimeUtil;
 
+/**
+ * Watchクラスを管理するクラス
+ *
+ */
 public class TimerManager implements Observer {
 
+	/**
+	 * コールバックリスナー
+	 */
 	private TimerCallbackListener listener;
+	/**
+	 * Watchクラスのインスタンス
+	 */
 	private Watch watch;
+	/**
+	 * 計測中のタイム
+	 */
 	private static Time time;
+	/**
+	 * 最終ラップタイム
+	 */
 	private String lastTime;
 
+	/**
+	 * 
+	 * @param listener
+	 *            コールバックリスナー
+	 */
 	public TimerManager(TimerCallbackListener listener) {
 		this.listener = listener;
 		time = new Time(0);
 		watch = Timer.getInstance();
 	}
 
+	/**
+	 * 
+	 * @param listener
+	 *            コールバックリスナー
+	 * @param time
+	 *            計測時間
+	 */
 	public TimerManager(TimerCallbackListener listener, long time) {
 		this.listener = listener;
 		watch = new StopWatch(time);
 		watch.measurement(this);
 	}
 
+	/**
+	 * スタートする
+	 */
 	public void start() {
 		watch.measurement(this);
 	}
 
+	/**
+	 * ストップする
+	 */
 	public void stop() {
 		watch.stop();
 	}
 
+	/**
+	 * ラップを記録する
+	 */
 	public void lap() {
 		watch.lap();
 	}
 
+	/**
+	 * リセットする
+	 */
 	public void reset() {
 		watch.reset();
 	}
@@ -55,10 +95,20 @@ public class TimerManager implements Observer {
 		return TimerManager.time.toString();
 	}
 
+	/**
+	 * 計測中のタイムを取得する
+	 * 
+	 * @return 計測中のタイム
+	 */
 	public static Time getTime() {
 		return time;
 	}
 
+	/**
+	 * 計測時間をString型(hh:mm)で取得する
+	 * 
+	 * @return 計測時間
+	 */
 	public String getMeasurementTime() {
 		StringBuilder sb = new StringBuilder();
 		if (time.getMinutes() < 10 && time.getHours() == 0) {
@@ -73,10 +123,20 @@ public class TimerManager implements Observer {
 		return sb.toString();
 	}
 
+	/**
+	 * 計測時間をint型で取得する
+	 * 
+	 * @return 計測時間
+	 */
 	public int getMeasurementIntTime() {
 		return TimeUtil.stringToInteger(getMeasurementTime());
 	}
 
+	/**
+	 * 計測時間をlong型で取得する
+	 * 
+	 * @return 計測時間
+	 */
 	public static long getSecTime() {
 		return time.getSeconds() + time.getMinutes() * 60 + time.getHours()
 				* 3600;
@@ -118,9 +178,6 @@ public class TimerManager implements Observer {
 			sb.append("0");
 		}
 		sb.append(sec);
-		// if (!sb.toString().equals(ZERO)) {
 		listener.onUpdateLap(sb.toString());
-		// }
-
 	}
 }

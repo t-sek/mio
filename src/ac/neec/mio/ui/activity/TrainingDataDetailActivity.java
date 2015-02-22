@@ -5,22 +5,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ac.neec.mio.R;
+import ac.neec.mio.consts.ErrorConstants;
 import ac.neec.mio.consts.SQLConstants;
 import ac.neec.mio.dao.ApiDao;
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.SQLiteDao;
 import ac.neec.mio.dao.Sourceable;
-import ac.neec.mio.db.DBManager;
 import ac.neec.mio.exception.XmlParseException;
 import ac.neec.mio.exception.XmlReadException;
-import ac.neec.mio.http.item.TrainingItem;
-import ac.neec.mio.http.item.TrainingLogItem;
-import ac.neec.mio.http.item.TrainingPlayItem;
-import ac.neec.mio.taining.TrainingInfo;
-import ac.neec.mio.taining.category.TrainingCategory;
-import ac.neec.mio.taining.menu.TrainingMenu;
-import ac.neec.mio.taining.play.TrainingPlay;
+import ac.neec.mio.training.TrainingInfo;
+import ac.neec.mio.training.category.TrainingCategory;
 import ac.neec.mio.training.log.TrainingLog;
+import ac.neec.mio.training.menu.TrainingMenu;
+import ac.neec.mio.training.play.TrainingPlay;
+import ac.neec.mio.ui.dialog.LoadingDialog;
 import ac.neec.mio.user.User;
 import ac.neec.mio.util.CalorieUtil;
 import ac.neec.mio.util.ColorUtil;
@@ -40,6 +38,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.koba.androidrtchart.ColorBar;
 import com.koba.androidrtchart.ColorBarItem;
@@ -52,45 +51,36 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 		Sourceable {
 
 	interface CallbackListener {
-		void onResponseLog();
-
-		void onResponsePlay();
+		void update();
 	}
 
 	private static final int MESSAGE_UPDATE = 0;
+	private static final int MESSAGE_ERROR = 2;
 
 	private CallbackListener listener;
 
-	// private static TrainingItem training;
-	// private static TrainingLogItem trainingLog;
-	// private static List<TrainingPlayItem> trainingPlays = new
-	// ArrayList<TrainingPlayItem>();
+	private LoadingDialog dialog;
 	private static TrainingInfo training;
-	private static List<TrainingLog> logs = new ArrayList<TrainingLog>();
-	private static List<TrainingPlay> plays = new ArrayList<TrainingPlay>();
+	private String targetUserId;
 	private static User user = User.getInstance();
 	private ApiDao dao;
-	private SQLiteDao daoSql;
-	private boolean playSelect;
 
 	Handler handler = new Handler() {
 		public void handleMessage(Message message) {
 			switch (message.what) {
 			case MESSAGE_UPDATE:
-				update();
+				listener.update();
+				break;
+			case MESSAGE_ERROR:
+				Toast.makeText(getApplicationContext(),
+						ErrorConstants.findTraining(), Toast.LENGTH_SHORT)
+						.show();
 				break;
 			default:
 				break;
 			}
 		};
 	};
-
-	private void update() {
-		logs = training.getLogs();
-		plays = training.getPlays();
-		listener.onResponsePlay();
-		listener.onResponseLog();
-	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -102,20 +92,17 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 					.commit();
 			listener = f.getListener();
 		}
-		Intent intent = getIntent();
-		// training = (TrainingItem) intent.getSerializableExtra(SQLConstants
-		// .tableTraining());
-		int trainingId = intent.getIntExtra(SQLConstants.trainingId(), 0);
-		dao.selectTraining(user.getId(), user.getId(), trainingId,
-				user.getPassword());
-		getActionBar().setTitle(
-				DateUtil.japaneseFormat(training.getTraining().getDate())
-						+ " "
-						+ DateUtil.timeJapaneseFormat(training.getTraining()
-								.getStartTime()));
-		daoSql = DaoFacade.getSQLiteDao();
 		dao = DaoFacade.getApiDao(this);
-		// dao.selectTrainingPlay(user.getId(), training.getTrainingId());
+		Intent intent = getIntent();
+		int trainingId = intent.getIntExtra(SQLConstants.trainingId(), 0);
+		targetUserId = intent.getStringExtra("target_user_id");
+		if (targetUserId == null) {
+			targetUserId = user.getId();
+		}
+		dao.selectTraining(user.getId(), targetUserId, trainingId,
+				user.getPassword());
+		dialog = new LoadingDialog();
+		dialog.show(getFragmentManager(), "dialog");
 	}
 
 	@Override
@@ -139,6 +126,7 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 				MapDataActivity.class);
 		intent.putExtra(SQLConstants.trainingId(), training.getTraining()
 				.getId());
+		intent.putExtra("target_user_id", targetUserId);
 		startActivity(intent);
 		// finish();
 	}
@@ -161,6 +149,8 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 
 		private ColorBar colorbar;
 		private SQLiteDao daoSql;
+		private List<TrainingLog> logs = new ArrayList<TrainingLog>();
+		private List<TrainingPlay> plays = new ArrayList<TrainingPlay>();
 
 		public PlaceholderFragment() {
 		}
@@ -172,7 +162,6 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 					container, false);
 			daoSql = DaoFacade.getSQLiteDao();
 			initFindViews(rootView);
-			setViewText();
 			return rootView;
 		}
 
@@ -212,29 +201,25 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 		private void setColorBar() {
 			ColorBarItem item;
 			for (TrainingPlay play : plays) {
-				// String name = DBManager.selectTrainingMenuName(playItem
-				// .getTrainingMenuId());
 				String name = daoSql.selectTrainingMenuName(play
 						.getTrainingMenuId());
 				String color = null;
-				// TrainingMenu menu = DBManager.selectTrainingMenu(playItem
-				// .getTrainingMenuId());
 				TrainingMenu menu = daoSql.selectTrainingMenu(play
 						.getTrainingMenuId());
 				if (menu != null) {
 					color = menu.getColor();
+					item = new ColorBarItem(play.getTrainingTime(), menu.getTrainingName(), color);
+					colorbar.addBarItem(item);
 				} else {
 					color = ColorUtil.DEFAULT_COLOR;
 				}
-				item = new ColorBarItem(play.getTrainingTime(), name, color);
-				colorbar.addBarItem(item);
 			}
-
 		}
 
 		private void setViewText() {
-			// TrainingCategory category = DBManager
-			// .selectTrainingCategory(training.getCategoryId());
+			if (training.getTraining() == null) {
+				return;
+			}
 			TrainingCategory category = daoSql.selectTrainingCategory(training
 					.getTraining().getCategoryId());
 			textDetailName.setText(category.getTrainingCategoryName());
@@ -253,6 +238,8 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 
 		@Override
 		public void onTouch(int index, LineDot dot) {
+			List<TrainingLog> logs = training.getLogs();
+			List<TrainingPlay> plays = training.getPlays();
 			textDatasHeartRate.setText(String.valueOf(logs.get(index)
 					.getHeartRate()));
 			textDatasTime.setText(logs.get(index).getTime());
@@ -267,16 +254,18 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 		}
 
 		@Override
-		public void onResponseLog() {
-			setLineGraph();
+		public void onTouch(int value, String comment) {
+			Toast.makeText(getActivity(), comment + " " + value + "秒",
+					Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
-		public void onResponsePlay() {
+		public void update() {
+			logs = training.getLogs();
+			plays = training.getPlays();
+			setViewText();
+			setLineGraph();
 			if (plays.size() != 0) {
-				// TrainingMenu menu =
-				// DBManager.selectTrainingMenu(trainingPlays
-				// .get(0).getTrainingMenuId());
 				TrainingMenu menu = daoSql.selectTrainingMenu(plays.get(0)
 						.getTrainingMenuId());
 				if (menu != null) {
@@ -284,11 +273,6 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 				}
 				setColorBar();
 			}
-		}
-
-		@Override
-		public void onTouch(int index, String comment) {
-			Log.e("activity", "onTouch " + index);
 		}
 
 	}
@@ -301,6 +285,7 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 
 	@Override
 	public void complete() {
+		dialog.dismiss();
 		try {
 			training = dao.getResponse();
 		} catch (XmlParseException e) {
@@ -308,17 +293,15 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 		} catch (XmlReadException e) {
 			e.printStackTrace();
 		}
-		handler.sendMessage(setMessage(MESSAGE_UPDATE));
+		if (training.getTraining() != null) {
+			handler.sendMessage(setMessage(MESSAGE_UPDATE));
+		} else {
+			handler.sendMessage(setMessage(MESSAGE_ERROR));
+		}
 	}
 
 	@Override
 	public void incomplete() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void complete(InputStream response) {
 		// TODO Auto-generated method stub
 
 	}
@@ -330,7 +313,7 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 	}
 
 	@Override
-	public void progressUpdate(int value) {
+	public void validate() {
 		// TODO Auto-generated method stub
 
 	}

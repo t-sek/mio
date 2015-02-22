@@ -6,18 +6,23 @@ import ac.neec.mio.exception.SQLiteInsertException;
 import ac.neec.mio.exception.SQLiteTableConstraintException;
 import ac.neec.mio.group.Affiliation;
 import ac.neec.mio.group.Group;
+import ac.neec.mio.group.MemberInfo;
 import ac.neec.mio.group.Permission;
-import ac.neec.mio.taining.Training;
-import ac.neec.mio.taining.category.TrainingCategory;
-import ac.neec.mio.taining.menu.TrainingMenu;
-import ac.neec.mio.taining.play.TrainingPlay;
+import ac.neec.mio.training.Training;
+import ac.neec.mio.training.category.TrainingCategory;
 import ac.neec.mio.training.log.TrainingLog;
-import android.database.sqlite.SQLiteOpenHelper;
+import ac.neec.mio.training.menu.TrainingMenu;
+import ac.neec.mio.training.play.TrainingPlay;
+import android.graphics.Bitmap;
 
+/**
+ * ローカルデータベースに接続するインターフェース
+ *
+ */
 public interface SQLiteDao {
 
 	/**
-	 * トレーニングカテゴリーを追加
+	 * トレーニングカテゴリーを追加する
 	 * 
 	 * @param trainingCategoryId
 	 *            カテゴリーID
@@ -33,7 +38,7 @@ public interface SQLiteDao {
 			SQLiteTableConstraintException;
 
 	/**
-	 * トレーニングメニューを追加
+	 * トレーニングメニューを追加する
 	 * 
 	 * @param trainingMenuId
 	 *            メニューID
@@ -56,82 +61,85 @@ public interface SQLiteDao {
 			throws SQLiteInsertException, SQLiteTableConstraintException;
 
 	/**
-	 * 指定したカテゴリーIDのカテゴリー情報を取得
+	 * 指定したカテゴリーIDのカテゴリー情報を取得する
 	 * 
 	 * @param categoryId
-	 * @return
+	 *            カテゴリーID
+	 * @return TrainingCategory型
 	 */
 	TrainingCategory selectTrainingCategory(int categoryId);
 
 	/**
-	 * 指定したカテゴリー名のカテゴリー情報を取得
+	 * 指定したカテゴリー名のカテゴリー情報を取得する
 	 * 
 	 * @param name
-	 * @return
+	 *            カテゴリー名
+	 * @return TrainingCategory型
 	 */
 	TrainingCategory selectTrainingCategory(String name);
 
 	/**
-	 * 全カテゴリーを取得
+	 * 全カテゴリーを取得する
 	 * 
-	 * @return
+	 * @return TrainingCategory型リスト
 	 */
 	List<TrainingCategory> selectTrainingCategory();
 
 	/**
-	 * 指定したカテゴリーIDに属しているトレーニングメニューを取得
+	 * 指定したカテゴリーIDに属しているトレーニングメニューを取得する
 	 * 
 	 * @param trainingCategoryId
 	 *            カテゴリーID
-	 * @return
+	 * @return TrainingMenu型リスト
 	 */
 	List<TrainingMenu> selectTrainingCategoryMenu(int trainingCategoryId);
 
 	/**
-	 * 全トレーニングメニューを取得
+	 * 全トレーニングメニューを取得する
 	 * 
-	 * @return
+	 * @return TrainingMenu型リスト
 	 */
 	List<TrainingMenu> selectTrainingMenu();
 
 	/**
-	 * 指定したメニューIDのメニュー情報を取得
+	 * 指定したメニューIDのメニュー情報を取得する
 	 * 
 	 * @param trainingMenuId
 	 *            メニューID
-	 * @return
+	 * @return TrainingMenu型
 	 */
 	TrainingMenu selectTrainingMenu(int trainingMenuId);
 
 	/**
-	 * 指定したカテゴリーIDの名前を取得
+	 * 指定したカテゴリーIDの名前を取得する
 	 * 
 	 * @param trainingCategoryId
 	 *            カテゴリーID
-	 * @return
+	 * @return メニュー名
 	 */
 	String selectTrainingMenuName(int trainingCategoryId);
 
 	/**
-	 * メニュー名からトレーニングメニューを取得
+	 * メニュー名からトレーニングメニューを取得する
 	 * 
 	 * @param trainingName
-	 * @return
+	 *            メニュー名
+	 * @return TrainingMenu型
 	 */
 	TrainingMenu selectTrainingMenu(String menuName);
 
 	/**
-	 * 全トレーニングカテゴリーを削除
+	 * 全トレーニングカテゴリーを削除する
 	 */
 	void deleteTrainingCategoryTableAll();
 
 	/**
-	 * 全トレーニングメニューを削除
+	 * 全トレーニングメニューを削除する
 	 */
 	void deleteTrainingMenuTableAll();
 
 	/**
-	 * トレーニングを追加
+	 * トレーニングを追加する
 	 * 
 	 * @param trainingCategoryId
 	 *            カテゴリーID
@@ -168,7 +176,7 @@ public interface SQLiteDao {
 			SQLiteTableConstraintException;
 
 	/**
-	 * トレーニングログを追加
+	 * トレーニングログを追加する
 	 * 
 	 * @param id
 	 *            現在計測中の暫定トレーニングID
@@ -196,7 +204,7 @@ public interface SQLiteDao {
 			throws SQLiteInsertException, SQLiteTableConstraintException;
 
 	/**
-	 * トレーニングプレイを追加
+	 * トレーニングプレイを追加する
 	 * 
 	 * @param id
 	 *            現在計測中の暫定トレーニングID
@@ -213,34 +221,36 @@ public interface SQLiteDao {
 			throws SQLiteInsertException, SQLiteTableConstraintException;
 
 	/**
-	 * トレーニングを更新
+	 * トレーニングを更新する
 	 * 
 	 * @param id
-	 * @param trainingCategoryId
-	 * @param date
-	 * @param startTime
+	 *            トレーニングID
 	 * @param playTime
+	 *            運動時間 sec
+	 * @param calorie
+	 *            カロリー
 	 * @param targetHeartRate
-	 * @param targetCalorie
-	 * @param consumptionCalorie
+	 *            目標心拍数
 	 * @param heartRateAvg
-	 * @param strange
+	 *            平均心拍数
 	 * @param distance
+	 *            走行距離
 	 */
-	void updateTraining(int id, String playTime, int consumptionCalorie,
-			int heartRateAvg, double distance);
+	void updateTraining(int id, String playTime, int calorie,
+			int targetHeartRate, int heartRateAvg, double distance);
 
 	/**
-	 * 全トレーニングを取得
+	 * 全トレーニングを取得する
 	 * 
-	 * @return
+	 * @return Training型リスト
 	 */
 	List<Training> selectTraining();
 
 	/**
-	 * トレーニングを取得
+	 * トレーニングを取得する
 	 * 
 	 * @param id
+	 *            トレーニングID
 	 */
 	Training selectTraining(int id);
 
@@ -248,31 +258,34 @@ public interface SQLiteDao {
 	 * トレーニングログを取得
 	 * 
 	 * @param id
-	 * @return
+	 *            トレーニングID
+	 * @return TrainingLog型リスト
 	 */
 	List<TrainingLog> selectTrainingLog(int id);
 
 	/**
-	 * トレーニングプレイを取得
+	 * トレーニングプレイを取得する
 	 * 
 	 * @param id
+	 *            トレーニングID
 	 */
 	List<TrainingPlay> selectTrainingPlay(int id);
 
 	/**
-	 * 指定したトレーニングIDの心拍数の推移を取得
+	 * 指定したトレーニングIDの心拍数の推移を取得する
 	 * 
 	 * @param trainingId
+	 *            トレーニングID
 	 */
 	void selectHeartRate(int trainingId);
 
 	/**
-	 * 全トレーニングを削除
+	 * 全トレーニングを削除する
 	 */
 	void deleteTrainingAll();
 
 	/**
-	 * トレーニングを削除
+	 * トレーニングを削除する
 	 * 
 	 * @param id
 	 *            トレーニングID
@@ -280,36 +293,36 @@ public interface SQLiteDao {
 	void deleteTraining(int id);
 
 	/**
-	 * 全トレーニングログを削除
+	 * 全トレーニングログを削除する
 	 */
 	void deleteTrainingLogAll();
 
 	/**
-	 * トレーニングログを削除
+	 * トレーニングログを削除する
 	 * 
 	 * @param id
-	 *            ログID
+	 *            トレーニングID
 	 */
 	void deleteTrainingLog(int id);
 
 	/**
-	 * 全トレーニングプレイを削除
+	 * 全トレーニングプレイを削除する
 	 */
 	void deleteTrainingPlayAll();
 
 	/**
-	 * トレーニングプレイを削除
+	 * トレーニングプレイを削除する
 	 * 
 	 * @param id
-	 *            プレイID
+	 *            トレーニングID
 	 */
 	void deleteTrainingPlay(int id);
 
 	/**
-	 * グループの権限一覧を登録
+	 * グループの権限一覧を登録する
 	 * 
 	 * @param perm
-	 *            グループ権限
+	 *            権限
 	 * @throws SQLiteInsertException
 	 *             インサートエラー
 	 * @throws SQLiteTableConstraintException
@@ -319,105 +332,156 @@ public interface SQLiteDao {
 			SQLiteTableConstraintException;
 
 	/**
-	 * グループ権限一覧を取得
+	 * グループ権限一覧を取得する
 	 * 
-	 * @return グループ権限リスト
+	 * @return 権限リスト
 	 */
 	List<Permission> selectPermission();
 
 	/**
-	 * グループ権限を取得
+	 * グループ権限を取得する
 	 * 
 	 * @param permissionId
-	 *            パーミッションID
-	 * @return
+	 *            権限ID
+	 * @return Permission型
 	 */
 	Permission selectPermission(int permissionId);
 
 	/**
-	 * グループ権限一覧を削除
+	 * グループ権限一覧を削除する
 	 */
 	void deletePermission();
 
 	/**
-	 * グループを登録
+	 * グループを登録する
 	 * 
 	 * @param groupId
 	 *            グループID
 	 * @param name
-	 *            名前
+	 *            グループ名
 	 * @param comment
 	 *            コメント
 	 * @param userId
 	 *            作成者ID
 	 * @param created
 	 *            作成日 yy-mm-dd形式
+	 * @param permissionId
+	 *            端末ユーザの権限ID
 	 * 
 	 * @throws SQLiteInsertException
+	 *             インサートエラー
 	 * @throws SQLiteTableConstraintException
+	 *             テーブル制約エラー
 	 */
 	void insertGroup(String groupId, String name, String comment,
-			String userId, String created) throws SQLiteInsertException,
-			SQLiteTableConstraintException;
+			String userId, String created, int permissionId)
+			throws SQLiteInsertException, SQLiteTableConstraintException;
 
 	/**
-	 * 全グループを取得
+	 * 全グループを取得する
 	 * 
-	 * @return
+	 * @return Group型リスト
 	 */
 	List<Group> selectGroup();
 
 	/**
-	 * グループを取得
+	 * 加入済みグループを取得する
+	 * 
+	 * @return Group型リスト
+	 */
+	List<Group> selectGroupJoin();
+
+	/**
+	 * グループを取得する
 	 * 
 	 * @param groupId
 	 *            グループID
-	 * @return
+	 * @return Group型
 	 */
 	Group selectGroup(String groupId);
 
 	/**
-	 * 全グループ削除
+	 * グループメンバーを登録する
+	 * 
+	 * @param groupId
+	 *            グループID
+	 * @param userId
+	 *            ユーザID
+	 * @param userName
+	 *            ユーザ名
+	 * @param permissionId
+	 *            権限ID
+	 * @param image
+	 *            プロフィール画像
+	 */
+	void insertGroupMember(String groupId, String userId, String userName,
+			int permissionId, Bitmap image) throws SQLiteInsertException,
+			SQLiteTableConstraintException;
+
+	/**
+	 * グループメンバーを取得する
+	 * 
+	 * @param groupId
+	 *            グループID
+	 * @return MemberInfo型リスト
+	 */
+	List<MemberInfo> selectGroupMember(String groupId);
+
+	/**
+	 * 指定した権限IDのグループメンバーを取得する
+	 * 
+	 * @param groupId
+	 *            グループID
+	 * @param permissionId
+	 *            権限ID
+	 * @return MemberInfo型リスト
+	 */
+	List<MemberInfo> selectGroupMember(String groupId, int permissionId);
+
+	void deleteGroupMember(String groupId);
+
+	void deleteGroupMember();
+
+	/**
+	 * 全グループ削除する
 	 */
 	void deleteGroup();
 
 	/**
 	 * 
-	 */
-
-	/**
-	 * 
-	 * グループ権限を登録
+	 * グループ権限を登録する
 	 * 
 	 * @param groupId
 	 *            グループId
 	 * @param permissionId
-	 *            パーミッションID
+	 *            権限ID
 	 * 
 	 * @throws SQLiteInsertException
+	 *             インサートエラー
 	 * @throws SQLiteTableConstraintException
+	 *             テーブル制約エラー
 	 */
 	void insertAffiliation(String groupId, int permissionId)
 			throws SQLiteInsertException, SQLiteTableConstraintException;
 
 	/**
-	 * グループ権限を取得
+	 * グループ権限を取得する
 	 * 
 	 * @param groupId
 	 *            グループID
-	 * @return
+	 * @return Affiliation型
 	 */
 	Affiliation selectAffiliation(String groupId);
 
 	/**
-	 * 全グループ権限を取得
+	 * 全グループ権限を取得する
 	 * 
-	 * @return
+	 * @return Affiliation型リスト
 	 */
 	List<Affiliation> selectAffiliation();
 
 	/**
-	 * 全グループ権限を削除
+	 * 全グループ権限を削除する
 	 */
 	void deleteAffiliation();
 

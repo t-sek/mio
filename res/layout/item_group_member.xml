@@ -12,8 +12,8 @@
 
         <com.sek.circleimageview.CircleImageView
             android:id="@+id/img_profile"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
             android:background="@drawable/circle" />
@@ -44,8 +44,24 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:text="id"
-                android:textColor="@android:color/black"
-                android:textSize="20dp" />
+                android:textColor="@android:color/black" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/text_permission_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="として参加しています" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 

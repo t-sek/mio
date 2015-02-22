@@ -4,13 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static ac.neec.mio.consts.SQLConstants.*;
+import ac.neec.mio.framework.ProductDataFactory;
 import ac.neec.mio.group.Permission;
 import ac.neec.mio.group.GroupFactory;
-import ac.neec.mio.training.framework.ProductDataFactory;
 import android.database.Cursor;
 
+/**
+ * 権限リストを解析するクラス
+ */
 public class PermissionListCursorParser extends CursorParser {
 
+	/**
+	 * 権限リスト
+	 */
 	private List<Permission> perms;
 
 	public PermissionListCursorParser(Cursor c) {
@@ -50,6 +56,9 @@ public class PermissionListCursorParser extends CursorParser {
 		c.close();
 	}
 
+	/**
+	 * @return Permission型のリスト
+	 */
 	@Override
 	public List<Permission> getObject() {
 		return perms;

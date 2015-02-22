@@ -146,4 +146,10 @@ public class UserSignUpBodilyActivity extends Activity implements
 		setBodilyData();
 	}
 
+	@Override
+	public void dataChanged(String data) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

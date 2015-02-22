@@ -10,13 +10,13 @@
     <string name="btn_measurement_rest">ラップ</string>
     <string name="btn_measurement_end">終了</string>
     <string name="title_activity_training_menu_detail_setting">TrainingMenuDetailSettingActivity</string>
-    <string name="time">タイム</string>
+    <string name="measurement_time">タイム</string>
     <string name="avg_speed">平均 キロ/分</string>
     <string name="km">キロメートル</string>
     <string name="mets">METs</string>
     <string name="strong">運動強度</string>
-    <string name="calorie">消費カロリー</string>
-    <string name="distance">距離</string>
+    <string name="text_calorie">消費カロリー</string>
+    <string name="text_distance">距離</string>
     <string name="target_heart_rate">目標心拍数</string>
     <string name="target_calorie">目標カロリー</string>
     <string name="estimated_calorie">推定カロリー</string>
@@ -48,6 +48,7 @@
     <string name="title_activity_group_info">グループ詳細</string>
     <string name="title_activity_group_member_list">メンバーリスト</string>
     <string name="title_activity_member_info">メンバー一覧</string>
+    <string name="title_activity_training_free_insert">トレーニングを追加</string>
     <string name="title_activity_sync_training">未同期トレーニング一覧</string>
     <string name="title_activity_weight_graph">過去の体重</string>
 

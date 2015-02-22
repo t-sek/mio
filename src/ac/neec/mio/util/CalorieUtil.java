@@ -5,10 +5,8 @@ import java.util.concurrent.TimeUnit;
 
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.SQLiteDao;
-import ac.neec.mio.db.DBManager;
-import ac.neec.mio.http.item.TrainingPlayItem;
-import ac.neec.mio.taining.menu.TrainingMenu;
-import ac.neec.mio.taining.play.TrainingPlay;
+import ac.neec.mio.training.menu.TrainingMenu;
+import ac.neec.mio.training.play.TrainingPlay;
 import android.content.Context;
 
 public class CalorieUtil {
@@ -25,28 +23,6 @@ public class CalorieUtil {
 		min += sec / 60;
 		hour += min / 60;
 		return calcCalorie(mets, hour, weight);
-	}
-
-	public static int calcPlayItemCalorie(List<TrainingPlayItem> list,
-			float weight, int time) {
-		SQLiteDao dao = DaoFacade.getSQLiteDao();
-		int calorie = 0;
-		for (TrainingPlayItem trainingPlayItem : list) {
-			// TrainingMenu menu = DBManager.selectTrainingMenu(trainingPlayItem
-			// .getTrainingMenuId());
-			TrainingMenu menu = dao.selectTrainingMenu(trainingPlayItem
-					.getTrainingMenuId());
-			if (menu != null) {
-				calorie += calcCalorie(menu.getMets(),
-						Long.valueOf(time * 1000), weight);
-				return 0;
-			}
-			if (trainingPlayItem.getTrainingTime() >= time) {
-				return calorie;
-			}
-			time -= trainingPlayItem.getTrainingTime();
-		}
-		return calorie;
 	}
 
 	public static int calcPlayCalorie(List<TrainingPlay> list, float weight,

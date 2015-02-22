@@ -13,6 +13,10 @@ import ac.neec.mio.exception.XmlReadException;
 import android.content.res.Resources;
 import android.util.Log;
 
+/**
+ * XML解析する抽象クラス
+ *
+ */
 public abstract class XmlParser {
 
 	private static final String CHARSET = "UTF-8";
@@ -20,6 +24,14 @@ public abstract class XmlParser {
 	private XmlPullParser xmlPullParser;
 	protected InputStream response;
 
+	/**
+	 * XMLファイルをInputStreamにセットする
+	 * 
+	 * @throws XmlParseException
+	 *             XMLファイル解析に失敗
+	 * @throws XmlReadException
+	 *             XMLファイルの読み込みに失敗
+	 */
 	private void init() throws XmlParseException, XmlReadException {
 		bufferedInputStream = new BufferedInputStream(response);
 		XmlPullParserFactory xmlPullParserFactory;
@@ -34,16 +46,40 @@ public abstract class XmlParser {
 		}
 	}
 
+	/**
+	 * レスポンスをセットする
+	 * 
+	 * @param response
+	 *            レスポンス
+	 */
 	public void setResponse(InputStream response) {
 		this.response = response;
-		Log.d("parser", "response "+this.response);
 	}
 
-	public <T> T getXmlParseObject() throws XmlParseException, XmlReadException {
+	/**
+	 * XMLファイルから解析したデータを取得する
+	 * 
+	 * @return レスポンス
+	 * @throws XmlParseException
+	 *             XMLファイル解析エラー
+	 * @throws XmlReadException
+	 *             XMLファイル読み込みエラー
+	 * @throws NullPointerException
+	 */
+	public <T> T getXmlParseObject() throws XmlParseException,
+			XmlReadException, NullPointerException {
 		init();
 		return getParseObject();
 	}
 
+	/**
+	 * レスポンスを解析する
+	 * 
+	 * @throws XmlParseException
+	 *             XMLファイル解析エラー
+	 * @throws XmlReadException
+	 *             XMLファイル読み込みエラー
+	 */
 	private void parseXml() throws XmlParseException, XmlReadException {
 		int eventType;
 		try {
@@ -92,7 +128,7 @@ public abstract class XmlParser {
 	/**
 	 * 文書終了
 	 */
-	protected abstract void endDocument();
+	protected abstract void endDocument() throws XmlParseException;
 
 	/**
 	 * 開きタグ
@@ -100,7 +136,7 @@ public abstract class XmlParser {
 	 * @param text
 	 *            タグ名
 	 */
-	protected abstract void startTag(String text);
+	protected abstract void startTag(String text) throws XmlParseException;
 
 	/**
 	 * 閉じタグ
@@ -118,11 +154,9 @@ public abstract class XmlParser {
 	protected abstract void text(String text);
 
 	/**
-	 * 解析したデータを返す
+	 * 解析したデータを取得する
 	 * 
-	 * @param <T>
-	 * 
-	 * @return
+	 * @return 解析データ
 	 */
 	protected abstract <T> T getParseObject();
 

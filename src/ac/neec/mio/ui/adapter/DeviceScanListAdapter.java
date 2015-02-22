@@ -5,10 +5,8 @@ import java.util.List;
 
 import ac.neec.mio.R;
 import ac.neec.mio.ble.DeviceInfo;
-import ac.neec.mio.taining.lap.LapItem;
 import ac.neec.mio.consts.PreferenceConstants;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +36,6 @@ public class DeviceScanListAdapter extends ArrayAdapter<DeviceInfo> {
 			convertView = inflater.inflate(R.layout.item_device_scan, null);
 		}
 		DeviceInfo item = list.get(position);
-		Log.e("adapter", "device " + item.getRssi());
 		TextView textName = (TextView) convertView
 				.findViewById(R.id.txt_device_name);
 		if (item.getName() == null) {

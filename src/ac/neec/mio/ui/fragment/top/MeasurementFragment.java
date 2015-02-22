@@ -9,11 +9,10 @@ import com.sek.drumpicker.DrumPicker;
 import ac.neec.mio.R;
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.SQLiteDao;
-import ac.neec.mio.db.DBManager;
 import ac.neec.mio.pref.DevicePreferenceManager;
 import ac.neec.mio.pref.UtilPreference;
-import ac.neec.mio.taining.category.TrainingCategory;
-import ac.neec.mio.taining.menu.TrainingMenu;
+import ac.neec.mio.training.category.TrainingCategory;
+import ac.neec.mio.training.menu.TrainingMenu;
 import ac.neec.mio.ui.activity.DeviceSettingActivity;
 import ac.neec.mio.ui.activity.MeasurementActivity;
 import ac.neec.mio.ui.dialog.TrainingSelectDialog;
@@ -71,7 +70,8 @@ public class MeasurementFragment extends TopBaseFragment implements
 		buttonMeasurement.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// intentMeasurement();
+				UtilPreference.putCategoryPicker(0);
+				UtilPreference.putMenuPicker(0);
 				checkBleSettingDevice();
 			}
 		});
@@ -208,10 +208,12 @@ public class MeasurementFragment extends TopBaseFragment implements
 		// Log.d("fragment", "category "
 		// + dao.selectTrainingCategory(index).getTrainingCategoryName());
 		if (dialogState == DIALOG_CATEGORY) {
-			UtilPreference.putCategoryPicker(index);
+			UtilPreference.putCategoryPicker(index + 1);
 			UtilPreference.putMenuPicker(0);
+			Log.d("activity", "category index " + index);
 		} else if (dialogState == DIALOG_MENU) {
-			UtilPreference.putMenuPicker(index);
+			UtilPreference.putMenuPicker(index + 1);
+			Log.d("activity", "menu index " + index);
 		}
 	}
 

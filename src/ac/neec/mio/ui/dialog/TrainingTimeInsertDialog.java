@@ -23,6 +23,7 @@ public class TrainingTimeInsertDialog extends DialogFragment implements
 
 	public static final int PLAY_TIME = 2;
 	public static final int START_TIME = 3;
+	public static final int ADD_TRAINING = 4;
 	private static final String TAG_HOUR = "h";
 	private static final String TAG_MIN = "m";
 	private static final String PLAY_UNIT1 = "分";
@@ -61,6 +62,24 @@ public class TrainingTimeInsertDialog extends DialogFragment implements
 		return dialog;
 	}
 
+	private void initPlayTime() {
+		pickerHour.setElements(getActivity().getApplicationContext(), TAG_HOUR,
+				TimeUtil.getPlayZeroHour());
+		pickerMin.setElements(getActivity().getApplicationContext(), TAG_MIN,
+				TimeUtil.getPlayNotZeroMin());
+		unit1 = PLAY_UNIT1;
+		unit2 = PLAY_UNIT2;
+	}
+
+	private void initStartTime() {
+		pickerHour.setElements(getActivity().getApplicationContext(), TAG_HOUR,
+				TimeUtil.getHour());
+		pickerMin.setElements(getActivity().getApplicationContext(), TAG_MIN,
+				TimeUtil.getMin());
+		unit1 = START_UNIT1;
+		unit2 = START_UNIT2;
+	}
+
 	private void init() {
 		pickerHour = (DrumPicker) dialog.findViewById(R.id.picker_hour);
 		pickerHour.setOnDrumPickerListener(this);
@@ -68,20 +87,13 @@ public class TrainingTimeInsertDialog extends DialogFragment implements
 		pickerMin.setOnDrumPickerListener(this);
 		switch (tag) {
 		case PLAY_TIME:
-			pickerHour.setElements(getActivity().getApplicationContext(),
-					TAG_HOUR, TimeUtil.getPlayZeroHour());
-			pickerMin.setElements(getActivity().getApplicationContext(),
-					TAG_MIN, TimeUtil.getPlayNotZeroMin());
-			unit1 = PLAY_UNIT1;
-			unit2 = PLAY_UNIT2;
+			initPlayTime();
 			break;
 		case START_TIME:
-			pickerHour.setElements(getActivity().getApplicationContext(),
-					TAG_HOUR, TimeUtil.getHour());
-			pickerMin.setElements(getActivity().getApplicationContext(),
-					TAG_MIN, TimeUtil.getMin());
-			unit1 = START_UNIT1;
-			unit2 = START_UNIT2;
+			initStartTime();
+			break;
+		case ADD_TRAINING:
+			initPlayTime();
 			break;
 		default:
 			break;
@@ -119,10 +131,9 @@ public class TrainingTimeInsertDialog extends DialogFragment implements
 
 	@Override
 	public void onScrollChanged(String tag, String element, int index) {
-		Log.d("dialog", "tag " + tag);
 		if (tag == TAG_HOUR) {
 			hour = element;
-			if (this.tag == PLAY_TIME) {
+			if (this.tag == PLAY_TIME || this.tag == ADD_TRAINING) {
 				if (element.equals("0")) {
 					pickerMin.setElements(getActivity(), TAG_MIN,
 							TimeUtil.getPlayNotZeroMin());
@@ -133,7 +144,7 @@ public class TrainingTimeInsertDialog extends DialogFragment implements
 			}
 		} else if (tag == TAG_MIN) {
 			min = element;
-			if (this.tag == PLAY_TIME) {
+			if (this.tag == PLAY_TIME || this.tag == ADD_TRAINING) {
 				if (element.equals("0")) {
 					pickerHour.setElements(getActivity(), TAG_MIN,
 							TimeUtil.getPlayHour());

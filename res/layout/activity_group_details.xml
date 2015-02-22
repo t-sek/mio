@@ -1,22 +1,23 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:background="@color/whiteTheme"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:background="@color/whiteTheme" >
 
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <ImageView
+        <com.sek.circleimageview.CircleImageView
             android:id="@+id/Group_image"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
             android:src="@drawable/icon_group" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="100dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical" >
 
             <TextView
@@ -32,6 +33,51 @@
                 android:layout_height="60dp"
                 android:text=""
                 android:textSize="40sp" />
+
+            <LinearLayout
+                android:id="@+id/layout_member"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="invisible" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="あなたは" />
+
+                <TextView
+                    android:id="@+id/text_permission"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp" />
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical" >
+
+                    <TextView
+                        android:id="@+id/text_join"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="として参加しています" />
+
+                    <TextView
+                        android:id="@+id/text_pending"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="です"
+                        android:visibility="invisible" />
+
+                    <TextView
+                        android:id="@+id/text_notice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="未加入です"
+                        android:visibility="invisible" />
+                </FrameLayout>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
@@ -49,7 +95,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/theme"
-            android:text="管理者名"
+            android:text="管理者"
             android:textSize="15sp" />
 
         <LinearLayout
@@ -61,9 +107,9 @@
                 android:id="@+id/managerName"
                 android:layout_width="0sp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:text="Name"
-                android:textSize="30sp" />
+                android:textSize="25sp" />
 
             <TextView
                 android:id="@+id/text_group_comment"
@@ -106,7 +152,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/operationLayout"
-        android:layout_marginTop="10dp"
         android:background="@color/grayTheme"
         android:orientation="vertical" >
 
@@ -132,6 +177,6 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="26dp"
-        android:text="退会" />
+        android:text="グループを退会" />
 
 </RelativeLayout>

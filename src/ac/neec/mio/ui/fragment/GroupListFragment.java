@@ -5,20 +5,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ac.neec.mio.R;
+import ac.neec.mio.consts.ErrorConstants;
+import ac.neec.mio.consts.MessageConstants;
 import ac.neec.mio.consts.PermissionConstants;
 import ac.neec.mio.dao.ApiDao;
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.DaoFactory;
+import ac.neec.mio.dao.SQLiteDao;
 import ac.neec.mio.dao.Sourceable;
 import ac.neec.mio.dao.item.api.ApiDaoFactory;
 import ac.neec.mio.exception.XmlParseException;
 import ac.neec.mio.exception.XmlReadException;
 import ac.neec.mio.group.Group;
 import ac.neec.mio.group.GroupInfo;
-import ac.neec.mio.http.HttpManager;
-import ac.neec.mio.http.listener.GroupResponseListener;
 import ac.neec.mio.ui.activity.GroupDetailsActivity;
 import ac.neec.mio.ui.adapter.GroupListAdapter;
+import ac.neec.mio.ui.dialog.LoadingDialog;
 import ac.neec.mio.ui.listener.SearchNotifyListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -32,26 +34,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-
-import com.android.volley.VolleyError;
+import android.widget.Toast;
 
 public class GroupListFragment extends Fragment implements
 		SearchNotifyListener, Sourceable {
 
 	private static final String TITLE = "全てのグループ";
 	private static final int MESSAGE_UPDATE = 1;
+	private static final int MESSAGE_ERROR = 2;
 
 	private ListView listView;
 	private List<Group> list = new ArrayList<Group>();
 	private GroupListAdapter adapter;
 	private ApiDao dao;
+	private SQLiteDao daoSql;
+	private LoadingDialog dialog = new LoadingDialog(MessageConstants.getting());
+	private int countImage = 0;
 
 	Handler handler = new Handler() {
 		public void handleMessage(Message message) {
 			switch (message.what) {
 			case MESSAGE_UPDATE:
 				update();
+				selectImage();
 				break;
+			case MESSAGE_ERROR:
+				networkError();
 			default:
 				break;
 			}
@@ -59,19 +67,26 @@ public class GroupListFragment extends Fragment implements
 	};
 
 	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		dialog.show(getActivity().getFragmentManager(), "dialog");
+	}
+
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_group_list, container,
 				false);
 		dao = DaoFacade.getApiDao(this);
+		daoSql = DaoFacade.getSQLiteDao();
 		dao.selectGroupAll();
 		listView = (ListView) view.findViewById(R.id.list_group);
 		listView.setEmptyView(view.findViewById(R.id.empty));
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				String groupId = list.get(position).getId();
-				intentGroupDetails(groupId);
+				Group group = list.get(position);
+				intentGroupDetails(group);
 			}
 		});
 		return view;
@@ -81,25 +96,47 @@ public class GroupListFragment extends Fragment implements
 		return (SearchNotifyListener) this;
 	}
 
-	private void intentGroupDetails(String groupId) {
+	private void intentGroupDetails(Group group) {
 		Intent intent = new Intent(getActivity().getApplicationContext(),
 				GroupDetailsActivity.class);
-		intent.putExtra("Group_Id", groupId);
-		int permissionId = 0;
-//		for (Affiliation affiliation : affiliations) {
-//			if (affiliation.getUserId().equals(user.getId())) {
-//				permissionId = affiliation.getPermition().getId();
-//			}
-//		}
-		intent.putExtra(GroupDetailsActivity.PERMISSION_ID,
-				PermissionConstants.notice());
+		intent.putExtra("Group_Id", group.getId());
+		intent.putExtra("permission_id", group.getPermissionId());
 		startActivity(intent);
 	}
 
 	private void update() {
-		adapter = new GroupListAdapter(getActivity().getApplicationContext(),
-				R.layout.item_group, list);
-		listView.setAdapter(adapter);
+		for (Group group : list) {
+			for (Group myGroup : daoSql.selectGroup()) {
+				if (group.getId().equals(myGroup.getId())) {
+					group.setPermissionId(myGroup.getPermissionId());
+				}
+			}
+		}
+		if (getActivity() != null) {
+			adapter = new GroupListAdapter(getActivity()
+					.getApplicationContext(), R.layout.item_group, list,
+					GroupListAdapter.ALL);
+			listView.setAdapter(adapter);
+		}
+	}
+
+	private void selectImage() {
+		if (countImage >= list.size()) {
+			return;
+		}
+		Group group = list.get(countImage);
+		if (group.getImageName() != null) {
+			dao.selectImage(group.getImageName());
+		} else {
+			countImage++;
+			selectImage();
+		}
+	}
+
+	private void networkError() {
+		dialog.dismiss();
+		Toast.makeText(getActivity().getApplicationContext(),
+				ErrorConstants.networkError(), Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
@@ -131,6 +168,7 @@ public class GroupListFragment extends Fragment implements
 
 	@Override
 	public void complete() {
+		dialog.dismiss();
 		try {
 			list = dao.getResponse();
 		} catch (XmlParseException e) {
@@ -145,25 +183,26 @@ public class GroupListFragment extends Fragment implements
 
 	@Override
 	public void incomplete() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void complete(InputStream response) {
-		// TODO Auto-generated method stub
-
+		if (dialog != null) {
+			dialog.dismiss();
+		}
+		Message message = new Message();
+		message.what = MESSAGE_ERROR;
+		handler.sendMessage(message);
 	}
 
 	@Override
 	public void complete(Bitmap image) {
-		// TODO Auto-generated method stub
-
+		list.get(countImage).setImage(image);
+		Message message = new Message();
+		message.what = MESSAGE_UPDATE;
+		handler.sendMessage(message);
+		countImage++;
 	}
 
 	@Override
-	public void progressUpdate(int value) {
+	public void validate() {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

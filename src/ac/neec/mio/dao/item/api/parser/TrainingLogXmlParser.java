@@ -1,11 +1,14 @@
 package ac.neec.mio.dao.item.api.parser;
 
-import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
-import ac.neec.mio.exception.XmlParseException;
-import ac.neec.mio.exception.XmlReadException;
-import ac.neec.mio.http.item.TrainingLogItem;
+import ac.neec.mio.training.log.TrainingLog;
 
+/**
+ * トレーニングログXMLを解析するクラス
+ *
+ */
 public class TrainingLogXmlParser extends XmlParser {
 
 	private static final String HEART_RATE = "Heartrate";
@@ -17,12 +20,51 @@ public class TrainingLogXmlParser extends XmlParser {
 	private static final String LOG_ID = "ID";
 	private static final String TARGET_HEART_RATE = "Targetrate";
 
+	/**
+	 * タグ名
+	 */
 	private String tagName;
-	private TrainingLogItem log;
+	/**
+	 * ログリスト
+	 */
+	private List<TrainingLog> logs;
+	/**
+	 * 心拍数
+	 */
+	private int heartRate;
+	/**
+	 * 計測時間
+	 */
+	private String time;
+	/**
+	 * 経度
+	 */
+	private double disX;
+	/**
+	 * 緯度
+	 */
+	private double disY;
+	/**
+	 * ラップタイム
+	 */
+	private String lap;
+	/**
+	 * スプリットタイム
+	 */
+	private String split;
+	/**
+	 * ログID
+	 */
+	private int id;
+	/**
+	 * 目標心拍数
+	 */
+	private int targetHeartRate;
 
 	@Override
 	protected void startDocument() {
-		log = new TrainingLogItem();
+		// log = new TrainingLogItem();
+		logs = new ArrayList<TrainingLog>();
 	}
 
 	@Override
@@ -41,28 +83,38 @@ public class TrainingLogXmlParser extends XmlParser {
 	@Override
 	protected void text(String text) {
 		if (tagName.equals(HEART_RATE)) {
-			log.addHeartRate(Integer.valueOf(text));
+			// log.addHeartRate(Integer.valueOf(text));
+			heartRate = Integer.valueOf(text);
 		} else if (tagName.equals(TIME)) {
-			log.addTime(text);
+			// log.addTime(text);
+			time = text;
 		} else if (tagName.equals(DIS_X)) {
-			log.addDisX(Double.valueOf(text));
+			// log.addDisX(Double.valueOf(text));
+			disX = Double.valueOf(text);
 		} else if (tagName.equals(DIS_Y)) {
-			log.addDisY(Double.valueOf(text));
+			disY = Double.valueOf(text);
 		} else if (tagName.equals(LAP)) {
-			log.addLap(text);
+			// log.addLap(text);
+			lap = text;
 		} else if (tagName.equals(SPLIT)) {
-			log.addSplit(text);
+			// log.addSplit(text);
+			split = text;
 		} else if (tagName.equals(LOG_ID)) {
-			log.addLogId(Integer.valueOf(text));
+			// log.addLogId(Integer.valueOf(text));
+			id = Integer.valueOf(text);
 		} else if (tagName.equals(TARGET_HEART_RATE)) {
-			log.addTargetHeartRate(Integer.valueOf(text));
+			// log.addTargetHeartRate(Integer.valueOf(text));
+			targetHeartRate = Integer.valueOf(text);
 		}
 	}
 
+	/**
+	 * @return TrainingLog型のリスト
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	protected TrainingLogItem getParseObject() {
-		return log;
+	protected List<TrainingLog> getParseObject() {
+		return logs;
 	}
 
 }

@@ -5,17 +5,23 @@ import android.graphics.Bitmap;
 public class GroupInfoListItem {
 	private String operation;
 	private Bitmap greenIcon;
-	
-	public GroupInfoListItem(String opr,Bitmap gi){
+	private int num;
+
+	public GroupInfoListItem(String opr, Bitmap gi, int num) {
 		this.operation = opr;
 		this.greenIcon = gi;
+		this.num = num;
 	}
-	
-	public Bitmap getIcon(){
+
+	public Bitmap getIcon() {
 		return greenIcon;
 	}
-	
-	public String getOperation(){
+
+	public String getOperation() {
 		return operation;
+	}
+
+	public int getNum() {
+		return num;
 	}
 }

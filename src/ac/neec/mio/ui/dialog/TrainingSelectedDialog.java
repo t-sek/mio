@@ -62,8 +62,7 @@ public class TrainingSelectedDialog extends DialogFragment implements
 		picker.setOnDrumPickerListener(this);
 		picker.setUpdateStyle(false);
 		picker.setTextSize(20);
-		Log.d("dialog", "set index " + index);
-		picker.setScrollPosition(index);
+		picker.setScrollPosition(index-1);
 	}
 
 	private void setListeners() {

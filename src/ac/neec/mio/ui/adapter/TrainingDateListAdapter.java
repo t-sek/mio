@@ -6,11 +6,12 @@ import java.util.List;
 import ac.neec.mio.R;
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.SQLiteDao;
-import ac.neec.mio.http.item.TrainingItem;
-import ac.neec.mio.taining.Training;
+import ac.neec.mio.training.Training;
 import ac.neec.mio.ui.listener.TrainingDataListCallbackListener;
 import ac.neec.mio.util.DateUtil;
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,14 +25,16 @@ public class TrainingDateListAdapter extends BaseExpandableListAdapter {
 	private List<List<Training>> trainings = new ArrayList<List<Training>>();
 
 	private int currentHourPosition = 0;
+	private int colorTab;
 	private SQLiteDao dao;
 
 	public TrainingDateListAdapter(Context context,
 			List<List<Training>> trainings,
-			TrainingDataListCallbackListener listener) {
+			TrainingDataListCallbackListener listener, int colorTab) {
 		this.context = context;
 		this.trainings = trainings;
 		this.listener = listener;
+		this.colorTab = colorTab;
 		dao = DaoFacade.getSQLiteDao();
 	}
 
@@ -97,6 +100,9 @@ public class TrainingDateListAdapter extends BaseExpandableListAdapter {
 		TextView textDate = (TextView) view.findViewById(R.id.txt_date);
 		String date = trainings.get(groupPosition).get(0).getDate();
 		textDate.setText(DateUtil.japaneseFormat(date));
+		// view.setBackgroundColor(colorTab);
+		// setTextColor(Color.parseColor("#FF00C0"));
+		view.setBackgroundResource(colorTab);
 		return view;
 	}
 
@@ -105,8 +111,8 @@ public class TrainingDateListAdapter extends BaseExpandableListAdapter {
 			boolean isLastChild, View convertView, ViewGroup parent) {
 		View view = getChildGenericView();
 		Training item = trainings.get(groupPosition).get(childPosition);
-		String trainingName = dao.selectTrainingCategory(
-				item.getCategoryId()).getTrainingCategoryName();
+		String trainingName = dao.selectTrainingCategory(item.getCategoryId())
+				.getTrainingCategoryName();
 		TextView textTrainingName = (TextView) view
 				.findViewById(R.id.txt_training_name);
 		textTrainingName.setText(trainingName);
@@ -114,7 +120,8 @@ public class TrainingDateListAdapter extends BaseExpandableListAdapter {
 			TextView textStartTime = (TextView) view
 					.findViewById(R.id.txt_start_time);
 			String time = item.getStartTime();
-			textStartTime.setText(DateUtil.timeJapaneseFormat(time));
+			Log.d("adapter", "startTime " + time);
+			textStartTime.setText(DateUtil.trainingTimeJapaneseFormat(time));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

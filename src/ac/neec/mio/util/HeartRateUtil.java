@@ -5,7 +5,6 @@ import java.util.List;
 
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.SQLiteDao;
-import ac.neec.mio.db.DBManager;
 import ac.neec.mio.training.log.TrainingLog;
 import android.content.Context;
 import android.util.Log;

@@ -12,11 +12,11 @@ import ac.neec.mio.dao.SQLiteDao;
 import ac.neec.mio.dao.Sourceable;
 import ac.neec.mio.exception.XmlParseException;
 import ac.neec.mio.exception.XmlReadException;
-import ac.neec.mio.taining.Training;
-import ac.neec.mio.taining.category.TrainingCategory;
-import ac.neec.mio.taining.menu.TrainingMenu;
-import ac.neec.mio.taining.play.TrainingPlay;
+import ac.neec.mio.training.Training;
+import ac.neec.mio.training.category.TrainingCategory;
 import ac.neec.mio.training.log.TrainingLog;
+import ac.neec.mio.training.menu.TrainingMenu;
+import ac.neec.mio.training.play.TrainingPlay;
 import ac.neec.mio.ui.dialog.LoadingDialog;
 import ac.neec.mio.user.User;
 import ac.neec.mio.util.CalorieUtil;
@@ -120,14 +120,14 @@ public class ResultActivity extends Activity implements Sourceable {
 	private void insertTrainingPlay() {
 		daoFlag = FLAG_TRAINING_PLAY;
 		for (TrainingPlay play : trainingPlays) {
-			dao.insertTrainingPlay(trainingId, play.getPlayId(),
-					play.getTrainingMenuId(),
-					String.valueOf(play.getTrainingTime()));
+			dao.insertTrainingPlay(user.getId(), trainingId, play.getPlayId(),
+					play.getTrainingMenuId(), play.getTrainingTime(),
+					user.getPassword());
 		}
 	}
 
 	private void insertTraining() {
-		httpLoadDialog = new LoadingDialog();
+		httpLoadDialog = new LoadingDialog("保存中");
 		httpLoadDialog.show(getFragmentManager(), "dialog");
 		daoFlag = FLAG_TRAINING;
 		Log.e("result", "date " + training.getDate());
@@ -278,7 +278,7 @@ public class ResultActivity extends Activity implements Sourceable {
 
 		@Override
 		public void onTouch(int index, LineDot dot) {
-			String time = trainingLogs.get(index).getTimeString();
+			String time = trainingLogs.get(index).getTime();
 			textDatasTime.setText(TimeUtil.stringToFormat(time));
 			textDatasHeartRate.setText(String.valueOf(trainingLogs.get(index)
 					.getHeartRate()));
@@ -348,20 +348,15 @@ public class ResultActivity extends Activity implements Sourceable {
 	}
 
 	@Override
-	public void complete(InputStream response) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void complete(Bitmap image) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void progressUpdate(int value) {
+	public void validate() {
 		// TODO Auto-generated method stub
 		
 	}
+
 }

@@ -7,12 +7,14 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="horizontal" >
 
         <ImageButton
             android:src="@drawable/ic_action_new"
             android:id="@+id/button_insert"
             android:layout_width="wrap_content"
+            android:background="@null"
             android:layout_height="wrap_content" />
 
         <ImageButton

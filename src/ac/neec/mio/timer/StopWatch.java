@@ -1,12 +1,22 @@
 package ac.neec.mio.timer;
 
-import android.speech.tts.TextToSpeech.OnUtteranceCompletedListener;
-import android.util.Log;
-
+/**
+ * ストップウォッチを実装したクラス
+ *
+ */
 public class StopWatch extends Watch implements Runnable {
 
+	/**
+	 * 時間
+	 */
 	private long time;
+	/**
+	 * 計測スレッド
+	 */
 	private Thread thread;
+	/**
+	 * 停止フラグ
+	 */
 	private boolean isStoped;
 
 	protected StopWatch(long time) {
@@ -14,9 +24,6 @@ public class StopWatch extends Watch implements Runnable {
 		thread = new Thread(this);
 		isStoped = true;
 		thread.start();
-	}
-
-	protected void startStopWatch() {
 	}
 
 	@Override
@@ -34,7 +41,7 @@ public class StopWatch extends Watch implements Runnable {
 
 	@Override
 	protected void reset() {
-
+		time = 0;
 	}
 
 	@Override
@@ -45,7 +52,8 @@ public class StopWatch extends Watch implements Runnable {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
 			}
-			update(Math.round(time)-Math.round(System.currentTimeMillis() - startTime));
+			update(Math.round(time)
+					- Math.round(System.currentTimeMillis() - startTime));
 		}
 		if (isStoped) {
 			alarm();

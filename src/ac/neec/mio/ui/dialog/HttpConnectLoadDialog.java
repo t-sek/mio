@@ -43,7 +43,7 @@ public class HttpConnectLoadDialog extends DialogFragment {
 		// フルスクリーン
 		dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
-		dialog.setContentView(R.layout.dialog_connect_road);
+		dialog.setContentView(R.layout.dialog_loading);
 		// 背景を透明にする
 		dialog.getWindow().setBackgroundDrawable(
 				new ColorDrawable(Color.TRANSPARENT));

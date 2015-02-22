@@ -13,13 +13,19 @@ import static ac.neec.mio.consts.SQLConstants.time;
 import java.util.ArrayList;
 import java.util.List;
 
-import ac.neec.mio.training.framework.ProductDataFactory;
+import ac.neec.mio.framework.ProductDataFactory;
 import ac.neec.mio.training.log.TrainingLog;
 import ac.neec.mio.training.log.TrainingLogFactory;
 import android.database.Cursor;
 
+/**
+ * トレーニングログを解析するクラス
+ */
 public class TrainingLogCursorParser extends CursorParser {
 
+	/**
+	 * トレーニングログ
+	 */
 	private List<TrainingLog> list;
 
 	public TrainingLogCursorParser(Cursor c) {
@@ -45,11 +51,13 @@ public class TrainingLogCursorParser extends CursorParser {
 					Double.valueOf(c.getDouble(indexDisX)),
 					Double.valueOf(c.getDouble(indexDisY)),
 					c.getString(indexTime), c.getString(indexLap),
-					c.getString(indexSplit),
-					c.getInt(indexTargetHeartRate)));
+					c.getString(indexSplit), c.getInt(indexTargetHeartRate)));
 		}
 	}
 
+	/**
+	 * @return TrainingLog型のリスト
+	 */
 	@Override
 	public List<TrainingLog> getObject() {
 		return list;

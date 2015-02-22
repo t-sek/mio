@@ -1,21 +1,21 @@
 package ac.neec.mio.ui.activity;
 
-import static ac.neec.mio.util.SignUpConstants.birth;
-import static ac.neec.mio.util.SignUpConstants.gender;
-import static ac.neec.mio.util.SignUpConstants.height;
-import static ac.neec.mio.util.SignUpConstants.logout;
-import static ac.neec.mio.util.SignUpConstants.mail;
-import static ac.neec.mio.util.SignUpConstants.name;
-import static ac.neec.mio.util.SignUpConstants.password;
-import static ac.neec.mio.util.SignUpConstants.quietHeartRate;
-import static ac.neec.mio.util.SignUpConstants.userId;
-import static ac.neec.mio.util.SignUpConstants.weight;
+import static ac.neec.mio.consts.SignUpConstants.birth;
+import static ac.neec.mio.consts.SignUpConstants.gender;
+import static ac.neec.mio.consts.SignUpConstants.height;
+import static ac.neec.mio.consts.SignUpConstants.logout;
+import static ac.neec.mio.consts.SignUpConstants.mail;
+import static ac.neec.mio.consts.SignUpConstants.name;
+import static ac.neec.mio.consts.SignUpConstants.password;
+import static ac.neec.mio.consts.SignUpConstants.quietHeartRate;
+import static ac.neec.mio.consts.SignUpConstants.userId;
+import static ac.neec.mio.consts.SignUpConstants.weight;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import ac.neec.mio.R;
+import ac.neec.mio.consts.ErrorConstants;
 import ac.neec.mio.consts.PreferenceConstants;
 import ac.neec.mio.dao.ApiDao;
 import ac.neec.mio.dao.DaoFacade;
@@ -42,17 +42,22 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class UserDataSettingActivity extends Activity implements
 		PickerChangedListener, EditChangedListener, PasswordChangedListener,
 		ProfileBodilyCallbackListener, ProfileBirthCallbackListener,
 		OnSharedPreferenceChangeListener, Sourceable {
+
+	private static final int MESSAGE_VALIDATE = 2;
 
 	private ListView listBody;
 	private ListView listMaster;
@@ -67,6 +72,20 @@ public class UserDataSettingActivity extends Activity implements
 	private ProfileSettingListAdapter accountListAdapter;
 	private ApiDao dao;
 	private boolean daoFlag;
+
+	private Handler handler = new Handler() {
+		public void handleMessage(Message message) {
+			switch (message.what) {
+			case MESSAGE_VALIDATE:
+				Toast.makeText(getApplicationContext(),
+						ErrorConstants.scriptValidate(), Toast.LENGTH_SHORT)
+						.show();
+				break;
+			default:
+				break;
+			}
+		};
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -292,16 +311,13 @@ public class UserDataSettingActivity extends Activity implements
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
 		if (key.equals(PreferenceConstants.weight())) {
-			dao.updateUserWeight(getApplicationContext(), user.getId(),
-					user.getPassword(),
+			dao.updateUserWeight(user.getId(), user.getPassword(),
 					String.valueOf(Math.round(user.getWeight())));
 		} else if (key.equals(PreferenceConstants.quietHeartRate())) {
-			dao.updateUserQuietHeartRate(getApplicationContext(), user.getId(),
-					user.getPassword(),
+			dao.updateUserQuietHeartRate(user.getId(), user.getPassword(),
 					String.valueOf(user.getQuietHeartRate()));
 		} else {
-			dao.updateUser(getApplicationContext(), user.getId(),
-					user.getName(), user.getBirth(),
+			dao.updateUser(user.getId(), user.getName(), user.getBirth(),
 					String.valueOf(Math.round(user.getHeight())),
 					user.getMail(), user.getPassword());
 		}
@@ -309,8 +325,6 @@ public class UserDataSettingActivity extends Activity implements
 
 	@Override
 	public void complete() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -326,21 +340,22 @@ public class UserDataSettingActivity extends Activity implements
 	}
 
 	@Override
-	public void complete(InputStream response) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void complete(Bitmap image) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void progressUpdate(int value) {
+	public void dataChanged(String data) {
 		// TODO Auto-generated method stub
-		
+
+	}
+
+	@Override
+	public void validate() {
+		Message message = new Message();
+		message.what = MESSAGE_VALIDATE;
+		handler.sendMessage(message);
 	}
 
 }

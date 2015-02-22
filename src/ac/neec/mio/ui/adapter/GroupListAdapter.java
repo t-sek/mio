@@ -1,60 +1,93 @@
 package ac.neec.mio.ui.adapter;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import ac.neec.mio.R;
+import ac.neec.mio.consts.PermissionConstants;
+import ac.neec.mio.dao.DaoFacade;
+import ac.neec.mio.dao.SQLiteDao;
 import ac.neec.mio.group.Group;
 import ac.neec.mio.ui.filter.GroupSearchFilter;
 import ac.neec.mio.ui.listener.GroupFilterCallbackListener;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
-import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.sek.circleimageview.CircleImageView;
 
 public class GroupListAdapter extends ArrayAdapter<Group> implements
 		GroupFilterCallbackListener {
 
-	private LayoutInflater inflater;
-	private List<Group> list = new ArrayList<Group>();
-	private List<Group> listAll = new ArrayList<Group>();
-	private Filter filter;
+	public static final int ALL = 1;
+	public static final int MY = 2;
 
-	public GroupListAdapter(Context context, int resource, List<Group> objects) {
+	private LayoutInflater inflater;
+	private Context context;
+	private int flag;
+	private SQLiteDao daoSql;
+	private List<Group> list = new ArrayList<Group>();
+	private Filter filter;
+	private CircleImageView image;
+	private TextView textId;
+	private TextView textName;
+
+	public GroupListAdapter(Context context, int resource, List<Group> objects,
+			int flag) {
 		super(context, resource, objects);
-		list = objects;
-		Collections.copy(objects, listAll);
-		Log.d("adapter", "list all " + listAll.size());
+		this.flag = flag;
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		list = objects;
+		this.context = context;
+		daoSql = DaoFacade.getSQLiteDao();
 	}
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		Group group = list.get(position);
+		String groupId = group.getId();
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.item_group, null);
 		}
-
-		// Bitmap btm = group.getBitmap();
-		// ImageView gpImag = (ImageView) convertView
-		// .findViewById(R.id.Group_image);
-		// gpImag.setImageBitmap(btm);
-
-		String id = group.getId();
-		TextView txstid = (TextView) convertView.findViewById(R.id.groupId);
-		txstid.setText(String.valueOf(id));
-
+		image = (CircleImageView) convertView.findViewById(R.id.Group_image);
+		textId = (TextView) convertView.findViewById(R.id.groupId);
+		textName = (TextView) convertView.findViewById(R.id.groupName);
+		TextView textPermission = (TextView) convertView
+				.findViewById(R.id.text_permission);
+		int permissionId = group.getPermissionId();
+		if (flag == ALL) {
+			if (permissionId == PermissionConstants.groupAdmin()
+					|| permissionId == PermissionConstants.member()
+					|| permissionId == PermissionConstants.trainer()) {
+				textPermission.setText("加入済み");
+				textPermission.setVisibility(View.VISIBLE);
+			} else if (permissionId == PermissionConstants.pending()) {
+				textPermission.setText("加入申請中");
+				textPermission.setVisibility(View.VISIBLE);
+			}
+		}
+		Bitmap btm = group.getBitmap();
+		if (btm != null) {
+			image.setImage(btm);
+		}
+		if (groupId == null) {
+			return convertView;
+		}
+		// if (permissionId == 0) {
+		// Affiliation affiliation = daoSql.selectAffiliation(groupId);
+		// if (affiliation != null) {
+		// permissionId = affiliation.getPermition().getId();
+		// }
+		// }
+		textId.setText(groupId);
 		String name = group.getGroupName();
-		TextView txstName = (TextView) convertView.findViewById(R.id.groupName);
-		txstName.setText(String.valueOf(name));
+		textName.setText(String.valueOf(name));
 		if (position % 2 == 0) {
 			convertView.setBackgroundColor(getContext().getResources()
 					.getColor(R.color.grayTheme));
@@ -62,7 +95,6 @@ public class GroupListAdapter extends ArrayAdapter<Group> implements
 			convertView.setBackgroundColor(getContext().getResources()
 					.getColor(R.color.greenTheme));
 		}
-
 		return convertView;
 	}
 

@@ -5,6 +5,7 @@ import java.util.List;
 
 import ac.neec.mio.R;
 import ac.neec.mio.consts.AppConstants;
+import ac.neec.mio.consts.ErrorConstants;
 import ac.neec.mio.consts.PermissionConstants;
 import ac.neec.mio.dao.ApiDao;
 import ac.neec.mio.dao.DaoFacade;
@@ -16,12 +17,14 @@ import ac.neec.mio.exception.XmlParseException;
 import ac.neec.mio.exception.XmlReadException;
 import ac.neec.mio.group.Affiliation;
 import ac.neec.mio.group.Group;
+import ac.neec.mio.group.MemberInfo;
 import ac.neec.mio.group.Permission;
 import ac.neec.mio.pref.AppPreference;
 import ac.neec.mio.sns.facebook.Login;
-import ac.neec.mio.taining.category.TrainingCategory;
-import ac.neec.mio.taining.menu.TrainingMenu;
 import ac.neec.mio.timer.TimerManager;
+import ac.neec.mio.training.category.TrainingCategory;
+import ac.neec.mio.training.menu.TrainingMenu;
+import ac.neec.mio.ui.dialog.SelectionAlertDialog;
 import ac.neec.mio.ui.fragment.FirstSignUpSelectFragment;
 import ac.neec.mio.ui.listener.TimerCallbackListener;
 import ac.neec.mio.user.LoginState;
@@ -39,6 +42,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -57,6 +61,7 @@ public class SplashActivity extends FragmentActivity implements
 	private static final int FLAG_PERM = 5;
 	private static final int MESSAGE_INTENT = 1;
 	private static final int MESSAGE_UPDATE = 6;
+	private static final int MESSAGE_ERROR = 9;
 	private static final int WEIT_TIME = 100;
 
 	private static final String SECTION = ".";
@@ -68,13 +73,14 @@ public class SplashActivity extends FragmentActivity implements
 	private Button buttonLogin;
 	private Button buttonFacebookLogin;
 	private TextView textMessage;
+	private TextView textSection;
+	private TextView textComplete;
 	private ApiDao dao;
 	private SQLiteDao daoSql;
 	private int daoFlag;
 	private User user = User.getInstance();
 	private Bundle bundle;
 	private Login login;
-	private Bitmap image;
 	private int sectionCount;
 
 	Handler handler = new Handler() {
@@ -85,6 +91,11 @@ public class SplashActivity extends FragmentActivity implements
 				break;
 			case MESSAGE_UPDATE:
 				updateTime((String) message.obj);
+				break;
+			case MESSAGE_ERROR:
+				textComplete.setText(ErrorConstants.networkError());
+				textComplete.setVisibility(View.INVISIBLE);
+				break;
 			default:
 				break;
 			}
@@ -106,8 +117,10 @@ public class SplashActivity extends FragmentActivity implements
 		AppConstants.setContext(getApplicationContext());
 		dao = DaoFacade.getApiDao(this);
 		daoSql = DaoFacade.getSQLiteDao();
-		// downloadTrainingCategory();
-		startAnimation();
+		downloadTrainingCategory();
+		// downloadUserInfo();
+		// intentTop();
+		// startAnimation();
 		manager = new TimerManager(this);
 		manager.start();
 	}
@@ -119,6 +132,8 @@ public class SplashActivity extends FragmentActivity implements
 		buttonLogin = (Button) findViewById(R.id.btn_login);
 		buttonFacebookLogin = (Button) findViewById(R.id.btn_facebook_login);
 		textMessage = (TextView) findViewById(R.id.text_message);
+		textSection = (TextView) findViewById(R.id.text_section);
+		textComplete = (TextView) findViewById(R.id.text_complete);
 	}
 
 	private void setListeners() {
@@ -136,14 +151,12 @@ public class SplashActivity extends FragmentActivity implements
 		buttonLogin.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Log.d("activity", "login button");
 				intentLogin();
 			}
 		});
 		buttonFacebookLogin.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Log.d("activity", "login button");
 				facebookLogin();
 			}
 		});
@@ -151,7 +164,9 @@ public class SplashActivity extends FragmentActivity implements
 
 	private void animationHeart() {
 		manager.stop();
-		textMessage.setText("完了!");
+		textMessage.setVisibility(View.INVISIBLE);
+		textSection.setVisibility(View.INVISIBLE);
+		textComplete.setVisibility(View.VISIBLE);
 		Animation anim = AnimationUtils.loadAnimation(getApplicationContext(),
 				R.anim.title_heart);
 		anim.setAnimationListener(this);
@@ -169,7 +184,6 @@ public class SplashActivity extends FragmentActivity implements
 				UserSignUpActivity.class);
 		// FirstSignUpSelectActivity.class);
 		startActivity(intent);
-		Log.d("activity", "signup name " + user.getName());
 		// finish();
 	}
 
@@ -195,17 +209,17 @@ public class SplashActivity extends FragmentActivity implements
 			text = "トレーニング情報を取得中";
 			break;
 		case FLAG_USER:
-			text = "ユーザー情報を取得中";
+			text = "プロフィール情報を取得中";
 			break;
 		case FLAG_PERM:
-			text = "ユーザー情報を取得中";
+			text = "プロフィール情報を取得中";
 			break;
 		default:
 			break;
 		}
+		textMessage.setText(text);
 		int nowTime = Integer.valueOf(TimeUtil.stringToSec(time));
 		StringBuilder sb = new StringBuilder();
-		sb.append(text);
 		for (int i = 0; i <= sectionCount; i++) {
 			sb.append(SECTION);
 		}
@@ -214,7 +228,7 @@ public class SplashActivity extends FragmentActivity implements
 		} else {
 			sectionCount++;
 		}
-		textMessage.setText(sb.toString());
+		textSection.setText(sb.toString());
 	}
 
 	private void downloadTrainingCategory() {
@@ -229,8 +243,7 @@ public class SplashActivity extends FragmentActivity implements
 
 	private void downloadUserInfo() {
 		daoFlag = FLAG_USER;
-		dao.selectUser(getApplicationContext(), user.getId(),
-				user.getPassword());
+		dao.selectUser(user.getId(), user.getPassword());
 	}
 
 	private void downloadUserImage(String image) {
@@ -273,6 +286,7 @@ public class SplashActivity extends FragmentActivity implements
 	public void onAnimationEnd(Animation animation) {
 		if (LoginState.getState() != LoginState.LOGIN) {
 			// intentSignUp();
+			textComplete.setVisibility(View.GONE);
 			buttonSignUp.setVisibility(View.VISIBLE);
 			buttonLogin.setVisibility(View.VISIBLE);
 			buttonFacebookLogin.setVisibility(View.GONE);
@@ -385,26 +399,19 @@ public class SplashActivity extends FragmentActivity implements
 
 	private void setMyGroupList(UserInfo info) {
 		daoSql.deleteAffiliation();
-		List<Affiliation> affiliations = info.getAffiliations();
 		List<Group> groups = info.getGroups();
-		for (int i = 0; i < affiliations.size(); i++) {
-			if (affiliations.get(i).getPermition().getId() == PermissionConstants
-					.notice()) {
-				break;
-			}
+		for (Group group : groups) {
 			try {
-				daoSql.insertAffiliation(affiliations.get(i).getGroupId(),
-						affiliations.get(i).getPermition().getId());
-				daoSql.insertGroup(groups.get(i).getId(), groups.get(i)
-						.getGroupName(), groups.get(i).getComment(), groups
-						.get(i).getUserId(), groups.get(i).getCreated());
+				daoSql.insertAffiliation(group.getId(), group.getPermissionId());
+				daoSql.insertGroup(group.getId(), group.getGroupName(),
+						group.getComment(), group.getUserId(),
+						group.getCreated(), group.getPermissionId());
 			} catch (SQLiteInsertException e) {
 				e.printStackTrace();
 			} catch (SQLiteTableConstraintException e) {
 				e.printStackTrace();
 			}
 		}
-
 	}
 
 	@Override
@@ -432,7 +439,6 @@ public class SplashActivity extends FragmentActivity implements
 				// startAnimation();
 				break;
 			case FLAG_USER:
-				Log.d("activity", "user ");
 				UserInfo info = null;
 				info = dao.getResponse();
 				daoSql.deleteGroup();
@@ -455,11 +461,10 @@ public class SplashActivity extends FragmentActivity implements
 
 	@Override
 	public void incomplete() {
+		Message message = new Message();
+		message.what = MESSAGE_ERROR;
+		handler.sendMessage(message);
 		startAnimation();
-	}
-
-	@Override
-	public void complete(InputStream response) {
 	}
 
 	@Override
@@ -469,7 +474,9 @@ public class SplashActivity extends FragmentActivity implements
 	}
 
 	@Override
-	public void progressUpdate(int value) {
-		Log.d("activity", "value " + value);
+	public void validate() {
+		// TODO Auto-generated method stub
+		
 	}
+
 }

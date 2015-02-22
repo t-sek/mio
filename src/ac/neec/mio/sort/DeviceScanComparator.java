@@ -4,6 +4,10 @@ import java.util.Comparator;
 
 import ac.neec.mio.ble.DeviceInfo;
 
+/**
+ * デバイス設定画面のソートを行う
+ *
+ */
 public class DeviceScanComparator implements Comparator<DeviceInfo> {
 
 	@Override

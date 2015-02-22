@@ -1,70 +1,18 @@
 package ac.neec.mio.dao.item.sqlite;
 
-import static ac.neec.mio.consts.SQLConstants.color;
-import static ac.neec.mio.consts.SQLConstants.comment;
-import static ac.neec.mio.consts.SQLConstants.compelWithdrawal;
-import static ac.neec.mio.consts.SQLConstants.consumptionCal;
-import static ac.neec.mio.consts.SQLConstants.created;
-import static ac.neec.mio.consts.SQLConstants.date;
-import static ac.neec.mio.consts.SQLConstants.disX;
-import static ac.neec.mio.consts.SQLConstants.disY;
-import static ac.neec.mio.consts.SQLConstants.dissolution;
-import static ac.neec.mio.consts.SQLConstants.distance;
-import static ac.neec.mio.consts.SQLConstants.groupId;
-import static ac.neec.mio.consts.SQLConstants.groupInfoChange;
-import static ac.neec.mio.consts.SQLConstants.groupInfoView;
-import static ac.neec.mio.consts.SQLConstants.groupNews;
-import static ac.neec.mio.consts.SQLConstants.heartRate;
-import static ac.neec.mio.consts.SQLConstants.heartRateAvg;
-import static ac.neec.mio.consts.SQLConstants.id;
-import static ac.neec.mio.consts.SQLConstants.joinStatus;
-import static ac.neec.mio.consts.SQLConstants.lap;
-import static ac.neec.mio.consts.SQLConstants.logId;
-import static ac.neec.mio.consts.SQLConstants.memberAddManage;
-import static ac.neec.mio.consts.SQLConstants.memberDataCheck;
-import static ac.neec.mio.consts.SQLConstants.memberListView;
-import static ac.neec.mio.consts.SQLConstants.mets;
-import static ac.neec.mio.consts.SQLConstants.name;
-import static ac.neec.mio.consts.SQLConstants.permissionChange;
-import static ac.neec.mio.consts.SQLConstants.permissionId;
-import static ac.neec.mio.consts.SQLConstants.playTime;
-import static ac.neec.mio.consts.SQLConstants.selectAffiliationTable;
-import static ac.neec.mio.consts.SQLConstants.selectGroupTable;
-import static ac.neec.mio.consts.SQLConstants.selectPermissionTable;
-import static ac.neec.mio.consts.SQLConstants.selectTrainingCategoryTable;
-import static ac.neec.mio.consts.SQLConstants.selectTrainingLogTable;
-import static ac.neec.mio.consts.SQLConstants.selectTrainingMenuTable;
-import static ac.neec.mio.consts.SQLConstants.selectTrainingPlayTable;
-import static ac.neec.mio.consts.SQLConstants.selectTrainingTable;
-import static ac.neec.mio.consts.SQLConstants.split;
-import static ac.neec.mio.consts.SQLConstants.startTime;
-import static ac.neec.mio.consts.SQLConstants.strange;
-import static ac.neec.mio.consts.SQLConstants.tableAffiliation;
-import static ac.neec.mio.consts.SQLConstants.tableGroup;
-import static ac.neec.mio.consts.SQLConstants.tablePermission;
-import static ac.neec.mio.consts.SQLConstants.tableTraining;
-import static ac.neec.mio.consts.SQLConstants.tableTrainingCategory;
-import static ac.neec.mio.consts.SQLConstants.tableTrainingLog;
-import static ac.neec.mio.consts.SQLConstants.tableTrainingMenu;
-import static ac.neec.mio.consts.SQLConstants.tableTrainingPlay;
-import static ac.neec.mio.consts.SQLConstants.targetCal;
-import static ac.neec.mio.consts.SQLConstants.targetHeartRate;
-import static ac.neec.mio.consts.SQLConstants.time;
-import static ac.neec.mio.consts.SQLConstants.trainingCategoryId;
-import static ac.neec.mio.consts.SQLConstants.trainingCategoryName;
-import static ac.neec.mio.consts.SQLConstants.trainingMenuId;
-import static ac.neec.mio.consts.SQLConstants.trainingName;
-import static ac.neec.mio.consts.SQLConstants.trainingTime;
-import static ac.neec.mio.consts.SQLConstants.userId;
-import static ac.neec.mio.consts.SQLConstants.withdrawal;
+import static ac.neec.mio.consts.SQLConstants.*;
 import static ac.neec.mio.util.PermissionUtil.getInt;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import ac.neec.mio.consts.PermissionConstants;
 import ac.neec.mio.dao.item.sqlite.parser.AffiliationCursorParser;
 import ac.neec.mio.dao.item.sqlite.parser.AffiliationsCursorParser;
 import ac.neec.mio.dao.item.sqlite.parser.CursorParser;
 import ac.neec.mio.dao.item.sqlite.parser.GroupCursorParser;
+import ac.neec.mio.dao.item.sqlite.parser.GroupMemberCursorParser;
 import ac.neec.mio.dao.item.sqlite.parser.GroupsCursorParser;
 import ac.neec.mio.dao.item.sqlite.parser.PermissionCursorParser;
 import ac.neec.mio.dao.item.sqlite.parser.PermissionListCursorParser;
@@ -80,16 +28,22 @@ import ac.neec.mio.exception.SQLiteInsertException;
 import ac.neec.mio.exception.SQLiteTableConstraintException;
 import ac.neec.mio.group.Affiliation;
 import ac.neec.mio.group.Group;
+import ac.neec.mio.group.MemberInfo;
 import ac.neec.mio.group.Permission;
-import ac.neec.mio.taining.Training;
-import ac.neec.mio.taining.category.TrainingCategory;
-import ac.neec.mio.taining.menu.TrainingMenu;
-import ac.neec.mio.taining.play.TrainingPlay;
+import ac.neec.mio.training.Training;
+import ac.neec.mio.training.category.TrainingCategory;
 import ac.neec.mio.training.log.TrainingLog;
+import ac.neec.mio.training.menu.TrainingMenu;
+import ac.neec.mio.training.play.TrainingPlay;
+import ac.neec.mio.util.BitmapUtil;
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.util.Log;
+import android.graphics.Bitmap;
 
+/**
+ * SQLをContentValuesに設定、解析クラスを生成するクラス
+ *
+ */
 public class SQLItemDao extends SQLiteItemDao {
 
 	protected SQLItemDao() {
@@ -149,7 +103,6 @@ public class SQLItemDao extends SQLiteItemDao {
 		Cursor c = super.select(tableTrainingMenu(), selectTrainingMenuTable(),
 				trainingCategoryId(), id);
 		CursorParser parser = new TrainingMenuListCursorParser(c);
-		List<TrainingMenu> list = parser.getObject();
 		return parser.getObject();
 	}
 
@@ -214,7 +167,7 @@ public class SQLItemDao extends SQLiteItemDao {
 		cv.put(playTime(), playTime);
 		cv.put(targetHeartRate(), targetHeartRate);
 		cv.put(targetCal(), TargetCalorie);
-		cv.put(consumptionCal(), consumptionCalorie);
+		cv.put(calorie(), consumptionCalorie);
 		cv.put(heartRateAvg(), heartRateAvg);
 		cv.put(strange(), strange);
 		cv.put(distance(), distance);
@@ -249,11 +202,12 @@ public class SQLItemDao extends SQLiteItemDao {
 	}
 
 	@Override
-	public void updateTraining(int id, String playTime, int consumptionCalorie,
-			int heartRateAvg, double distance) {
+	public void updateTraining(int id, String playTime, int calorie,
+			int targetHeartRate, int heartRateAvg, double distance) {
 		ContentValues cv = new ContentValues();
 		cv.put(playTime(), playTime);
-		cv.put(consumptionCal(), consumptionCalorie);
+		cv.put(calorie(), calorie);
+		cv.put(targetHeartRate(), targetHeartRate);
 		cv.put(heartRateAvg(), heartRateAvg);
 		cv.put(distance(), distance);
 		super.update(tableTraining(), cv, id(), String.valueOf(id));
@@ -366,14 +320,15 @@ public class SQLItemDao extends SQLiteItemDao {
 
 	@Override
 	public void insertGroup(String groupId, String name, String comment,
-			String userId, String created) throws SQLiteInsertException,
-			SQLiteTableConstraintException {
+			String userId, String created, int permissionId)
+			throws SQLiteInsertException, SQLiteTableConstraintException {
 		ContentValues cv = new ContentValues();
 		cv.put(id(), groupId);
 		cv.put(name(), name);
 		cv.put(comment(), comment);
 		cv.put(userId(), userId);
 		cv.put(created(), created);
+		cv.put(permissionId(), permissionId);
 		super.insert(tableGroup(), cv);
 	}
 
@@ -381,15 +336,80 @@ public class SQLItemDao extends SQLiteItemDao {
 	public List<Group> selectGroup() {
 		Cursor c = super.select(tableGroup(), selectGroupTable());
 		CursorParser parser = new GroupsCursorParser(c);
-		return parser.getObject();
+		List<Group> group = parser.getObject();
+		Iterator<Group> i = group.iterator();
+		while (i.hasNext()) {
+			int permissionId = i.next().getPermissionId();
+			if (permissionId == PermissionConstants.notice()) {
+				i.remove();
+			}
+		}
+		return group;
+	}
+
+	@Override
+	public List<Group> selectGroupJoin() {
+		List<Group> join = new ArrayList<Group>();
+		Cursor c = super.select(tableGroup(), selectGroupTable());
+		CursorParser parser = new GroupsCursorParser(c);
+		join = parser.getObject();
+		Iterator<Group> i = join.iterator();
+		while (i.hasNext()) {
+			int permissionId = i.next().getPermissionId();
+			if (permissionId == PermissionConstants.notice()
+					|| permissionId == PermissionConstants.pending()) {
+				i.remove();
+			}
+		}
+		return join;
 	}
 
 	@Override
 	public Group selectGroup(String groupId) {
-		Cursor c = super.select(tableGroup(), selectGroupTable(), id(),
-				groupId);
+		Cursor c = super
+				.select(tableGroup(), selectGroupTable(), id(), groupId);
 		CursorParser parser = new GroupCursorParser(c);
 		return parser.getObject();
+	}
+
+	@Override
+	public List<MemberInfo> selectGroupMember(String groupId) {
+		Cursor c = super.select(tableGroupMember(), selectGroupMemberTable(),
+				groupId(), groupId);
+		CursorParser parser = new GroupMemberCursorParser(c);
+		return parser.getObject();
+	}
+
+	@Override
+	public void insertGroupMember(String groupId, String userId,
+			String userName, int permissionId, Bitmap image)
+			throws SQLiteInsertException, SQLiteTableConstraintException {
+		ContentValues cv = new ContentValues();
+		cv.put(groupId(), groupId);
+		cv.put(userId(), userId);
+		cv.put(name(), userName);
+		cv.put(permissionId(), permissionId);
+		byte[] blob = BitmapUtil.bitmapToBlob(image);
+		cv.put(image(), blob);
+		super.insert(tableGroupMember(), cv);
+	}
+
+	@Override
+	public List<MemberInfo> selectGroupMember(String groupId, int permissionId) {
+		Cursor c = super.select(tableGroupMember(), selectGroupMemberTable(),
+				groupId(), groupId);
+		CursorParser parser = new GroupMemberCursorParser(c);
+		return parser.getObject();
+	}
+
+	@Override
+	public void deleteGroupMember(String groupId) {
+		super.delete(tableGroupMember(), groupId(), groupId);
+	}
+
+	@Override
+	public void deleteGroupMember() {
+		super.delete(tableGroupMember());
 	}
 
 	@Override

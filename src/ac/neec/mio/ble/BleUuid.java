@@ -16,7 +16,7 @@
 package ac.neec.mio.ble;
 
 /**
- * BLE UUID Strings
+ * BluetoothLE UUID
  */
 public class BleUuid {
 	// 180A Device Information
@@ -37,9 +37,5 @@ public class BleUuid {
 	public static final String CHAR_BATTERY_LEVEL = "00002a19-0000-1000-8000-00805f9b34fb";
 	// 2902 Client Disprictor
 	public static final String DIS_CLIENT_CHARACTERISTIC_CONFIGURATION = "00002902-0000-1000-8000-00805f9b34fb";
-	// SIG unregisted UUID Service
-	public static final String UNKNOWN_MIO_1 = "6c721826-5bf1-4f649170-381c08ec57ee";
-	public static final String UNKNOWN_MIO_2 = "6c722a0b-5bf1-4f649170-381c08ec57ee";
-
 
 }

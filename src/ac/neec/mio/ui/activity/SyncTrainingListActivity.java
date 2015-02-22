@@ -12,9 +12,9 @@ import ac.neec.mio.dao.Sourceable;
 import ac.neec.mio.exception.CreateTrainingIdException;
 import ac.neec.mio.exception.XmlParseException;
 import ac.neec.mio.exception.XmlReadException;
-import ac.neec.mio.taining.Training;
-import ac.neec.mio.taining.play.TrainingPlay;
+import ac.neec.mio.training.Training;
 import ac.neec.mio.training.log.TrainingLog;
+import ac.neec.mio.training.play.TrainingPlay;
 import ac.neec.mio.ui.adapter.SyncTrainingListAdapter;
 import ac.neec.mio.ui.adapter.SyncTrainingListAdapter.CallbackListener;
 import ac.neec.mio.ui.adapter.item.SyncTrainingItem;
@@ -155,7 +155,7 @@ public class SyncTrainingListActivity extends Activity implements Sourceable,
 				adapter.setItemChecked(position, true);
 			}
 		});
-		dialog = new LoadingDialog();
+		dialog = new LoadingDialog("保存中");
 	}
 
 	private void insertTraining() {
@@ -194,9 +194,9 @@ public class SyncTrainingListActivity extends Activity implements Sourceable,
 		daoFlag = FLAG_TRAINING_PLAY;
 		if (trainingPlays.size() != 0) {
 			TrainingPlay play = trainingPlays.get(0);
-			dao.insertTrainingPlay(trainingId, play.getPlayId(),
-					play.getTrainingMenuId(),
-					String.valueOf(play.getTrainingTime()));
+			dao.insertTrainingPlay(user.getId(), trainingId, play.getPlayId(),
+					play.getTrainingMenuId(), play.getTrainingTime(),
+					user.getPassword());
 			trainingPlays.remove(0);
 		}
 	}
@@ -365,20 +365,15 @@ public class SyncTrainingListActivity extends Activity implements Sourceable,
 	}
 
 	@Override
-	public void complete(InputStream response) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void complete(Bitmap image) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void progressUpdate(int value) {
+	public void validate() {
 		// TODO Auto-generated method stub
 		
 	}
+
 }

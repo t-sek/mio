@@ -4,13 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static ac.neec.mio.consts.SQLConstants.*;
-import ac.neec.mio.taining.menu.TrainingMenu;
-import ac.neec.mio.taining.menu.TrainingMenuFactory;
-import ac.neec.mio.training.framework.ProductDataFactory;
+import ac.neec.mio.framework.ProductDataFactory;
+import ac.neec.mio.training.menu.TrainingMenu;
+import ac.neec.mio.training.menu.TrainingMenuFactory;
 import android.database.Cursor;
 
+/**
+ * トレーニングメニューリストを解析するクラス
+ */
 public class TrainingMenuListCursorParser extends CursorParser {
 
+	/**
+	 * トレーニングメニューリスト
+	 */
 	private List<TrainingMenu> list;
 
 	public TrainingMenuListCursorParser(Cursor c) {
@@ -35,7 +41,9 @@ public class TrainingMenuListCursorParser extends CursorParser {
 		c.close();
 	}
 
-
+	/**
+	 * @return TrainingMenu型のリスト
+	 */
 	@Override
 	public List<TrainingMenu> getObject() {
 		return list;

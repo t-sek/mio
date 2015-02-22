@@ -6,7 +6,7 @@ import java.util.List;
 import ac.neec.mio.R;
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.SQLiteDao;
-import ac.neec.mio.taining.menu.TrainingMenu;
+import ac.neec.mio.training.menu.TrainingMenu;
 import ac.neec.mio.ui.adapter.ChangeTrainingSettingListAdapter;
 import ac.neec.mio.ui.listener.MeasurementCallbackListener;
 import android.app.Dialog;
@@ -72,7 +72,6 @@ public class ChangeTrainingSelectDialog extends DialogFragment {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				listener.onSelected(arg2);
-				Log.d("dialog", "selected " + arg2);
 				dialog.dismiss();
 			}
 		});

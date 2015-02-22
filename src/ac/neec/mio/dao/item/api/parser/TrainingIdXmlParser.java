@@ -6,11 +6,21 @@ import ac.neec.mio.exception.XmlParseException;
 import ac.neec.mio.exception.XmlReadException;
 import android.util.Log;
 
+/**
+ * トレーニングXMLからトレーニングIDを抽出するクラス
+ *
+ */
 public class TrainingIdXmlParser extends XmlParser {
 
 	private static final String TRAINING_ID = "training_id";
 
+	/**
+	 * トレーニングID
+	 */
 	private int trainingId;
+	/**
+	 * タグ名
+	 */
 	private String tagName;
 
 	@Override
@@ -37,6 +47,9 @@ public class TrainingIdXmlParser extends XmlParser {
 		}
 	}
 
+	/**
+	 * @return Integer型
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	protected Integer getParseObject() {

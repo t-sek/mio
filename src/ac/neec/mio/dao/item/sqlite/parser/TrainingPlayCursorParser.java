@@ -2,14 +2,21 @@ package ac.neec.mio.dao.item.sqlite.parser;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import static ac.neec.mio.consts.SQLConstants.*;
-import ac.neec.mio.taining.play.TrainingPlay;
-import ac.neec.mio.taining.play.TrainingPlayFactory;
-import ac.neec.mio.training.framework.ProductDataFactory;
+import ac.neec.mio.framework.ProductDataFactory;
+import ac.neec.mio.training.play.TrainingPlay;
+import ac.neec.mio.training.play.TrainingPlayFactory;
 import android.database.Cursor;
 
+/**
+ * トレーニングプレイを解析するクラス
+ */
 public class TrainingPlayCursorParser extends CursorParser {
 
+	/**
+	 * トレーニングプレイ
+	 */
 	private List<TrainingPlay> list;
 
 	public TrainingPlayCursorParser(Cursor c) {
@@ -28,6 +35,9 @@ public class TrainingPlayCursorParser extends CursorParser {
 		}
 	}
 
+	/**
+	 * @return TrainingPlay型のリスト
+	 */
 	@Override
 	public List<TrainingPlay> getObject() {
 		return list;

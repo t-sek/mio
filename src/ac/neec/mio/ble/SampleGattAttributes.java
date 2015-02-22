@@ -20,7 +20,9 @@ import java.util.HashMap;
 
 /**
  * This class includes a small subset of standard GATT attributes for
- * demonstration purposes.
+ * demonstration purposes. <a href=
+ * "https://developer.android.com/samples/BluetoothLeGatt/src/com.example.android.bluetoothlegatt/SampleGattAttributes.html"
+ * >ソース</a>
  */
 public class SampleGattAttributes {
 	private static HashMap<String, String> attributes = new HashMap<String, String>();

@@ -5,8 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import ac.neec.mio.R;
-import ac.neec.mio.db.DBManager;
-import ac.neec.mio.taining.menu.TrainingMenu;
+import ac.neec.mio.training.menu.TrainingMenu;
 import ac.neec.mio.ui.listener.TrainingSettingCallbackListener;
 import ac.neec.mio.user.User;
 import ac.neec.mio.util.CalorieUtil;
