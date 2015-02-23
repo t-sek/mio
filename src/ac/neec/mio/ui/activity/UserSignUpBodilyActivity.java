@@ -16,16 +16,44 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * 身体情報設定画面クラス
+ *
+ */
 public class UserSignUpBodilyActivity extends Activity implements
 		ProfileBodilyCallbackListener {
 
+	/**
+	 * 身長を表示するテキストビュー
+	 */
 	private TextView textHeight;
+	/**
+	 * 体重を表示するテキストビュー
+	 */
 	private TextView textWeight;
+	/**
+	 * 安静時心拍数を表示するテキストビュー
+	 */
 	private TextView textQuietHeartRate;
+	/**
+	 * 身長を設定するイメージビュー
+	 */
 	private ImageView imageHeight;
+	/**
+	 * 体重を設定するイメージビュー
+	 */
 	private ImageView imageWeight;
+	/**
+	 * 安静時心拍数を設定するイメージビュー
+	 */
 	private ImageView imageQuietHeartRate;
+	/**
+	 * 次画面ボタン
+	 */
 	private Button button;
+	/**
+	 * ユーザ情報
+	 */
 	private User user = User.getInstance();
 
 	@Override
@@ -36,13 +64,16 @@ public class UserSignUpBodilyActivity extends Activity implements
 		setListener();
 		setBodilyData();
 	}
-	
+
 	@Override
-	protected void onResume(){
+	protected void onResume() {
 		super.onResume();
 		setBodilyData();
 	}
 
+	/**
+	 * 画面の初期化処理をする
+	 */
 	private void initFindViews() {
 		textHeight = (TextView) findViewById(R.id.txt_height);
 		textWeight = (TextView) findViewById(R.id.txt_weight);
@@ -53,6 +84,9 @@ public class UserSignUpBodilyActivity extends Activity implements
 		button = (Button) findViewById(R.id.button);
 	}
 
+	/**
+	 * ビューにリスナーを設定する
+	 */
 	private void setListener() {
 		imageHeight.setOnClickListener(new OnClickListener() {
 			@Override
@@ -80,6 +114,9 @@ public class UserSignUpBodilyActivity extends Activity implements
 		});
 	}
 
+	/**
+	 * 身体情報を画面に設定する
+	 */
 	private void setBodilyData() {
 		textHeight.setText(String.valueOf(Math.round(user.getHeight())));
 		textWeight.setText(BodilyUtil.weightToRound(user.getWeight()));
@@ -87,38 +124,64 @@ public class UserSignUpBodilyActivity extends Activity implements
 				.getQuietHeartRate())));
 	}
 
+	/**
+	 * 新規登録確認画面に遷移する
+	 */
 	private void intentSignUpConf() {
 		Intent intent = new Intent(UserSignUpBodilyActivity.this,
 				UserSignUpConfActivity.class);
 		startActivity(intent);
 	}
 
+	/**
+	 * 身長設定ダイアログを表示する
+	 */
 	private void showHeightDialog() {
 		showProfileBodilyDialog(BodilyUtil.height(),
 				ProfileBodilySelectDialog.HEIGHT);
 	}
 
+	/**
+	 * 体重設定ダイアログを表示する
+	 */
 	private void showWeightDialog() {
 		showProfileBodilyDialog(BodilyUtil.weight(),
 				ProfileBodilySelectDialog.WEIGHT);
 	}
 
+	/**
+	 * 安静時心拍数設定ダイアログを表示する
+	 */
 	private void showQuietHeartRateDialog() {
 		showProfileBodilyDialog(BodilyUtil.quietHeartRate(),
 				ProfileBodilySelectDialog.QUIET_HEART_RATE);
 	}
 
+	/**
+	 * 設定ダイアログを表示する
+	 * 
+	 * @param row
+	 *            要素
+	 * @param section
+	 *            設定項目
+	 */
 	private void showProfileBodilyDialog(String[] row, int section) {
 		new ProfileBodilySelectDialog(this, row, section).show(
 				getFragmentManager(), "dialog");
 	}
 
+	/**
+	 * 安静時心拍数計測画面に遷移する
+	 */
 	private void intentQuietHeartRateMeasurement() {
 		Intent intent = new Intent(UserSignUpBodilyActivity.this,
 				DeviceScanActivity.class);
 		startActivity(intent);
 	}
-	
+
+	/**
+	 * 安静時心拍数設定ダイアログを表示する
+	 */
 	private void showQuietHeartRateAlertDialog() {
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 		alertDialogBuilder.setMessage("どのように設定しますか？");
@@ -149,7 +212,7 @@ public class UserSignUpBodilyActivity extends Activity implements
 	@Override
 	public void dataChanged(String data) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

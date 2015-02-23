@@ -9,17 +9,34 @@ import ac.neec.mio.ui.listener.GroupFilterCallbackListener;
 import android.util.Log;
 import android.widget.Filter;
 
+/**
+ * グループ検索の実装クラス
+ */
 public class GroupSearchFilter extends Filter {
 
+	/**
+	 * 全グループ
+	 */
 	private List<Group> allItems = new ArrayList<Group>();
-	private List<Group> allItemsBank = new ArrayList<Group>();
+	/**
+	 * 検索結果グループ
+	 */
 	private ArrayList<Group> items;
+	/**
+	 * コールバックリスナー
+	 */
 	private GroupFilterCallbackListener listener;
 
+	/**
+	 * 
+	 * @param listener
+	 *            コールバックリスナー
+	 * @param allItems
+	 *            全グループ
+	 */
 	public GroupSearchFilter(GroupFilterCallbackListener listener,
 			List<Group> allItems) {
 		this.allItems = allItems;
-		Log.d("filter", "new all items " + allItems.size());
 		this.listener = listener;
 	}
 
@@ -29,8 +46,6 @@ public class GroupSearchFilter extends Filter {
 		FilterResults result = new FilterResults();
 		if (constraint != null && constraint.toString().length() > 0) {
 			items = new ArrayList<Group>();
-			Log.d("filter", "all items " + allItems.size());
-			Log.d("filter", "items " + items.size());
 			for (Group item : allItems) {
 				if (item.getGroupName().toLowerCase().contains(constraint)
 						|| item.getId().toLowerCase().contains(constraint)) {
@@ -59,7 +74,7 @@ public class GroupSearchFilter extends Filter {
 			for (Group group : items) {
 				listener.onAddition(group);
 			}
-		}else{
+		} else {
 			for (Group group : allItems) {
 				listener.onAddition(group);
 			}

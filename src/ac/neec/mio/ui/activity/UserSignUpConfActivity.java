@@ -29,6 +29,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * 新規登録確認画面クラス
+ *
+ */
 public class UserSignUpConfActivity extends Activity implements Sourceable {
 
 	private static final int MESSAGE_USER_ERROR = 1;
@@ -37,22 +41,62 @@ public class UserSignUpConfActivity extends Activity implements Sourceable {
 	private static final int DAO_UPDATE_USER = 2;
 	private static final int DAO_UPDATE_HEART_RATE = 3;
 
+	/**
+	 * ユーザIDを表示するテキストビュー
+	 */
 	private TextView textId;
+	/**
+	 * ユーザ名を表示するテキストビュー
+	 */
 	private TextView textName;
+	/**
+	 * メールアドレスを表示するテキストビュー
+	 */
 	private TextView textMail;
+	/**
+	 * 生年月日を表示するテキストビュー
+	 */
 	private TextView textBirth;
+	/**
+	 * 性別を表示するテキストビュー
+	 */
 	private TextView textGender;
+	/**
+	 * 身長を表示するテキストビュー
+	 */
 	private TextView textHeight;
+	/**
+	 * 体重を表示するテキストビュー
+	 */
 	private TextView textWeight;
+	/**
+	 * 安静時心拍数を表示するテキストビュー
+	 */
 	private TextView textQuietHeartRate;
+	/**
+	 * 新規登録ボタン
+	 */
 	private Button buttonSignUp;
-
+	/**
+	 * ユーザ情報
+	 */
 	private User user = User.getInstance();
+	/**
+	 * 新規登録中ダイアログ
+	 */
 	private LoadingDialog dialogLoading = new LoadingDialog(
 			MessageConstants.add());
+	/**
+	 * WebAPI接続インスタンス
+	 */
 	private ApiDao dao;
+	/**
+	 * WebAPI通信フラグ
+	 */
 	private int daoFlag;
-
+	/**
+	 * 画面ハンドラー
+	 */
 	private Handler handler = new Handler() {
 		public void handleMessage(Message message) {
 			switch (message.what) {
@@ -89,6 +133,9 @@ public class UserSignUpConfActivity extends Activity implements Sourceable {
 		dao = DaoFacade.getApiDao(this);
 	}
 
+	/**
+	 * 画面の初期化処理をする
+	 */
 	private void initFindViews() {
 		textId = (TextView) findViewById(R.id.text_id);
 		textName = (TextView) findViewById(R.id.text_name);
@@ -101,6 +148,9 @@ public class UserSignUpConfActivity extends Activity implements Sourceable {
 		buttonSignUp = (Button) findViewById(R.id.button_sign_up);
 	}
 
+	/**
+	 * ビューにリスナーを設定する
+	 */
 	private void setListener() {
 		buttonSignUp.setOnClickListener(new OnClickListener() {
 			@Override
@@ -110,6 +160,9 @@ public class UserSignUpConfActivity extends Activity implements Sourceable {
 		});
 	}
 
+	/**
+	 * 新規登録をする
+	 */
 	private void uploadUserInfo() {
 		dialogLoading.show(getFragmentManager(), "");
 		dao.insertUser(user.getId(),
@@ -121,6 +174,9 @@ public class UserSignUpConfActivity extends Activity implements Sourceable {
 		daoFlag = DAO_UPDATE_USER;
 	}
 
+	/**
+	 * 入力データを画面に表示する
+	 */
 	private void setUserData() {
 		textId.setText(user.getId());
 		textName.setText(user.getName());
@@ -137,6 +193,9 @@ public class UserSignUpConfActivity extends Activity implements Sourceable {
 		textQuietHeartRate.setText(String.valueOf(user.getQuietHeartRate()));
 	}
 
+	/**
+	 * トップ画面に遷移する
+	 */
 	private void intentTop() {
 		Intent intent = new Intent(UserSignUpConfActivity.this,
 				TopActivity.class);

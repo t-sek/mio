@@ -23,37 +23,101 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+/**
+ * 身体情報をピッカーで設定するダイアログクラス
+ */
 public class ProfileBodilySelectDialog extends PickerBaseDialog {
 
+	/**
+	 * 身長フラグ
+	 */
 	public static final int HEIGHT = 1;
+	/**
+	 * 体重フラグ
+	 */
 	public static final int WEIGHT = 2;
+	/**
+	 * 安静時心拍数フラグ
+	 */
 	public static final int QUIET_HEART_RATE = 3;
+	/**
+	 * 最低身長初期値
+	 */
 	private static final float DEFAULT_HELGHT = 100;
+	/**
+	 * 最低体重初期値
+	 */
 	private static final float DEFAULT_WEIGHT = 30;
+	/**
+	 * 最低安静時心拍数初期値
+	 */
 	private static final int DEFAULT_QUIET_HEART_RATE = 40;
-
+	/**
+	 * コールバックリスナー
+	 */
 	private ProfileBodilyCallbackListener listener;
+	/**
+	 * ダイアログインスタンス
+	 */
 	private Dialog dialog;
+	/**
+	 * 設定フラグ
+	 */
 	private int name;
-	private Button buttonClose;
+	/**
+	 * 決定ボタン
+	 */
 	private Button buttonDecided;
+	/**
+	 * タイトルを表示するテキストビュー
+	 */
 	private TextView textDialogTitle;
-
+	/**
+	 * 選択されているデータ
+	 */
 	private String selectedData;
+	/**
+	 * 選択されているピッカーのインデックス
+	 */
 	private int id;
+	/**
+	 * ユーザ情報
+	 */
 	private User user = User.getInstance();
-
+	/**
+	 * ピッカー要素
+	 */
 	protected String[] row;
 
+	/**
+	 * 設定された項目を通知するリスナー
+	 */
 	public interface ProfileBodilyCallbackListener {
+		/**
+		 * データ変更を通知する
+		 */
 		void dataChanged();
 
+		/**
+		 * 変更されたデータを通知する
+		 * 
+		 * @param data
+		 *            変更されたデータ
+		 */
 		void dataChanged(String data);
 	}
 
-	public ProfileBodilySelectDialog() {
-	}
-
+	/**
+	 * 
+	 * @param listener
+	 *            コールバックリスナー
+	 * @param row
+	 *            ピッカー要素
+	 * @param name
+	 *            ピッカー名<br>
+	 *            ProfileBodilySelectDialogのHEIGHT、WEIGHT、QUIET_HEART_RATEを設定する
+	 * 
+	 */
 	public ProfileBodilySelectDialog(ProfileBodilyCallbackListener listener,
 			String[] row, int name) {
 		this.listener = listener;
@@ -72,6 +136,9 @@ public class ProfileBodilySelectDialog extends PickerBaseDialog {
 		return dialog;
 	}
 
+	/**
+	 * タイトルを設定する
+	 */
 	private void setTitle() {
 		switch (name) {
 		case HEIGHT:
@@ -88,6 +155,9 @@ public class ProfileBodilySelectDialog extends PickerBaseDialog {
 		}
 	}
 
+	/**
+	 * ダイアログを設定する
+	 */
 	private void setDialog() {
 		dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		// フルスクリーン
@@ -99,6 +169,9 @@ public class ProfileBodilySelectDialog extends PickerBaseDialog {
 				new ColorDrawable(Color.TRANSPARENT));
 	}
 
+	/**
+	 * ピッカーを設定する
+	 */
 	private void setPicker() {
 		line = (LinearLayout) dialog.findViewById(R.id.main_line_0);
 		picker = (DrumPicker) dialog.findViewById(R.id.picker);
@@ -117,12 +190,17 @@ public class ProfileBodilySelectDialog extends PickerBaseDialog {
 
 	}
 
+	/**
+	 * 画面の初期化処理をする
+	 */
 	private void initFindViews() {
-		buttonClose = (Button) dialog.findViewById(R.id.btn_dialog_close);
 		buttonDecided = (Button) dialog.findViewById(R.id.btn_dialog_decided);
 		textDialogTitle = (TextView) dialog.findViewById(R.id.dialog_title);
 	}
 
+	/**
+	 * ビューにリスナーを設定する
+	 */
 	private void setListeners() {
 		buttonDecided.setOnClickListener(new OnClickListener() {
 			@Override
@@ -163,17 +241,8 @@ public class ProfileBodilySelectDialog extends PickerBaseDialog {
 		});
 	}
 
-	// private void setScrollPosition(final int index) {
-	// new Handler().post(new Runnable() {
-	// public void run() {
-	// unitHeight = pickerPanel.getRowHeight(0);
-	// scrollTo(0, (index + 1) * unitHeight);
-	// }
-	// });
-	// }
-
 	/**
-	 * ドラム作成
+	 * ピッカーのドラムを作成する
 	 */
 	private void setLine() {
 		ViewGroup viewGroup = null;
@@ -200,6 +269,11 @@ public class ProfileBodilySelectDialog extends PickerBaseDialog {
 		viewGroup.addView(view_2, viewGroup.getChildCount());
 	}
 
+	/**
+	 * ドラムをスクロールする
+	 * @param mode
+	 * 
+	 */
 	protected void moveScrollFirst(final int mode) {
 		Message message = new Message();
 		message.what = MESSAGE_WHAT;
@@ -210,7 +284,9 @@ public class ProfileBodilySelectDialog extends PickerBaseDialog {
 		}
 	}
 
-	// 繰り返しハンドラー
+	/**
+	 * 繰り返しハンドラー
+	 */
 	private Handler handler_0 = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
@@ -223,8 +299,16 @@ public class ProfileBodilySelectDialog extends PickerBaseDialog {
 		}
 	};
 
+	/**
+	 * 行き先要素番号を決定する
+	 * 
+	 * @param max
+	 *            ドラムサイズ
+	 * @param currentY
+	 *            行き先
+	 * @return 行き先要素番号
+	 */
 	private int getToPosition(int max, int currentY) {
-		// 行き先要素番号の決定
 		int index = 0;
 		for (int i = 0; i < max; i++) {
 			if (currentY < unitHeight * i + unitHeight / 2) {
@@ -237,7 +321,6 @@ public class ProfileBodilySelectDialog extends PickerBaseDialog {
 
 	/**
 	 * 移動量を決める
-	 * 
 	 */
 	protected void moveScroll(final int mode) {
 		// TrainingSettingPicker sv = (mode == 0 ? picker : mScrollView_1);
@@ -278,7 +361,9 @@ public class ProfileBodilySelectDialog extends PickerBaseDialog {
 		return false;
 	}
 
-	// テキストの更新
+	/**
+	 * テキストを更新する
+	 */
 	private void updateText() {
 		id = picker.getScrollY() / unitHeight;
 		selectedData = row[id];

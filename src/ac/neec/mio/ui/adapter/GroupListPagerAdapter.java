@@ -10,16 +10,34 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+/**
+ * 全グループ、所属グループタブの設定クラス
+ *
+ */
 public class GroupListPagerAdapter extends FragmentStatePagerAdapter {
 
+	/**
+	 * タブ要素
+	 */
 	private List<Fragment> fragments = new ArrayList<Fragment>();
+	/**
+	 * コールバックリスナー
+	 */
 	private List<SearchNotifyListener> groupList = new ArrayList<SearchNotifyListener>();
 
+	/**
+	 * 
+	 * @param fm
+	 *            フラグメントマネージャー
+	 */
 	public GroupListPagerAdapter(FragmentManager fm) {
 		super(fm);
 		setFragments();
 	}
 
+	/**
+	 * タブ要素を設定する
+	 */
 	private void setFragments() {
 		SearchNotifyListener my = new MyGroupListFragment();
 		SearchNotifyListener all = new GroupListFragment();
@@ -29,6 +47,11 @@ public class GroupListPagerAdapter extends FragmentStatePagerAdapter {
 		fragments.add((Fragment) all);
 	}
 
+	/**
+	 * コールバックリスナーを設定する
+	 * 
+	 * @return コールバックリスナーリスト
+	 */
 	public List<SearchNotifyListener> getSearchListener() {
 		return groupList;
 	}

@@ -28,20 +28,51 @@ import android.os.IBinder;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
+/**
+ * BluetoothLE通信処理を定義した抽象クラス<br>
+ * 通信を行う場合は、このクラスを継承する。
+ *
+ */
 public abstract class BleConnectBaseActivity extends FragmentActivity implements
 		BleConnectCallbackListener {
 
+	/**
+	 * 通信するデバイスのアドレス
+	 */
 	private static String DEVICE_ADDRESS;
+	/**
+	 * 通信リクエストコード
+	 */
 	private static final int REQUEST_ENABLE_BT = 1;
+	/**
+	 * 通信タイムアウト時間
+	 */
 	public static final int CONNECT_WAIT_TIME = 10000;
 
+	/**
+	 * BluetoothLeServiceクラスのインスタンス
+	 */
 	private BluetoothLeService bluetoothLeService;
+	/**
+	 * BluetoothAdapterクラスのインスタンス
+	 */
 	private BluetoothAdapter bluetoothAdapter;
+	/**
+	 * デバイスとの接続を行う
+	 */
 	private ServiceConnection serviceConnection;
+	/**
+	 * デバイスからのデータを受信する
+	 */
 	private BroadcastReceiver gattUpdateReceiver;
-
+	/**
+	 * 通信中の待機ダイアログ
+	 */
 	private BleConnectDialog dialog;
 
+	/**
+	 * デバイスからの心拍数取得のための、UUIDをサービスに設定する
+	 */
 	protected void setupReadCharacteristic() {
 		List<BluetoothGattService> gatts = bluetoothLeService
 				.getSupportedGattServices();
@@ -56,6 +87,11 @@ public abstract class BleConnectBaseActivity extends FragmentActivity implements
 		bluetoothLeService.setCharacteristicNotification(characteristic, true);
 	}
 
+	/**
+	 * 受信タイプを設定する
+	 * 
+	 * @return 受信タイプ
+	 */
 	private static IntentFilter makeGattUpdateIntentFilter() {
 		final IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(BluetoothLeService.ACTION_GATT_CONNECTED);
@@ -77,11 +113,18 @@ public abstract class BleConnectBaseActivity extends FragmentActivity implements
 		bleDisconnect();
 	}
 
+	/**
+	 * デバイスとの通信を切断する
+	 */
 	protected void disconnectAction() {
 		bleDisconnect();
 		connectBleDevice();
 	}
 
+	/**
+	 * 通信前処理を行う<br>
+	 * アダプターの設定、受信タイプの設定
+	 */
 	protected void bleConnectOnResume() {
 		final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(BLUETOOTH_SERVICE);
 		bluetoothAdapter = bluetoothManager.getAdapter();
@@ -92,7 +135,7 @@ public abstract class BleConnectBaseActivity extends FragmentActivity implements
 	}
 
 	/**
-	 * 接続中ダイアログ表示
+	 * 接続中ダイアログ表示する
 	 */
 	private void showConnectDialog() {
 		dialog = new BleConnectDialog(BleConnectBaseActivity.this);
@@ -106,7 +149,7 @@ public abstract class BleConnectBaseActivity extends FragmentActivity implements
 	}
 
 	/**
-	 * デバイス接続
+	 * デバイスと接続する
 	 */
 	private void connectDevice() {
 		if (DevicePreferenceManager.getDeviceAddress() != null) {
@@ -162,7 +205,7 @@ public abstract class BleConnectBaseActivity extends FragmentActivity implements
 	}
 
 	/**
-	 * デバイス切断
+	 * デバイスと切断する
 	 */
 	protected void bleDisconnect() {
 		try {
@@ -176,10 +219,16 @@ public abstract class BleConnectBaseActivity extends FragmentActivity implements
 		}
 	}
 
+	/**
+	 * デバイスを接続成功した
+	 */
 	public void onConnected() {
 		dialog.dismiss();
 	}
 
+	/**
+	 * デバイスを切断する
+	 */
 	public void onCancel() {
 	}
 
@@ -196,7 +245,7 @@ public abstract class BleConnectBaseActivity extends FragmentActivity implements
 	}
 
 	/**
-	 * 端末BluetoothLE対応チェック
+	 * 端末BluetoothLE対応チェックする
 	 */
 	protected void checkBleSupport() {
 		// BluetoothLE サポート外
@@ -217,24 +266,24 @@ public abstract class BleConnectBaseActivity extends FragmentActivity implements
 	}
 
 	/**
-	 * デバイス接続開始
+	 * デバイス接続開始する
 	 */
 	protected void connectBleDevice() {
 		connectDevice();
 	}
 
 	/**
-	 * Bluetooth立ち上げ許可
+	 * Bluetooth立ち上げ許可する
 	 */
 	protected abstract void requestEnable();
 
 	/**
-	 * Bluetooth立ち上げ拒否
+	 * Bluetooth立ち上げ拒否する
 	 */
 	protected abstract void requestNotEnable();
 
 	/**
-	 * デバイスから心拍数受信
+	 * デバイスから心拍数受信する
 	 * 
 	 * @param heartRate
 	 *            心拍数

@@ -1,4 +1,4 @@
-package ac.neec.mio.ui.fragment.top;
+package ac.neec.mio.ui.fragment;
 
 import ac.neec.mio.R;
 import ac.neec.mio.user.User;

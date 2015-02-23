@@ -18,27 +18,63 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+/**
+ * ユーザ情報のパスワードを変更するダイアログクラス
+ */
 public class UserDataSettingPasswordDialog extends DialogFragment {
 
-	public static final int NAME = 1;
-	public static final int MAIL = 2;
-	public static final int USER_ID = 3;
-	public static final int PASSWORD = 4;
-
+	/**
+	 * ダイアログインスタンス
+	 */
 	private Dialog dialog;
+	/**
+	 * 現在のパスワードを入力するフォーム
+	 */
 	private EditText editOld;
+	/**
+	 * 新しいのパスワードを入力するフォーム
+	 */
 	private EditText editNew;
+	/**
+	 * 新しいのパスワードの確認を入力するフォーム
+	 */
 	private EditText editNewConf;
+	/**
+	 * 現在のパスワードが違うエラーを表示するテキストビュー
+	 */
 	private TextView alartOld;
+	/**
+	 * 新しいパスワードの確認エラーを表示するテキストビュー
+	 */
 	private TextView alartNew;
+	/**
+	 * 決定ボタン
+	 */
 	private Button button;
+	/**
+	 * コールバックリスナー
+	 */
 	private PasswordChangedListener listener;
+	/**
+	 * ユーザ情報
+	 */
 	private User user = User.getInstance();
 
+	/**
+	 * パスワード変更完了を通知するリスナー
+	 */
 	public interface PasswordChangedListener {
+		/**
+		 * パスワード変更完了を通知する
+		 */
 		void dataChanged();
 	}
 
+	/**
+	 * 
+	 * @param listener
+	 *            コールバックリスナー
+	 */
 	public UserDataSettingPasswordDialog(PasswordChangedListener listener) {
 		this.listener = listener;
 	}
@@ -51,6 +87,9 @@ public class UserDataSettingPasswordDialog extends DialogFragment {
 		return dialog;
 	}
 
+	/**
+	 * 画面の初期化処理をする
+	 */
 	private void init() {
 		editOld = (EditText) dialog.findViewById(R.id.edit_old);
 		editNew = (EditText) dialog.findViewById(R.id.edit_new);
@@ -72,14 +111,21 @@ public class UserDataSettingPasswordDialog extends DialogFragment {
 		});
 	}
 
+	/**
+	 * パスワードを保存する
+	 */
 	private void storeUpEditData() {
 		user.setPassword(editNew.getText().toString());
 	}
 
+	/**
+	 * 入力項目を確認する
+	 * 
+	 * @return true エラーなし<br>
+	 *         false エラーあり
+	 */
 	private boolean validate() {
 		boolean val = true;
-		Log.d("dialog", "user "+user.getPassword());
-		Log.d("dialog", "text "+editOld.getText().toString());
 		if (!editOld.getText().toString().equals(user.getPassword())) {
 			alartOld.setVisibility(View.VISIBLE);
 			val = false;
@@ -96,6 +142,9 @@ public class UserDataSettingPasswordDialog extends DialogFragment {
 		return val;
 	}
 
+	/**
+	 * ダイアログを設定する
+	 */
 	private void setDialog() {
 		dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		dialog.setContentView(R.layout.dialog_user_data_setting_password);

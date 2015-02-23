@@ -12,11 +12,27 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+/**
+ * ラップリストビュー設定クラス
+ *
+ */
 public class LapListAdapter extends ArrayAdapter<LapItem> {
 
+	/**
+	 * ラップリスト
+	 */
 	private List<LapItem> list = new ArrayList<LapItem>();
 	private LayoutInflater inflater;
 
+	/**
+	 * 
+	 * @param context
+	 *            コンテキスト
+	 * @param resource
+	 *            リソース
+	 * @param list
+	 *            ラップリスト
+	 */
 	public LapListAdapter(Context context, int resource, List<LapItem> list) {
 		super(context, resource, list);
 		this.list = list;
@@ -24,17 +40,33 @@ public class LapListAdapter extends ArrayAdapter<LapItem> {
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
+	/**
+	 * ラップリスト数
+	 * 
+	 * @returnz リスト数
+	 */
 	public int getListSize() {
 		return list.size();
 	}
 
+	/**
+	 * ラップを追加する
+	 * 
+	 * @param item
+	 *            ラップ
+	 */
 	public void setLapTime(LapItem item) {
 		list.add(item);
 		notifyDataSetChanged();
 	}
 
+	/**
+	 * ラップリストを追加する
+	 * 
+	 * @param list
+	 *            ラップリスト
+	 */
 	public void setLapTimeList(List<LapItem> list) {
-		// Collections.reverse(list);
 		this.list = list;
 		notifyDataSetChanged();
 	}
@@ -56,9 +88,6 @@ public class LapListAdapter extends ArrayAdapter<LapItem> {
 		textId.setText(String.valueOf(item.getId()));
 		textLapTime.setText(item.getLapTime());
 		textDistance.setText(item.getDistance());
-
-		// textName.setText(list.get(position).getTrainingName());
-		// convertView.setBackgroundColor(R.color.theme);
 		return convertView;
 	}
 

@@ -19,11 +19,24 @@ import android.view.View;
 
 import com.viewpagerindicator.TabPageIndicator;
 
+/**
+ * トップ画面クラス
+ *
+ */
 public class TopActivity extends FragmentActivity implements
 		TopCallbackListener {
 
+	/**
+	 * タブのアダプター
+	 */
 	private TopPagerAdapter adapter;
+	/**
+	 * タブ
+	 */
 	private ViewPager pager;
+	/**
+	 * タブナビゲーション
+	 */
 	private TabPageIndicator indicator;
 
 	@Override
@@ -34,6 +47,9 @@ public class TopActivity extends FragmentActivity implements
 		setPager();
 	}
 
+	/**
+	 * 画面の初期化処理をする
+	 */
 	private void initFindViews() {
 		adapter = new TopPagerAdapter(getSupportFragmentManager(), this,
 				R.id.pager_top);
@@ -42,6 +58,9 @@ public class TopActivity extends FragmentActivity implements
 		indicator = (TabPageIndicator) findViewById(R.id.indicator_top);
 	}
 
+	/**
+	 * タブを設定する
+	 */
 	private void setPager() {
 		pager.setOverScrollMode(View.OVER_SCROLL_ALWAYS);
 		pager.setAdapter(adapter);

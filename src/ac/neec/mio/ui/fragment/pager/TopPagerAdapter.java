@@ -4,12 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ac.neec.mio.R;
-import ac.neec.mio.ui.fragment.top.DashBoardFragment;
-import ac.neec.mio.ui.fragment.top.DeviceDataFragment;
-import ac.neec.mio.ui.fragment.top.TopBaseFragment;
-import ac.neec.mio.ui.fragment.top.MeasurementFragment;
-import ac.neec.mio.ui.fragment.top.ProfileFragment;
-import ac.neec.mio.ui.fragment.top.TrainingDataFragment;
+import ac.neec.mio.ui.fragment.DeviceDataFragment;
+import ac.neec.mio.ui.fragment.MeasurementFragment;
+import ac.neec.mio.ui.fragment.ProfileFragment;
+import ac.neec.mio.ui.fragment.TopBaseFragment;
+import ac.neec.mio.ui.fragment.TrainingDataFragment;
 import ac.neec.mio.ui.listener.TopCallbackListener;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

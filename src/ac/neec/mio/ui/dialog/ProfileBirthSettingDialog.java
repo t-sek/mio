@@ -20,54 +20,114 @@ import android.widget.TextView;
 import com.sek.drumpicker.DrumPicker;
 import com.sek.drumpicker.DrumPickerListener;
 
+/**
+ * 生年月日をピッカーで設定するダイアログクラス
+ *
+ */
 public class ProfileBirthSettingDialog extends DialogFragment implements
 		DrumPickerListener {
 
+	/**
+	 * 年ピッカーフラグ
+	 */
 	private static final String PICKER_YEAR = "year";
+	/**
+	 * 月ピッカーフラグ
+	 */
 	private static final String PICKER_MONTH = "month";
+	/**
+	 * 日ピッカーフラグ
+	 */
 	private static final String PICKER_DAY = "day";
 
+	/**
+	 * コールバックリスナー
+	 */
 	private ProfileBirthCallbackListener listener;
+	/**
+	 * ダイアログインスタンス
+	 */
 	private Dialog dialog;
+	/**
+	 * 決定ボタン
+	 */
 	private Button buttonDecided;
+	/**
+	 * タイトルを表示するテキストビュー
+	 */
 	private TextView textTitle;
+	/**
+	 * タイトル
+	 */
 	private String title;
+	/**
+	 * ユーザ情報
+	 */
 	private User user = User.getInstance();
+	/**
+	 * 年ピッカー
+	 */
 	private DrumPicker pickerYear;
+	/**
+	 * 月ピッカー
+	 */
 	private DrumPicker pickerMonth;
+	/**
+	 * 日ピッカー
+	 */
 	private DrumPicker pickerDay;
-	// ドラム要素
+	/**
+	 * 年ドラム要素
+	 */
 	private String[] years;
+	/**
+	 * 月ドラム要素
+	 */
 	private String[] months;
+	/**
+	 * 日ドラム要素
+	 */
 	private String[] days;
-
+	/**
+	 * 選択されている年
+	 */
 	private String year;
+	/**
+	 * 選択されている月
+	 */
 	private String month;
+	/**
+	 * 選択されている日
+	 */
 	private String day;
 
+	/**
+	 * 選択されている年月日を通知するリスナー
+	 */
 	public interface ProfileBirthCallbackListener {
+		/**
+		 * 選択されている年月日を通知する
+		 * 
+		 * @param year
+		 *            年
+		 * @param month
+		 *            月
+		 * @param day
+		 *            日
+		 */
 		void dateChanged(String year, String month, String day);
 	}
 
 	public ProfileBirthSettingDialog() {
 	}
 
-	public ProfileBirthSettingDialog(ProfileBirthCallbackListener listener,
-			String yaer, String month, String day) {
-		this.listener = listener;
-		this.year = year;
-		this.month = month;
-		this.day = day;
-	}
-
+	/**
+	 * 
+	 * @param listener
+	 *            コールバックリスナー
+	 */
 	public ProfileBirthSettingDialog(ProfileBirthCallbackListener listener) {
 		this.listener = listener;
-	}
-
-	public ProfileBirthSettingDialog(ProfileBirthCallbackListener listener,
-			String title) {
-		this.listener = listener;
-		this.title = title;
 	}
 
 	@Override
@@ -83,6 +143,9 @@ public class ProfileBirthSettingDialog extends DialogFragment implements
 		return dialog;
 	}
 
+	/**
+	 * ピッカー要素の日付を設定する
+	 */
 	private void setDate() {
 		years = DateUtil.getYears();
 		year = years[0];
@@ -95,6 +158,9 @@ public class ProfileBirthSettingDialog extends DialogFragment implements
 		day = days[0];
 	}
 
+	/**
+	 * ダイアログを設定する
+	 */
 	private void setDialog() {
 		dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		// フルスクリーン
@@ -107,13 +173,14 @@ public class ProfileBirthSettingDialog extends DialogFragment implements
 		// setCancelable(false);
 	}
 
+	/**
+	 * 画面の初期化処理をする
+	 */
 	private void initFindViews() {
 		buttonDecided = (Button) dialog.findViewById(R.id.btn_dialog_decided);
 		buttonDecided.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Log.d("dialog", "yaer " + year + " month " + month + " day "
-						+ day);
 				listener.dateChanged(year, month, day);
 				dismiss();
 			}
@@ -127,6 +194,9 @@ public class ProfileBirthSettingDialog extends DialogFragment implements
 		pickerDay = (DrumPicker) dialog.findViewById(R.id.picker_day);
 	}
 
+	/**
+	 * ピッカーを設定する
+	 */
 	private void setPicker() {
 		Context context = getActivity().getApplicationContext();
 		pickerYear.setElements(context, PICKER_YEAR, years);
@@ -137,6 +207,9 @@ public class ProfileBirthSettingDialog extends DialogFragment implements
 		pickerDay.setOnDrumPickerListener(this);
 	}
 
+	/**
+	 * 前回のピッカーの位置に移動する
+	 */
 	private void setPickerIndex() {
 		String[] date = DateUtil.getSplitDate(DateUtil.japaneseFormat(user
 				.getBirth()));
@@ -148,6 +221,9 @@ public class ProfileBirthSettingDialog extends DialogFragment implements
 		pickerDay.setScrollPosition(indexDay);
 	}
 
+	/**
+	 * 年または月が変更されたとき、日の最大値を更新する
+	 */
 	private void updateDay() {
 		int day = DateUtil.getActualMaximum(Integer.valueOf(year),
 				Integer.valueOf(month));

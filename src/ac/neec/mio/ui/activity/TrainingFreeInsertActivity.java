@@ -49,6 +49,10 @@ import com.koba.androidrtchart.ColorBar;
 import com.koba.androidrtchart.ColorBarItem;
 import com.koba.androidrtchart.ColorBarListener;
 
+/**
+ * トレーニング手入力画面クラス
+ *
+ */
 public class TrainingFreeInsertActivity extends Activity implements Sourceable,
 		OnClickListener, TrainingSelectCallbackListener,
 		ProfileBirthCallbackListener, TimeChangedListener, NumChangedListener,
@@ -62,39 +66,130 @@ public class TrainingFreeInsertActivity extends Activity implements Sourceable,
 	private static final int PLAY_TIME = 7;
 	private static final int ADD_TRAINING = 8;
 
+	/**
+	 * 日付テーブル
+	 */
 	private TableRow date;
+	/**
+	 * カテゴリーテーブル
+	 */
 	private TableRow category;
+	/**
+	 * 開始時間テーブル
+	 */
 	private TableRow startTime;
+	/**
+	 * 計測時間テーブル
+	 */
 	private TableRow playTime;
+	/**
+	 * 消費カロリーテーブル
+	 */
 	private TableRow calorie;
+	/**
+	 * 走行距離テーブル
+	 */
 	private TableRow distance;
+	/**
+	 * 開始年を表示するテキストビュー
+	 */
 	private TextView textYear;
+	/**
+	 * 開始月を表示するテキストビュー
+	 */
 	private TextView textMonth;
+	/**
+	 * 開始日を表示するテキストビュー
+	 */
 	private TextView textDay;
+	/**
+	 * カテゴリーを表示するテキストビュー
+	 */
 	private TextView textCategory;
+	/**
+	 * 開始時間を表示するテキストビュー
+	 */
 	private TextView textStartHour;
+	/**
+	 * 開始分を表示するテキストビュー
+	 */
 	private TextView textStartMin;
+	/**
+	 * 計測時間を表示するテキストビュー
+	 */
 	private TextView textPlayHour;
+	/**
+	 * 計測分を表示するテキストビュー
+	 */
 	private TextView textPlayMin;
+	/**
+	 * 消費カロリーを表示するテキストビュー
+	 */
 	private TextView textCalorie;
+	/**
+	 * 走行距離を表示するテキストビュー
+	 */
 	private TextView textDistance;
+	/**
+	 * 保存ボタン
+	 */
 	private Button button;
+	/**
+	 * トレーニングメニュー追加ボタン
+	 */
 	private ImageButton buttonBarAdd;
+	/**
+	 * トレーニングメニューを表示するカラーバー
+	 */
 	private ColorBar colorbar;
-
+	/**
+	 * ユーザ情報
+	 */
 	private User user = User.getInstance();
+	/**
+	 * データ保存中ダイアログ
+	 */
 	private LoadingDialog dialogLoading = new LoadingDialog(
 			MessageConstants.save());
+	/**
+	 * WebAPI接続インスタンス
+	 */
 	private ApiDao dao;
+	/**
+	 * ローカルデータベース接続インスタンス
+	 */
 	private SQLiteDao daoSql;
+	/**
+	 * トレーニングメニュー
+	 */
 	private TrainingMenu menu;
+	/**
+	 * トレーニングプレイリスト
+	 */
 	private List<TrainingPlay> plays = new ArrayList<TrainingPlay>();
+	/**
+	 * TrainingPlayクラスを生成するクラス
+	 */
 	private ProductDataFactory factory = new TrainingPlayFactory();
+	/**
+	 * WebAPIから取得したトレーニングID
+	 */
 	private int trainingId;
+	/**
+	 * カテゴリーID
+	 */
 	private int categoryId;
+	/**
+	 * WebAPI通信フラグ
+	 */
 	private int daoFlag;
+	/**
+	 * ダイアログフラグ
+	 */
 	private int dialogFlag;
-
+	/**
+	 * 画面ハンドラー
+	 */
 	private Handler handler = new Handler() {
 		public void handleMessage(Message message) {
 			switch (message.what) {
@@ -122,6 +217,9 @@ public class TrainingFreeInsertActivity extends Activity implements Sourceable,
 		textCategory.setText(category.getTrainingCategoryName());
 	}
 
+	/**
+	 * 画面の初期化処理をする
+	 */
 	private void initFindViews() {
 		date = (TableRow) findViewById(R.id.date);
 		category = (TableRow) findViewById(R.id.category);
@@ -144,6 +242,9 @@ public class TrainingFreeInsertActivity extends Activity implements Sourceable,
 		colorbar = (ColorBar) findViewById(R.id.colorbar);
 	}
 
+	/**
+	 * ビューにリスナーを設定する
+	 */
 	private void setListener() {
 		date.setOnClickListener(this);
 		category.setOnClickListener(this);
@@ -156,6 +257,9 @@ public class TrainingFreeInsertActivity extends Activity implements Sourceable,
 		colorbar.setOnTouchListener(this);
 	}
 
+	/**
+	 * 今日の日付を設定する
+	 */
 	private void setNowDate() {
 		textStartHour.setText(TimeUtil.nowDateHour());
 		textStartMin.setText(TimeUtil.nowDateMin());
@@ -164,6 +268,12 @@ public class TrainingFreeInsertActivity extends Activity implements Sourceable,
 		textDay.setText(DateUtil.nowDay());
 	}
 
+	/**
+	 * カラーバーを設定する
+	 * 
+	 * @param sec
+	 *            トレーニング時間
+	 */
 	private void setColorBar(int sec) {
 		ColorBarItem item;
 		item = new ColorBarItem(sec, menu.getTrainingName(), menu.getColor());
@@ -172,6 +282,9 @@ public class TrainingFreeInsertActivity extends Activity implements Sourceable,
 		updatePlayTime();
 	}
 
+	/**
+	 * 計測時間を画面に更新する
+	 */
 	private void updatePlayTime() {
 		int time = 0;
 		for (TrainingPlay play : plays) {
@@ -183,6 +296,9 @@ public class TrainingFreeInsertActivity extends Activity implements Sourceable,
 		textPlayMin.setText(String.valueOf(sec));
 	}
 
+	/**
+	 * トレーニングメニュー設定ダイアログを表示する
+	 */
 	private void showMenuDialog() {
 		dialogFlag = MENU;
 		List<TrainingMenu> menus = daoSql
@@ -198,6 +314,9 @@ public class TrainingFreeInsertActivity extends Activity implements Sourceable,
 				"dialog");
 	}
 
+	/**
+	 * トレーニングカテゴリー設定ダイアログを表示する
+	 */
 	private void showCategoryDialog() {
 		dialogFlag = CATEGORY;
 		List<TrainingCategory> list = daoSql.selectTrainingCategory();
@@ -212,38 +331,42 @@ public class TrainingFreeInsertActivity extends Activity implements Sourceable,
 				"dialog");
 	}
 
-	private void showPlayDialog() {
-		// new TrainingTimeInsertDialog(this,
-		// TrainingTimeInsertDialog.PLAY_TIME)
-		// .show(getFragmentManager(), "dialog");
-	}
-
+	/**
+	 * トレーニング日設定ダイアログを表示する
+	 */
 	private void showStartDialog() {
 		new TrainingTimeInsertDialog(this, TrainingTimeInsertDialog.START_TIME)
 				.show(getFragmentManager(), "dialog");
 	}
 
-	private void showDateDialog() {
-		// new ProfileBirthSettingDialog(this, "実施日").show(getFragmentManager(),
-		// "dialog");
-	}
-
+	/**
+	 * 消費カロリー設定ダイアログを表示する
+	 */
 	private void showCalorieDialog() {
 		new TrainingNumInsertDialog(this, TrainingNumInsertDialog.CALORIE)
 				.show(getFragmentManager(), "dialog");
 	}
 
+	/**
+	 * 走行距離設定ダイアログを表示する
+	 */
 	private void showDistanceDialog() {
 		new TrainingNumInsertDialog(this, TrainingNumInsertDialog.DISTANCE)
 				.show(getFragmentManager(), "dialog");
 	}
 
+	/**
+	 * トレーニング追加ダイアログを表示する
+	 */
 	private void showAddTrainingDialog() {
 		new TrainingTimeInsertDialog(this,
 				TrainingTimeInsertDialog.ADD_TRAINING).show(
 				getFragmentManager(), "dialog");
 	}
 
+	/**
+	 * WebAPIにトレーニングを追加する
+	 */
 	private void insert() {
 		daoFlag = FLAG_TRAINING;
 		String date = DateUtil.dateFormat(textYear.getText().toString(),
@@ -320,16 +443,12 @@ public class TrainingFreeInsertActivity extends Activity implements Sourceable,
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.date:
-			showDateDialog();
 			break;
 		case R.id.category:
 			showCategoryDialog();
 			break;
 		case R.id.start_time:
 			showStartDialog();
-			break;
-		case R.id.play_time:
-			showPlayDialog();
 			break;
 		case R.id.calorie:
 			showCalorieDialog();

@@ -19,13 +19,35 @@ import android.widget.TextView;
 
 import com.sek.circleimageview.CircleImageView;
 
+/**
+ * グループメンバーリストビュー設定クラス
+ *
+ */
 public class GroupMemberListAdapter extends ArrayAdapter<MemberInfo> {
 
 	private LayoutInflater inflater;
+	/**
+	 * グループメンバーリスト
+	 */
 	private List<MemberInfo> members;
+	/**
+	 * リソース
+	 */
 	private Resources resources;
+	/**
+	 * ローカルデータベース接続インスタンス
+	 */
 	private SQLiteDao daoSql = DaoFacade.getSQLiteDao();
 
+	/**
+	 * 
+	 * @param context
+	 *            コンテキスト
+	 * @param resource
+	 *            リソース
+	 * @param objects
+	 *            グループメンバーリスト
+	 */
 	public GroupMemberListAdapter(Context context, int resource,
 			List<MemberInfo> objects) {
 		super(context, resource, objects);

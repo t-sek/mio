@@ -37,25 +37,66 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+/**
+ * ルート参照画面クラス
+ *
+ */
 public class MapDataActivity extends FragmentActivity implements Sourceable {
 
+	/**
+	 * カメラ更新メッセージ
+	 */
 	private static final int MESSAGE_CAMERA = 2;
+	/**
+	 * マーカー更新メッセージ
+	 */
 	private static final int MESSAGE_MARKER = 3;
+	/**
+	 * オプション更新メッセージ
+	 */
 	private static final int MESSAGE_OPTION = 4;
+	/**
+	 * エラーメッセージ<br>
+	 * 走行ルートがない場合
+	 */
 	private static final int MESSAGE_EMPTY = 5;
 
+	/**
+	 * グーグルマップインスタンス
+	 */
 	private static GoogleMap map;
+	/**
+	 * 地図レイアウト
+	 */
 	private SupportMapFragment mapFragment;
-	private float[] results = new float[1];
-
+	/**
+	 * ユーザ情報
+	 */
 	private User user = User.getInstance();
+	/**
+	 * WebAPIから取得したトレーニングID
+	 * 
+	 */
 	private int trainingId;
+	/**
+	 * ローカルデータベースに保存されているトレーニングID
+	 */
 	private int id;
+	/**
+	 * トレーニングを実施したユーザID
+	 */
 	private String targetUserId;
-
+	/**
+	 * WebAPI接続インスタンス
+	 */
 	private ApiDao dao;
+	/**
+	 * ローカルデータベース接続インスタンス
+	 */
 	private SQLiteDao daoSql;
-
+	/**
+	 * 画面ハンドラー
+	 */
 	Handler handler = new Handler() {
 		public void handleMessage(Message message) {
 			switch (message.what) {
@@ -75,12 +116,24 @@ public class MapDataActivity extends FragmentActivity implements Sourceable {
 			}
 		};
 	};
-	
+
+	/**
+	 * 走行ルートがないメッセージをトーストで表示する
+	 */
 	private void showEmptyMessage() {
 		Toast.makeText(getApplicationContext(), "走行ルートがありません",
 				Toast.LENGTH_SHORT).show();
 	}
 
+	/**
+	 * 画面ハンドラーメッセージを設定する
+	 * 
+	 * @param msg
+	 *            メッセージ
+	 * @param o
+	 *            ハンドラーに通知するオブジェクト
+	 * @return メッセージインスタンス
+	 */
 	private Message setMessage(int msg, Object o) {
 		Message message = new Message();
 		message.what = msg;
@@ -106,17 +159,14 @@ public class MapDataActivity extends FragmentActivity implements Sourceable {
 		trainingId = getIntent().getIntExtra(SQLConstants.trainingId(), 0);
 		id = getIntent().getIntExtra(SQLConstants.id(), 0);
 		targetUserId = getIntent().getStringExtra("target_user_id");
-		Log.d("activity", "targetUserId "+targetUserId);
 		if (targetUserId == null) {
 			targetUserId = user.getId();
 		}
 		if (id != 0) {
-			// drawMapLine(DBManager.selectTrainingLog(id));
 			drawMapLine(daoSql.selectTrainingLog(id));
 		} else if (trainingId != 0) {
 			dao.selectTraining(user.getId(), targetUserId, trainingId,
 					user.getPassword());
-			// dao.selectTrainingLog(user.getId(), trainingId);
 		}
 		if (savedInstanceState != null && mapFragment == null) {
 			mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -124,20 +174,45 @@ public class MapDataActivity extends FragmentActivity implements Sourceable {
 		}
 	}
 
+	/**
+	 * 指定したカメラ位置に移動する
+	 * 
+	 * @param cameraPos
+	 *            カメラ位置
+	 */
 	private void moveThisCameraPosition(CameraPosition cameraPos) {
 		map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPos));
 	}
 
+	/**
+	 * 指定位置にマーカーを立てる
+	 * 
+	 * @param options
+	 *            マーカー
+	 */
 	private void addMarker(MarkerOptions options) {
 		map.addMarker(options);
 	}
 
+	/**
+	 * 線をひく
+	 * 
+	 * @param straight
+	 *            開始位置、終了位置を設定
+	 */
 	private void addPolyline(PolylineOptions straight) {
 		map.addPolyline(straight);
 	}
 
+	/**
+	 * 指定位置に移動
+	 * 
+	 * @param disX
+	 *            経度
+	 * @param disY
+	 *            緯度
+	 */
 	private void moveThisPosition(double disX, double disY) {
-		// 現在地に移動
 		CameraPosition cameraPos = new CameraPosition.Builder()
 				.target(new LatLng(disX, disY)).zoom(17.0f).bearing(0).build();
 		if (map != null) {
@@ -145,6 +220,18 @@ public class MapDataActivity extends FragmentActivity implements Sourceable {
 		}
 	}
 
+	/**
+	 * マップにラインをひく
+	 * 
+	 * @param fromX
+	 *            開始位置経度
+	 * @param fromY
+	 *            開始位置緯度
+	 * @param toX
+	 *            終了位置経度
+	 * @param toY
+	 *            終了位置緯度
+	 */
 	private void drawLine(double fromX, double fromY, double toX, double toY) {
 		LatLng from = new LatLng(fromX, fromY);
 		LatLng to = new LatLng(toX, toY);
@@ -154,6 +241,12 @@ public class MapDataActivity extends FragmentActivity implements Sourceable {
 		setMessage(MESSAGE_OPTION, straight);
 	}
 
+	/**
+	 * トレーニングログリストから位置情報を抽出し、ラインをかく
+	 * 
+	 * @param list
+	 *            トレーニングログリスト
+	 */
 	private void drawMapLine(List<TrainingLog> list) {
 		if (list.size() == 0) {
 			return;
@@ -170,8 +263,17 @@ public class MapDataActivity extends FragmentActivity implements Sourceable {
 		}
 	}
 
+	/**
+	 * 指定位置にマーカーをうつ
+	 * 
+	 * @param disX
+	 *            経度
+	 * @param disY
+	 *            緯度
+	 * @param position
+	 *            開始・終了フラグ
+	 */
 	private void addMapMarker(double disX, double disY, int position) {
-		// 現在地にマーカーをうつ
 		MarkerOptions options = new MarkerOptions();
 		options.position(new LatLng(disX, disY));
 		if (position == 0) {

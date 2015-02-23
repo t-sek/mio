@@ -58,60 +58,182 @@ import com.koba.androidrtchart.ColorBarItem;
 import com.koba.androidrtchart.ColorBarListener;
 import com.viewpagerindicator.CirclePageIndicator;
 
+/**
+ * 計測画面クラス
+ *
+ */
 public class MeasurementActivity extends BleConnectBaseActivity implements
 		TimerCallbackListener, AlertCallbackListener, LocationCallbackListener,
 		MeasurementCallbackListener, ColorBarListener {
 
+	/**
+	 * タイム更新メッセージ
+	 */
 	private static final int MESSAGE_TIME_UPDATE = 1;
+	/**
+	 * 平均ペース更新メッセージ
+	 */
 	private static final int MESSAGE_NOTIFY_MIN = 2;
+	/**
+	 * デバイス接続タイムアウト
+	 */
 	private static final int MESSAGE_CONNECT_TIMEOUT = 3;
 	private static final String DIALOG_MESSAGE = "トレーニングを終了しますか？";
 	private static final String DIALOG_POSITIVE = "続ける";
 	private static final String DIALOG_NEGATIVE = "終了する";
 
+	/**
+	 * タブリスト
+	 */
 	private List<Fragment> fragments = new ArrayList<Fragment>();
 
+	/**
+	 * スタートボタン
+	 */
 	private Button buttonStart;
+	/**
+	 * ストップボタン
+	 */
 	private Button buttonStop;
+	/**
+	 * ラップボタン
+	 */
 	private Button buttonLap;
+	/**
+	 * タイムを表示するテキストビュー
+	 */
 	private TextView textTime;
+	/**
+	 * カロリーを表示するテキストビュー
+	 */
 	private TextView textCalorie;
+	/**
+	 * 心拍数を表示するテキストビュー
+	 */
 	private TextView textHeartRate;
+	/**
+	 * 走行距離を表示するテキストビュー
+	 */
 	private TextView textDistance;
+	/**
+	 * 平均ペースを表示するテキストビュー
+	 */
 	private TextView textSpeed;
+	/**
+	 * ヘッダーを定義するレイアウト
+	 */
 	private LinearLayout header;
+	/**
+	 * フッターを定義するレイアウト
+	 */
 	private LinearLayout footer;
+	/**
+	 * タブ
+	 */
 	private ViewPager viewPager;
+	/**
+	 * トレーニングメニューを表示するカラーバー
+	 */
 	private ColorBar colorbar;
+	/**
+	 * トレーニングメニュー追加ボタン
+	 */
 	private ImageButton newTrainingButton;
+	/**
+	 * カラーバーの要素
+	 */
 	private ColorBarItem item;
+	/**
+	 * タブのアダプター
+	 */
 	private MeasurementPagerAdapter adapter;
+	/**
+	 * LapItemクラスの生成クラス
+	 */
 	private ProductDataFactory lapFactory = new LapItemFactory();
-
+	/**
+	 * ユーザ情報
+	 */
 	private User user = User.getInstance();
-
+	/**
+	 * タブの通知リスト
+	 */
 	private List<NotificationCallbackListener> listeners = new ArrayList<NotificationCallbackListener>();
-
+	/**
+	 * タイム
+	 */
 	private String time;
+	/**
+	 * タイマーのマネージャーインスタンス
+	 */
 	private TimerManager timerManager;
+	/**
+	 * 計測中フラグ
+	 */
 	private boolean isMeasurement = false;
+	/**
+	 * 心拍数受信フラグ
+	 */
 	private boolean isHeartRateRecived = false;
+	/**
+	 * トレーニングID
+	 */
 	private int id;
+	/**
+	 * カテゴリーID
+	 */
 	private int trainingCategoryId;
+	/**
+	 * 目標心拍数
+	 */
 	private int targetHeartRate = 180;
+	/**
+	 * トレーニングメニュー
+	 */
 	private TrainingMenu trainingMenu;
+	/**
+	 * 開始時間
+	 */
 	private String startTime;
+	/**
+	 * 最終トレーニングプレイ時間
+	 */
 	private int lastTrainingPlayTime;
+	/**
+	 * 現在のトレーニングプレイ時間
+	 */
 	private int nowTrainingPlayTime;
+	/**
+	 * 最終トレーニングメニューID
+	 */
 	private int lastTrainingMenuId;
+	/**
+	 * ラップ画面タブ
+	 */
 	private LapMeasurementFragment lapFragment;
-
+	/**
+	 * 経度
+	 */
 	private double disX = 0;
+	/**
+	 * 緯度
+	 */
 	private double disY = 0;
+	/**
+	 * 走行距離
+	 */
 	private double distance = 0;
+	/**
+	 * 走行スピードリスト
+	 */
 	private List<Float> speeds = new ArrayList<Float>();
+	/**
+	 * ローカルデータベース接続インスタンス
+	 */
 	private SQLiteDao daoSql;
-
+	/**
+	 * 画面ハンドラー
+	 */
 	private Handler handler = new Handler() {
 		public void handleMessage(Message message) {
 			switch (message.what) {
@@ -168,7 +290,6 @@ public class MeasurementActivity extends BleConnectBaseActivity implements
 		initFindViews();
 		setListeners();
 		setPagerAdapter();
-		setTrainingPagerAdapter(trainingCategoryId);
 		getActionBar().setTitle(trainingMenu.getTrainingName());
 		lastTrainingMenuId = trainingMenu.getTrainingMenuId();
 		startTime = TimeUtil.nowDateTime();
@@ -185,6 +306,9 @@ public class MeasurementActivity extends BleConnectBaseActivity implements
 		}
 	}
 
+	/**
+	 * トレーニング終了確認ダイアログを表示する
+	 */
 	private void showSelectionAlertDialog() {
 		DialogFragment newFragment = new SelectionAlertDialog(this,
 				DIALOG_MESSAGE, DIALOG_POSITIVE, DIALOG_NEGATIVE, false);
@@ -203,14 +327,9 @@ public class MeasurementActivity extends BleConnectBaseActivity implements
 		return super.dispatchKeyEvent(event);
 	}
 
-	private void setTrainingPagerAdapter(final int trainingCategoryId) {
-		List<String> trainingName = new ArrayList<String>();
-		for (TrainingMenu menu : daoSql
-				.selectTrainingCategoryMenu(trainingCategoryId)) {
-			trainingName.add(menu.getTrainingName());
-		}
-	}
-
+	/**
+	 * タブを設定する
+	 */
 	private void setPagerAdapter() {
 		adapter = new MeasurementPagerAdapter(getSupportFragmentManager());
 		setMeasurementFragment();
@@ -223,9 +342,11 @@ public class MeasurementActivity extends BleConnectBaseActivity implements
 		indicator.setCurrentItem(1);
 	}
 
+	/**
+	 * タブの要素を設定する
+	 */
 	private void setMeasurementFragment() {
-		BaseFragment fragment1 = new MapMeasurementFragment(
-				getSupportFragmentManager(), this);
+		BaseFragment fragment1 = new MapMeasurementFragment(this);
 		BaseFragment fragment2 = new GraphicalMeasurementFragment(this);
 		BaseFragment fragment3 = new LapMeasurementFragment();
 		lapFragment = (LapMeasurementFragment) fragment3;
@@ -240,6 +361,9 @@ public class MeasurementActivity extends BleConnectBaseActivity implements
 		}
 	}
 
+	/**
+	 * 画面の初期化処理をする
+	 */
 	private void initFindViews() {
 		header = (LinearLayout) findViewById(R.id.include_measurement_header);
 		footer = (LinearLayout) findViewById(R.id.include_measurement_footer);
@@ -263,11 +387,20 @@ public class MeasurementActivity extends BleConnectBaseActivity implements
 		colorbar.addBarItem(item);
 	}
 
+	/**
+	 * アクションバーにトレーニング名を表示する
+	 * 
+	 * @param trainingName
+	 *            トレーニング名
+	 */
 	private void setActionBer(String trainingName) {
 		trainingMenu = daoSql.selectTrainingMenu(trainingName);
 		getActionBar().setTitle(trainingName);
 	}
 
+	/**
+	 * 計測を開始する
+	 */
 	private void setStartMeasurement() {
 		buttonStart.setVisibility(View.INVISIBLE);
 		buttonStop.setVisibility(View.VISIBLE);
@@ -291,7 +424,7 @@ public class MeasurementActivity extends BleConnectBaseActivity implements
 	}
 
 	/**
-	 * 停止
+	 * 計測を停止する
 	 */
 	private void setStopMeasurement() {
 		buttonStart.setVisibility(View.VISIBLE);
@@ -301,7 +434,7 @@ public class MeasurementActivity extends BleConnectBaseActivity implements
 	}
 
 	/**
-	 * リスナー設定
+	 * ビューにリスナーを設定する
 	 */
 	private void setListeners() {
 		buttonStart.setOnClickListener(new OnClickListener() {
@@ -337,7 +470,7 @@ public class MeasurementActivity extends BleConnectBaseActivity implements
 	}
 
 	/**
-	 * トレーニング追加ダイアログ表示
+	 * トレーニング追加ダイアログを表示する
 	 */
 	private void showTrainingDialog() {
 		// stopMeasurement();
@@ -348,7 +481,7 @@ public class MeasurementActivity extends BleConnectBaseActivity implements
 	}
 
 	/**
-	 * トップ画面へ遷移
+	 * トップ画面へ遷移する
 	 */
 	private void intentTop() {
 		Intent intent = new Intent(MeasurementActivity.this, TopActivity.class);
@@ -357,7 +490,7 @@ public class MeasurementActivity extends BleConnectBaseActivity implements
 	}
 
 	/**
-	 * デバイス設定画面へ遷移
+	 * デバイス設定画面へ遷移する
 	 */
 	private void intentDeviceScan() {
 		Intent intent = new Intent(MeasurementActivity.this,
@@ -366,7 +499,7 @@ public class MeasurementActivity extends BleConnectBaseActivity implements
 	}
 
 	/**
-	 * 計測結果画面へ遷移
+	 * 計測結果画面へ遷移する
 	 */
 	private void intentMeasurementResult() {
 		Intent intent = new Intent(MeasurementActivity.this,
@@ -378,7 +511,7 @@ public class MeasurementActivity extends BleConnectBaseActivity implements
 	}
 
 	/**
-	 * 計測停止
+	 * タイマーを停止する
 	 */
 	private void stopMeasurement() {
 		if (timerManager != null) {
@@ -390,7 +523,7 @@ public class MeasurementActivity extends BleConnectBaseActivity implements
 	}
 
 	/**
-	 * 計測開始
+	 * タイマーを開始する
 	 */
 	private void startMeasurement() {
 		isMeasurement = true;
@@ -405,7 +538,7 @@ public class MeasurementActivity extends BleConnectBaseActivity implements
 	}
 
 	/**
-	 * タイム更新
+	 * タイムを更新する
 	 */
 	private void updateTime() {
 		textTime.setText(timerManager.getMeasurementTime());
@@ -417,7 +550,7 @@ public class MeasurementActivity extends BleConnectBaseActivity implements
 	}
 
 	/**
-	 * カロリー更新
+	 * カロリーを更新する
 	 */
 	private void updateCalorie() {
 		List<TrainingPlay> play = daoSql.selectTrainingPlay(id);
@@ -439,6 +572,9 @@ public class MeasurementActivity extends BleConnectBaseActivity implements
 		textCalorie.setText(String.valueOf(calorie));
 	}
 
+	/**
+	 * 平均ペースを更新する
+	 */
 	private void notifyMinSpeed() {
 		float avg = 0;
 		for (float speed : speeds) {

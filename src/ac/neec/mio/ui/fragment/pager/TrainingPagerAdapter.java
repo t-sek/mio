@@ -2,7 +2,7 @@ package ac.neec.mio.ui.fragment.pager;
 
 import java.util.List;
 
-import ac.neec.mio.ui.fragment.top.MeasurementFragment;
+import ac.neec.mio.ui.fragment.MeasurementFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;

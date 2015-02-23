@@ -42,22 +42,55 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+/**
+ * 所属グループ一覧リストを表示する画面クラス
+ */
 public class MyGroupListFragment extends Fragment implements Sourceable,
 		SearchNotifyListener {
 
+	/**
+	 * タブタイトル
+	 */
 	private static final String TITLE = "参加しているグループ";
-
+	/**
+	 * 更新メッセージ
+	 */
 	private static final int MESSAGE_UPDATE = 1;
+	/**
+	 * 設定メッセージ
+	 */
 	private static final int MESSAGE_SHOW_SETTING = 2;
+	/**
+	 * 取得メッセージ
+	 */
 	private static final int MESSAGE_SHOW_GETTING = 6;
-
+	/**
+	 * 所属グループ一覧を表示するリストビュー
+	 */
 	private ListView listView;
+	/**
+	 * 所属グループリスト
+	 */
 	private List<Group> groups = new ArrayList<Group>();
+	/**
+	 * ユーザ情報
+	 */
 	private User user = User.getInstance();
+	/**
+	 * WebAPI接続インスタンス
+	 */
 	private ApiDao dao = DaoFacade.getApiDao(this);
+	/**
+	 * ローカルデータベース接続インスタンス
+	 */
 	private SQLiteDao daoSql = DaoFacade.getSQLiteDao();
+	/**
+	 * データ取得中ダイアログ
+	 */
 	private LoadingDialog dialog;
-
+	/**
+	 * 画面ハンドラー
+	 */
 	Handler handler = new Handler() {
 		public void handleMessage(Message message) {
 			switch (message.what) {
@@ -84,7 +117,6 @@ public class MyGroupListFragment extends Fragment implements Sourceable,
 		dao.selectUser(user.getId(), user.getPassword());
 		Message message = new Message();
 		message.what = MESSAGE_SHOW_GETTING;
-		// handler.sendMessage(message);
 	}
 
 	@Override
@@ -103,10 +135,15 @@ public class MyGroupListFragment extends Fragment implements Sourceable,
 		});
 		dialog = new LoadingDialog(MessageConstants.getting());
 		dialog.show(getActivity().getFragmentManager(), "dialog");
-		// update();
 		return view;
 	}
 
+	/**
+	 * グループ詳細画面に遷移する
+	 * 
+	 * @param groupId
+	 *            グループID
+	 */
 	private void intentGroupDetails(String groupId) {
 		Intent intent = new Intent(getActivity().getApplicationContext(),
 				GroupDetailsActivity.class);
@@ -119,6 +156,9 @@ public class MyGroupListFragment extends Fragment implements Sourceable,
 		startActivity(intent);
 	}
 
+	/**
+	 * リストを更新する
+	 */
 	private void update() {
 		if (dialog != null) {
 			dialog.dismiss();
@@ -133,6 +173,12 @@ public class MyGroupListFragment extends Fragment implements Sourceable,
 		listView.setAdapter(adapter);
 	}
 
+	/**
+	 * ユーザ情報から所属グループを取得する
+	 * 
+	 * @param info
+	 *            ユーザ情報
+	 */
 	private void setMyGroupList(UserInfo info) {
 		dialog.dismiss();
 		daoSql.deleteAffiliation();

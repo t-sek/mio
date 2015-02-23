@@ -29,21 +29,53 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+/**
+ * ログイン画面クラス
+ *
+ */
 public class LoginActivity extends Activity implements Sourceable {
 
+	/**
+	 * ログインエラーメッセージ
+	 */
 	private static final int MESSAGE_TOAST = 1;
+	/**
+	 * ネットワークエラーメッセージ
+	 */
 	private static final int MESSAGE_NETWORK_ERROR = 2;
+	/**
+	 * 不正文字入力エラーメッセージ
+	 */
 	private static final int MESSAGE_VALIDATE = 3;
 
+	/**
+	 * ユーザID入力フォーム
+	 */
 	private EditText editId;
+	/**
+	 * パスワード入力フォーム
+	 */
 	private EditText editPass;
+	/**
+	 * ログインボタン
+	 */
 	private Button buttonLogin;
-	private String id;
+	/**
+	 * ユーザ情報
+	 */
 	private User user = User.getInstance();
+	/**
+	 * ログイン中ダイアログ
+	 */
 	private LoadingDialog dialogLoading = new LoadingDialog(
 			MessageConstants.login());
+	/**
+	 * WebAPI接続インスタンス
+	 */
 	private ApiDao dao;
-
+	/**
+	 * 画面ハンドラー
+	 */
 	private Handler handler = new Handler() {
 		public void handleMessage(Message message) {
 			switch (message.what) {
@@ -79,17 +111,22 @@ public class LoginActivity extends Activity implements Sourceable {
 		dao = DaoFacade.getApiDao(this);
 	}
 
+	/**
+	 * 画面の初期化処理をする
+	 */
 	private void initFindViews() {
 		editId = (EditText) findViewById(R.id.edit_id);
 		editPass = (EditText) findViewById(R.id.edit_pass);
 		buttonLogin = (Button) findViewById(R.id.button_login);
 	}
 
+	/**
+	 * ビューにリスナーを設定する
+	 */
 	private void setListener() {
 		buttonLogin.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View V) {// ここからボタン押した時の処理？
 				// tx1にIDの内容を取得してみる
-				id = String.valueOf(editId.getText());
 				// tx2にPassの内容を取得してみる
 				// pass = String.valueOf(editPass.getText());
 
@@ -99,17 +136,22 @@ public class LoginActivity extends Activity implements Sourceable {
 		});
 	}
 
+	/**
+	 * ログインチェックをする
+	 */
 	private void downloadLoginInfo() {
 		dialogLoading.show(getFragmentManager(), "");
 		dao.selectUser(editId.getText().toString(), editPass.getText()
 				.toString());
 	}
 
+	/**
+	 * トップ画面に遷移する
+	 */
 	private void intentTop() {
 		boolean res = true;
 		if (res == true) {
 			Intent intent = new Intent(LoginActivity.this, TopActivity.class);
-			intent.putExtra("ID", id);
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 					| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			startActivity(intent);
@@ -117,12 +159,12 @@ public class LoginActivity extends Activity implements Sourceable {
 		}
 	}
 
-	private void intentSignUp() {
-		Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
-		startActivity(intent);
-		finish();
-	}
-
+	/**
+	 * ユーザ情報を保存する
+	 * 
+	 * @param info
+	 *            ユーザ情報
+	 */
 	private void setUserInfo(UserInfo info) {
 		user.setId(info.getUserId());
 		user.setName(info.getName());
@@ -143,7 +185,6 @@ public class LoginActivity extends Activity implements Sourceable {
 		UserInfo userInfo = null;
 		try {
 			userInfo = dao.getResponse();
-			Log.d("activity", "user " + userInfo);
 		} catch (XmlParseException e) {
 			e.printStackTrace();
 		} catch (XmlReadException e) {

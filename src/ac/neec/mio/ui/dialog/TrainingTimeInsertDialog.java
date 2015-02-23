@@ -18,37 +18,134 @@ import android.widget.TextView;
 import com.sek.drumpicker.DrumPicker;
 import com.sek.drumpicker.DrumPickerListener;
 
+/**
+ * トレーニング開始時間、トレーニング開始時間、トレーニングメニュー時間をピッカーで設定するダイアログクラス
+ *
+ */
 public class TrainingTimeInsertDialog extends DialogFragment implements
 		DrumPickerListener {
 
+	/**
+	 * 計測時間フラグ
+	 */
 	public static final int PLAY_TIME = 2;
+	/**
+	 * 開始時間フラグ
+	 */
 	public static final int START_TIME = 3;
+	/**
+	 * トレーニングメニュー時間
+	 */
 	public static final int ADD_TRAINING = 4;
+	/**
+	 * 時間フラグ
+	 */
 	private static final String TAG_HOUR = "h";
+	/**
+	 * 分フラグ
+	 */
 	private static final String TAG_MIN = "m";
+	/**
+	 * 開始時間分単位
+	 */
 	private static final String PLAY_UNIT1 = "分";
+	/**
+	 * 計測時間時間単位
+	 */
 	private static final String START_UNIT1 = "時";
+	/**
+	 * 開始時間秒単位
+	 */
 	private static final String PLAY_UNIT2 = "秒";
+	/**
+	 * 計測時間分単位
+	 */
 	private static final String START_UNIT2 = "分";
+	/**
+	 * ダイアログインスタンス
+	 */
 	private Dialog dialog;
+	/**
+	 * コールバックリスナー
+	 */
 	private TimeChangedListener listener;
+	/**
+	 * 時間設定ピッカー
+	 */
 	private DrumPicker pickerHour;
+	/**
+	 * 分設定ピッカー
+	 */
 	private DrumPicker pickerMin;
+	/**
+	 * 選択された数値を表示するテキストビュー
+	 */
 	private TextView textInsert;
+	/**
+	 * 左単位を表示するテキストビュー
+	 */
 	private TextView textHourUnit;
+	/**
+	 * 右単位を表示するテキストビュー
+	 */
 	private TextView textMinUnit;
+	/**
+	 * 決定ボタン
+	 */
 	private Button button;
+	/**
+	 * 選択された時間
+	 */
 	private String hour = "0";
+	/**
+	 * 選択された分
+	 */
 	private String min = "0";
+	/**
+	 * 選択された時間
+	 */
 	private String time;
+	/**
+	 * タグ<br>
+	 * TrainingTimeInsertDialogクラスのPLAY_TIME、START_TIME、ADD_TRAINING
+	 */
 	private int tag;
+	/**
+	 * 左単位
+	 */
 	private String unit1;
+	/**
+	 * 右単位
+	 */
 	private String unit2;
 
+	/**
+	 * 設定された時間を通知するリスナー
+	 */
 	public interface TimeChangedListener {
+		/**
+		 * 設定された時間を通知する
+		 * 
+		 * @param tag
+		 *            タグ<br>
+		 *            TrainingTimeInsertDialogクラスのPLAY_TIME、START_TIME、
+		 *            ADD_TRAINING
+		 * @param hour
+		 *            時間
+		 * @param min
+		 *            分
+		 */
 		void onSelected(int tag, String hour, String min);
 	}
 
+	/**
+	 * 
+	 * @param listener
+	 *            コールバックリスナー
+	 * @param tag
+	 *            タグ<br>
+	 *            TrainingTimeInsertDialogクラスのPLAY_TIME、START_TIME、 ADD_TRAINING
+	 */
 	public TrainingTimeInsertDialog(TimeChangedListener listener, int tag) {
 		this.listener = listener;
 		this.tag = tag;
@@ -62,6 +159,9 @@ public class TrainingTimeInsertDialog extends DialogFragment implements
 		return dialog;
 	}
 
+	/**
+	 * 計測時間要素をピッカーに設定する
+	 */
 	private void initPlayTime() {
 		pickerHour.setElements(getActivity().getApplicationContext(), TAG_HOUR,
 				TimeUtil.getPlayZeroHour());
@@ -71,6 +171,9 @@ public class TrainingTimeInsertDialog extends DialogFragment implements
 		unit2 = PLAY_UNIT2;
 	}
 
+	/**
+	 * 開始時間要素をピッカーに設定する
+	 */
 	private void initStartTime() {
 		pickerHour.setElements(getActivity().getApplicationContext(), TAG_HOUR,
 				TimeUtil.getHour());
@@ -80,6 +183,9 @@ public class TrainingTimeInsertDialog extends DialogFragment implements
 		unit2 = START_UNIT2;
 	}
 
+	/**
+	 * 画面の初期化処理をする
+	 */
 	private void init() {
 		pickerHour = (DrumPicker) dialog.findViewById(R.id.picker_hour);
 		pickerHour.setOnDrumPickerListener(this);
@@ -112,11 +218,17 @@ public class TrainingTimeInsertDialog extends DialogFragment implements
 		});
 	}
 
+	/**
+	 * リスナーに通知し、ダイアログを閉じる
+	 */
 	private void insert() {
 		listener.onSelected(tag, hour, min);
 		dismiss();
 	}
 
+	/**
+	 * ダイアログを設定する
+	 */
 	private void setDialog() {
 		dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		dialog.setContentView(R.layout.dialog_insert_training_picker);
@@ -153,7 +265,6 @@ public class TrainingTimeInsertDialog extends DialogFragment implements
 							TimeUtil.getPlayZeroHour());
 				}
 			}
-
 		}
 		time = hour + unit1 + min + unit2;
 		textInsert.setText(time);

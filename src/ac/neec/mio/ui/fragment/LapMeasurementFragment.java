@@ -14,12 +14,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+/**
+ * 計測画面(右)画面クラス
+ *
+ */
 public class LapMeasurementFragment extends MeasurementBaseFragment implements
 		NotificationCallbackListener {
 
+	/**
+	 * 画面ビュー
+	 */
 	private View view;
+	/**
+	 * ラップを表示するリストビュー
+	 */
 	private ListView listView;
+	/**
+	 * ラップを表示するリストビューのアダプター
+	 */
 	private LapListAdapter adapter;
+	/**
+	 * ラップリスト
+	 */
 	private List<LapItem> list = new ArrayList<LapItem>();
 
 	@Override
@@ -30,21 +46,24 @@ public class LapMeasurementFragment extends MeasurementBaseFragment implements
 		return view;
 	}
 
+	/**
+	 * アダプターを設定する
+	 */
 	private void setAdapter() {
 		adapter = new LapListAdapter(getActivity(), R.layout.item_lap, list);
 		listView = (ListView) view.findViewById(R.id.list_lap);
 		listView.setAdapter(adapter);
 	}
 
+	/**
+	 * ラップタイムを追加する
+	 * 
+	 * @param item
+	 *            ラップ
+	 */
 	public void setLapTime(LapItem item) {
-		// adapter.insert(item, 0);
 		adapter.insert(item, adapter.getListSize());
 		listView.setSelection(adapter.getListSize());
-		// adapter.add(item);
-		// adapter.setLapTime(item);
-		// adapter.notifyDataSetChanged();
-		// list.add(item);
-		// adapter.setLapTimeList(list);
 	}
 
 	@Override

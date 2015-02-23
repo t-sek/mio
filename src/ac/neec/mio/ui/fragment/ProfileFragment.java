@@ -1,4 +1,4 @@
-package ac.neec.mio.ui.fragment.top;
+package ac.neec.mio.ui.fragment;
 
 import java.io.File;
 import java.io.InputStream;
@@ -35,17 +35,36 @@ import android.widget.TextView;
 
 import com.sek.circleimageview.CircleImageView;
 
+/**
+ * トップ画面(右)<br>
+ * プロフィール画面クラス
+ */
 public class ProfileFragment extends TopBaseFragment implements
 		OnClickListener, AlertCallbackListener {
+	/**
+	 * タブタイトル
+	 */
 	public static final String TITLE = "アカウント";
-	private static final int REQUEST_GALLERY = 1;
-	private static final int REQUEST_GALLERY_KITKAT = 2;
+	/**
+	 * プロフィールアイコン切り取りリクエスト
+	 */
 	private static final int REQUEST_CROP_PICK = 3;
 
+	/**
+	 * 画面ビュー
+	 */
 	private View view;
-
+	/**
+	 * ユーザ情報設定画面遷移ボタン
+	 */
 	private ImageButton buttonData;
+	/**
+	 * グループ情報画面遷移ボタン
+	 */
 	private ImageButton buttonGroup;
+	/**
+	 * デバイス設定画面遷移ボタン
+	 */
 	private ImageButton buttonSetting;
 	private LinearLayout layoutTheme;
 	private LinearLayout layoutData;

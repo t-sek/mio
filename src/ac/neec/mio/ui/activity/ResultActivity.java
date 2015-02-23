@@ -45,29 +45,66 @@ import com.koba.androidrtchart.LineDot;
 import com.koba.androidrtchart.LineDotTouchListener;
 import com.koba.androidrtchart.LineGraph;
 
+/**
+ * 計測結果画面クラス
+ *
+ */
 public class ResultActivity extends Activity implements Sourceable {
 
 	private static final int FLAG_TRAINING = 2;
 	private static final int FLAG_TRAINING_LOG = 3;
 	private static final int FLAG_TRAINING_PLAY = 4;
+	/**
+	 * ネットワークエラーメッセージ
+	 */
 	private static final int MESSAGE_NETWORK_ERROR = 6;
-
+	/**
+	 * WebAPIから取得したトレーニングID
+	 */
 	private int trainingId;
+	/**
+	 * 計測したトレーニングID
+	 */
 	private int id;
+	/**
+	 * トレーニングログリスト
+	 */
 	private static List<TrainingLog> trainingLogs = new ArrayList<TrainingLog>();
+	/**
+	 * トレーニングプレイリスト
+	 */
 	private static List<TrainingPlay> trainingPlays = new ArrayList<TrainingPlay>();
+	/**
+	 * トレーニング情報
+	 */
 	protected static Training training;
+	/**
+	 * 計測したトレーニングカテゴリー
+	 */
 	protected static TrainingCategory trainingCategory;
+	/**
+	 * ユーザ情報
+	 */
 	protected static User user = User.getInstance();
-	protected List<TrainingLog> fitTrainingLogs = new ArrayList<TrainingLog>();
-
+	/**
+	 * データ保存中ダイアログ
+	 */
 	private LoadingDialog httpLoadDialog;
+	/**
+	 * WebAPI接続インスタンス
+	 */
 	private ApiDao dao;
+	/**
+	 * ローカルデータベース接続インスタンス
+	 */
 	private static SQLiteDao daoSql;
-
-	protected static boolean isBackPressed;
+	/**
+	 * WebAPI通信フラグ
+	 */
 	private int daoFlag;
-
+	/**
+	 * 画面ハンドラー
+	 */
 	Handler handler = new Handler() {
 		public void handleMessage(Message message) {
 			switch (message.what) {
@@ -89,7 +126,6 @@ public class ResultActivity extends Activity implements Sourceable {
 				1);
 		dao = DaoFacade.getApiDao(this);
 		daoSql = DaoFacade.getSQLiteDao();
-		isBackPressed = false;
 		trainingLogs = daoSql.selectTrainingLog(id);
 		trainingPlays = daoSql.selectTrainingPlay(id);
 		training = daoSql.selectTraining(id);
@@ -107,6 +143,9 @@ public class ResultActivity extends Activity implements Sourceable {
 		SpeechUtil.speechOnDestroy();
 	}
 
+	/**
+	 * WebAPIにトレーニングログを追加する
+	 */
 	private void insertTrainingLog() {
 		daoFlag = FLAG_TRAINING_LOG;
 		for (TrainingLog log : trainingLogs) {
@@ -117,6 +156,9 @@ public class ResultActivity extends Activity implements Sourceable {
 		}
 	}
 
+	/**
+	 * WebAPIにトレーニングプレイを追加する
+	 */
 	private void insertTrainingPlay() {
 		daoFlag = FLAG_TRAINING_PLAY;
 		for (TrainingPlay play : trainingPlays) {
@@ -126,6 +168,9 @@ public class ResultActivity extends Activity implements Sourceable {
 		}
 	}
 
+	/**
+	 * WebAPIにトレーニングを追加する
+	 */
 	private void insertTraining() {
 		httpLoadDialog = new LoadingDialog("保存中");
 		httpLoadDialog.show(getFragmentManager(), "dialog");
@@ -141,6 +186,9 @@ public class ResultActivity extends Activity implements Sourceable {
 						.getDistance());
 	}
 
+	/**
+	 * 走行ルート画面に遷移する
+	 */
 	private void intentMapData() {
 		Intent intent = new Intent(ResultActivity.this, MapDataActivity.class);
 		intent.putExtra(SQLConstants.id(), trainingLogs.get(0).getId());
@@ -174,6 +222,9 @@ public class ResultActivity extends Activity implements Sourceable {
 		return super.dispatchKeyEvent(event);
 	}
 
+	/**
+	 * トップ画面に遷移する
+	 */
 	private void intentDashboard() {
 		Intent intent = new Intent(ResultActivity.this, TopActivity.class);
 		startActivity(intent);
@@ -219,6 +270,11 @@ public class ResultActivity extends Activity implements Sourceable {
 			return rootView;
 		}
 
+		/**
+		 * 画面の初期化処理をする
+		 * 
+		 * @param rootView
+		 */
 		private void initFindViews(View rootView) {
 			graph = (LineGraph) rootView.findViewById(R.id.line_graph);
 			colorBar = (ColorBar) rootView.findViewById(R.id.colorbar);
@@ -240,6 +296,9 @@ public class ResultActivity extends Activity implements Sourceable {
 					.findViewById(R.id.datas_calorie_label);
 		}
 
+		/**
+		 * トレーニング情報を表示する
+		 */
 		private void setViewText() {
 			textDetailName.setText(trainingCategory.getTrainingCategoryName());
 			textDetailTime.setText(training.getPlayTime());
@@ -254,10 +313,12 @@ public class ResultActivity extends Activity implements Sourceable {
 
 		}
 
+		/**
+		 * カラーバーを設定する
+		 */
 		private void setColorBar() {
 			ColorBarItem item;
 			for (TrainingPlay play : trainingPlays) {
-				Log.e("", "play " + play.getTrainingMenuId());
 				item = new ColorBarItem(play.getTrainingTime(), "", daoSql
 						.selectTrainingMenu(play.getTrainingMenuId())
 						.getColor());
@@ -288,26 +349,37 @@ public class ResultActivity extends Activity implements Sourceable {
 		}
 	}
 
+	/**
+	 * トレーニングデータを削除する
+	 */
 	private void deleteTraining() {
 		daoSql.deleteTraining(id);
 		daoSql.deleteTrainingLog(id);
 		daoSql.deleteTrainingPlay(id);
 	}
 
+	/**
+	 * 保存が完了し、ローカルデータベースのトレーニングデータを削除する
+	 */
 	private void storeUpComplete() {
 		httpLoadDialog.dismiss();
-		// Toast.makeText(getApplicationContext(), "保存しました", Toast.LENGTH_SHORT)
-		// .show();
 		deleteTraining();
 	}
 
+	/**
+	 * 保存失敗処理を行う
+	 */
 	private void showNetworkError() {
 		httpLoadDialog.dismiss();
-		// Toast.makeText(getApplicationContext(), "保存に失敗しました",
-		// Toast.LENGTH_SHORT)
-		// .show();
 	}
 
+	/**
+	 * 画面ハンドラーメッセージを設定する
+	 *
+	 * @param msg
+	 *            メッセージ
+	 * @return メッセージインスタンス
+	 */
 	private void setMessage(int what) {
 		Message message = new Message();
 		message.what = what;
@@ -320,7 +392,6 @@ public class ResultActivity extends Activity implements Sourceable {
 		case FLAG_TRAINING:
 			try {
 				trainingId = dao.getResponse();
-				Log.d("result", "trainingId " + trainingId);
 			} catch (XmlParseException e) {
 				e.printStackTrace();
 				setMessage(MESSAGE_NETWORK_ERROR);
@@ -356,7 +427,7 @@ public class ResultActivity extends Activity implements Sourceable {
 	@Override
 	public void validate() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

@@ -4,6 +4,10 @@ import ac.neec.mio.framework.ProductData;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * トレーニング中のメニューを記録していくクラス
+ *
+ */
 public class TrainingPlay extends ProductData {
 
 	/**

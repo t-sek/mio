@@ -21,21 +21,56 @@ import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+/**
+ * HTTP通信などの待機ダイアログクラス
+ */
 public class LoadingDialog extends DialogFragment implements
 		TimerCallbackListener {
 
+	/**
+	 * 更新メッセージ
+	 */
 	private static final int MESSAGE_UPDATE = 6;
+	/**
+	 * 閉じるメッセージ
+	 */
 	private static final int MESSAGE_DISMISS = 5;
+	/**
+	 * 待機中メッセージ
+	 */
 	private static final String SECTION = ".";
 
+	/**
+	 * ダイアログインスタンス
+	 */
 	private Dialog dialog;
+	/**
+	 * 待機中メッセージ
+	 */
 	private String message;
+	/**
+	 * 待機中プログレスバー
+	 */
 	private ProgressBar progressBar;
+	/**
+	 * 待機中メッセージテキストビュー
+	 */
 	private TextView textMessage;
+	/**
+	 * 待機中更新メッセージテキストビュー
+	 */
 	private TextView textSection;
+	/**
+	 * タイマーマネージャーインスタンス
+	 */
 	private TimerManager manager;
+	/**
+	 * 待機中更新イテレータ
+	 */
 	private int sectionCount = 0;
-
+	/**
+	 * 画面ハンドラー
+	 */
 	Handler handler = new Handler() {
 		public void handleMessage(Message message) {
 			switch (message.what) {
@@ -50,11 +85,19 @@ public class LoadingDialog extends DialogFragment implements
 		};
 	};
 
+	/**
+	 * 
+	 */
 	public LoadingDialog() {
 		this.message = MessageConstants.getting();
 		manager = new TimerManager(this);
 	}
 
+	/**
+	 * 
+	 * @param message
+	 *            更新中メッセージ
+	 */
 	public LoadingDialog(String message) {
 		this.message = message;
 		manager = new TimerManager(this);
@@ -79,6 +122,9 @@ public class LoadingDialog extends DialogFragment implements
 
 	}
 
+	/**
+	 * ダイアログを設定する
+	 */
 	private void setDialog() {
 		dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		// フルスクリーン
@@ -99,6 +145,9 @@ public class LoadingDialog extends DialogFragment implements
 		manager.stop();
 	}
 
+	/**
+	 * ダイアログを閉じる
+	 */
 	private void updateDismiss() {
 		progressBar.setVisibility(View.INVISIBLE);
 		textMessage.setText("完了!");
@@ -110,6 +159,12 @@ public class LoadingDialog extends DialogFragment implements
 		dismiss();
 	}
 
+	/**
+	 * 待機中メッセージを更新する
+	 * 
+	 * @param time
+	 *            タイム
+	 */
 	private void updateTime(String time) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i <= sectionCount; i++) {

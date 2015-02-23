@@ -37,25 +37,77 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
+/**
+ * グループメンバー一覧画面クラス
+ *
+ */
 public class GroupMemberListActivity extends Activity implements Sourceable {
 
+	/**
+	 * 更新メッセージ
+	 */
 	private static final int MESSAGE_UPDATE = 2;
+	/**
+	 * アイコン更新メッセージ
+	 */
 	private static final int MESSAGE_IMAGE_UPDATE = 3;
+	/**
+	 * エラーメッセージ
+	 */
 	private static final int MESSAGE_ERROR = 4;
 
+	/**
+	 * メンバー一覧
+	 */
 	private List<MemberInfo> members;
+	/**
+	 * メンバー一覧を表示するリストビュー
+	 * 
+	 */
 	private ListView listView;
+	/**
+	 * メンバーリストアダプター
+	 */
 	private GroupMemberListAdapter adapter;
+	/**
+	 * グループ情報
+	 */
 	private GroupInfo group;
+	/**
+	 * 権限
+	 */
 	private Permission permission;
+	/**
+	 * 管理者リスト
+	 */
 	private List<MemberInfo> admin = new ArrayList<MemberInfo>();
+	/**
+	 * トレーナーリスト
+	 */
 	private List<MemberInfo> trainer = new ArrayList<MemberInfo>();
+	/**
+	 * メンバーリスト
+	 */
 	private List<MemberInfo> member = new ArrayList<MemberInfo>();
+	/**
+	 * WebAPI接続インスタンス
+	 */
 	private ApiDao dao;
+	/**
+	 * ローカルデータベース接続インスタンス
+	 */
 	private SQLiteDao daoSql;
+	/**
+	 * データ取得中ダイアログ
+	 */
 	private LoadingDialog dialog;
+	/**
+	 * メンバーのアイコン取得に使用するイテレータ
+	 */
 	private int countMember = 0;
-
+	/**
+	 * 画面ハンドラー
+	 */
 	Handler handler = new Handler() {
 		public void handleMessage(Message message) {
 			switch (message.what) {
@@ -92,6 +144,9 @@ public class GroupMemberListActivity extends Activity implements Sourceable {
 		}
 	}
 
+	/**
+	 * メンバーリストを初期化する
+	 */
 	private void initMember() {
 		members = new ArrayList<MemberInfo>();
 		admin = new ArrayList<MemberInfo>();
@@ -116,6 +171,9 @@ public class GroupMemberListActivity extends Activity implements Sourceable {
 		init();
 	}
 
+	/**
+	 * 画面の初期化処理をする
+	 */
 	private void init() {
 		listView = (ListView) findViewById(R.id.list_group_member);
 		if (permission.getMemberListView()) {
@@ -131,6 +189,9 @@ public class GroupMemberListActivity extends Activity implements Sourceable {
 		}
 	}
 
+	/**
+	 * メンバー一覧を更新する
+	 */
 	private void update() {
 		getActionBar().setTitle(group.getName());
 		members = new ArrayList<MemberInfo>();
@@ -141,6 +202,9 @@ public class GroupMemberListActivity extends Activity implements Sourceable {
 		setMemberList();
 	}
 
+	/**
+	 * メンバーリストにメンバーを追加する
+	 */
 	private void setMemberList() {
 		int id = members.get(0).getPermissionId();
 		Permission permission = daoSql.selectPermission(id);
@@ -158,6 +222,9 @@ public class GroupMemberListActivity extends Activity implements Sourceable {
 		setMembers();
 	}
 
+	/**
+	 * 管理者、トレーナー、メンバーごとにメンバーを追加する
+	 */
 	private void setMembers() {
 		for (MemberInfo member : members) {
 			if (permission.getId() == PermissionConstants.groupAdmin()) {
@@ -180,6 +247,12 @@ public class GroupMemberListActivity extends Activity implements Sourceable {
 		}
 	}
 
+	/**
+	 * メンバー詳細画面に遷移する
+	 * 
+	 * @param info
+	 *            メンバー情報
+	 */
 	private void intentMemberInfo(MemberInfo info) {
 		Intent intent = new Intent(GroupMemberListActivity.this,
 				GroupMemberInfoActivity.class);
@@ -195,9 +268,10 @@ public class GroupMemberListActivity extends Activity implements Sourceable {
 		startActivity(intent);
 	}
 
+	/**
+	 * メンバーのアイコンを取得する
+	 */
 	private void selectImage() {
-		Log.d("activity", "count " + countMember);
-		Log.d("activity", "size " + members.size());
 		if (countMember >= members.size()) {
 			return;
 		}
@@ -211,6 +285,13 @@ public class GroupMemberListActivity extends Activity implements Sourceable {
 		}
 	}
 
+	/**
+	 * 画面ハンドラーメッセージを設定する
+	 * 
+	 * @param msg
+	 *            メッセージ
+	 * @return メッセージインスタンス
+	 */
 	private void setMessage(int msg) {
 		Message message = new Message();
 		message.what = msg;
@@ -233,8 +314,6 @@ public class GroupMemberListActivity extends Activity implements Sourceable {
 
 	@Override
 	public void complete(Bitmap image) {
-		Log.d("activity", "complete setImage " + image + " count "
-				+ countMember);
 		MemberInfo member = members.get(countMember);
 		member.setImage(image);
 		countMember++;
@@ -250,7 +329,7 @@ public class GroupMemberListActivity extends Activity implements Sourceable {
 	@Override
 	public void validate() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

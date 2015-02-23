@@ -1,11 +1,8 @@
 package ac.neec.mio.ui.activity;
 
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import com.google.android.gms.internal.bu;
 import com.sek.circleimageview.CircleImageView;
 
 import ac.neec.mio.R;
@@ -21,14 +18,12 @@ import ac.neec.mio.exception.SQLiteInsertException;
 import ac.neec.mio.exception.SQLiteTableConstraintException;
 import ac.neec.mio.exception.XmlParseException;
 import ac.neec.mio.exception.XmlReadException;
-import ac.neec.mio.group.Affiliation;
 import ac.neec.mio.group.Group;
 import ac.neec.mio.group.GroupInfo;
 import ac.neec.mio.group.MemberInfo;
 import ac.neec.mio.group.Permission;
 import ac.neec.mio.ui.adapter.GroupInfoListAdapter;
-import ac.neec.mio.ui.adapter.GroupInfoListItem;
-import ac.neec.mio.ui.adapter.GroupSettingListAdapter;
+import ac.neec.mio.ui.adapter.item.GroupInfoListItem;
 import ac.neec.mio.ui.dialog.GroupSettingDialog;
 import ac.neec.mio.ui.dialog.GroupSettingDialog.CallbackListener;
 import ac.neec.mio.ui.dialog.LoadingDialog;
@@ -41,53 +36,148 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * グループ詳細画面クラス
+ *
+ */
 public class GroupDetailsActivity extends FragmentActivity implements
 		CallbackListener, Sourceable, AlertCallbackListener {
 
+	/**
+	 * 更新メッセージ
+	 */
 	private static final int MESSAGE_UPDATE = 20;
+	/**
+	 * 画像更新メッセージ
+	 */
 	private static final int MESSAGE_IMAGE_UPDATE = 21;
+	/**
+	 * エラーメッセージ
+	 */
 	private static final int MESSAGE_ERROR = 22;
+	/**
+	 * 不正文字入力エラーメッセージ
+	 */
 	private static final int MESSAGE_VALIDATE = 23;
+	/**
+	 * 設定メニュー項目リスト
+	 */
 	private List<GroupInfoListItem> list = new ArrayList<GroupInfoListItem>();
 
+	/**
+	 * グループ名を表示するテキストビュー
+	 */
 	private TextView textGroupName;
+	/**
+	 * グループIDを表示するテキストビュー
+	 */
 	private TextView textGroupId;
+	/**
+	 * コメントを表示するテキストビュー
+	 */
 	private TextView textGroupComment;
+	/**
+	 * 権限名を表示するテキストビュー
+	 */
 	private TextView textPermissionName;
+	/**
+	 * 管理者を表示するテキストビュー
+	 */
 	private TextView textAdminName;
+	/**
+	 * 
+	 */
 	private TextView textJoin;
+	/**
+	 * 加入申請中を表示するテキストビュー
+	 */
 	private TextView textPending;
+	/**
+	 * 未加入を表示するテキストビュー
+	 */
 	private TextView textNotice;
+	/**
+	 * グループアイコンを表示するイメージビュー
+	 */
 	private CircleImageView icon;
+	/**
+	 * 権限レイアウトを定義
+	 */
 	private LinearLayout layoutPermission;
+	/**
+	 * グループ退会ボタン
+	 */
 	private Button buttonNotice;
+	/**
+	 * 設定リストアダプター
+	 */
 	private GroupInfoListAdapter adapter;
+	/**
+	 * データ取得中ダイアログ
+	 */
 	private LoadingDialog dialog;
+	/**
+	 * グループ情報
+	 */
 	private Group group;
+	/**
+	 * メンバーリスト
+	 */
 	private List<MemberInfo> members = new ArrayList<MemberInfo>();
+	/**
+	 * ユーザ情報
+	 */
 	private User user = User.getInstance();
+	/**
+	 * WebAPI接続インスタンス
+	 */
 	private ApiDao dao = DaoFacade.getApiDao(this);
+	/**
+	 * ローカルデータベース接続インスタンス
+	 */
 	private SQLiteDao daoSql = DaoFacade.getSQLiteDao();
+	/**
+	 * 権限
+	 */
 	private Permission permission;
+	/**
+	 * グループID
+	 */
 	private String groupId;
+	/**
+	 * グループアイコン
+	 */
 	private Bitmap image;
+	/**
+	 * メンバー数(加入申請中、未加入含む)
+	 */
 	private int member;
+	/**
+	 * 未加入数
+	 */
 	private int notice;
+	/**
+	 * 加入申請中数
+	 */
 	private int pending;
+	/**
+	 * グループ削除フラグ
+	 */
 	private boolean deleteGroup;
 
+	/**
+	 * 画面ハンドラー
+	 */
 	Handler handler = new Handler() {
 		public void handleMessage(Message message) {
 			switch (message.what) {
@@ -119,6 +209,9 @@ public class GroupDetailsActivity extends FragmentActivity implements
 		selectGroup();
 	}
 
+	/**
+	 * WebAPIからグループを取得する
+	 */
 	private void selectGroup() {
 		if (groupId != null) {
 			dao.selectGroup(groupId);
@@ -142,6 +235,9 @@ public class GroupDetailsActivity extends FragmentActivity implements
 		setAdapter();
 	}
 
+	/**
+	 * グループ編集ダイアログを表示する
+	 */
 	private void showEditGroupSettingDialog() {
 		GroupSettingDialog dialog = new GroupSettingDialog(this,
 				GroupSettingDialog.EDIT_GROUP);
@@ -153,6 +249,9 @@ public class GroupDetailsActivity extends FragmentActivity implements
 		dialog.setGroupId(group.getId());
 	}
 
+	/**
+	 * グループに加入ダイアログを表示する
+	 */
 	private void showPendingDialog() {
 		SelectionAlertDialog dialog = new SelectionAlertDialog(this,
 				SettingConstants.messagePending(),
@@ -161,6 +260,9 @@ public class GroupDetailsActivity extends FragmentActivity implements
 		dialog.show(getFragmentManager(), "dialog");
 	}
 
+	/**
+	 * グループに退会ダイアログを表示する
+	 */
 	private void showWithdrawalDialog() {
 		SelectionAlertDialog dialog = new SelectionAlertDialog(this,
 				SettingConstants.messageWithdrawal(),
@@ -169,6 +271,9 @@ public class GroupDetailsActivity extends FragmentActivity implements
 		dialog.show(getFragmentManager(), "dialog");
 	}
 
+	/**
+	 * 設定リストを追加する
+	 */
 	private void setAdapter() {
 		adapter = new GroupInfoListAdapter(this, R.layout.activity_group_list,
 				list);
@@ -197,6 +302,9 @@ public class GroupDetailsActivity extends FragmentActivity implements
 		});
 	}
 
+	/**
+	 * 設定リストを設定する
+	 */
 	private void setListItem() {
 		member -= notice + pending;
 		if (permission.getGroupInfoChange()) {
@@ -221,12 +329,18 @@ public class GroupDetailsActivity extends FragmentActivity implements
 
 	}
 
+	/**
+	 * 権限の変更後、設定リストを更新する
+	 */
 	private void updateAdapter() {
 		adapter.clear();
 		setListItem();
 		adapter.notifyDataSetChanged();
 	}
 
+	/**
+	 * 画面の初期化処理をする
+	 */
 	private void initFindViews() {
 		textGroupId = (TextView) findViewById(R.id.text_group_id);
 		textGroupId.setText(groupId);
@@ -258,11 +372,9 @@ public class GroupDetailsActivity extends FragmentActivity implements
 		}
 	}
 
-	private void deleteGroupMember() {
-		dao.deleteGroupMember(user.getId(), user.getId(), groupId,
-				user.getPassword());
-	}
-
+	/**
+	 * グループを解散、または退会ダイアログを表示する
+	 */
 	private void showNoticeDialog() {
 		String message;
 		if (permission.getDissolution()) {
@@ -276,6 +388,9 @@ public class GroupDetailsActivity extends FragmentActivity implements
 		dialog.show(getFragmentManager(), "dialog");
 	}
 
+	/**
+	 * 加入申請承認画面に遷移する
+	 */
 	private void intentPendingMember() {
 		initMemberNum();
 		Intent intent = new Intent(GroupDetailsActivity.this,
@@ -285,6 +400,9 @@ public class GroupDetailsActivity extends FragmentActivity implements
 		startActivity(intent);
 	}
 
+	/**
+	 * トレーナー追加画面に遷移する
+	 */
 	private void intentAddTrainingMember() {
 		initMemberNum();
 		Intent intent = new Intent(GroupDetailsActivity.this,
@@ -294,6 +412,9 @@ public class GroupDetailsActivity extends FragmentActivity implements
 		startActivity(intent);
 	}
 
+	/**
+	 * メンバー一覧画面に遷移する
+	 */
 	private void intentMember() {
 		initMemberNum();
 		Intent intent = new Intent(GroupDetailsActivity.this,
@@ -303,21 +424,33 @@ public class GroupDetailsActivity extends FragmentActivity implements
 		startActivity(intent);
 	}
 
+	/**
+	 * メンバー数を初期化する
+	 */
 	private void initMemberNum() {
 		pending = 0;
 		notice = 0;
 	}
 
+	/**
+	 * WebAPIからアイコンを取得する
+	 */
 	private void selectImage() {
 		if (group.getImageName() != null) {
 			dao.selectImage(group.getImageName());
 		}
 	}
 
+	/**
+	 * アイコンを更新する
+	 */
 	private void updateImage() {
 		icon.setImage(image);
 	}
 
+	/**
+	 * グループ情報を画面に更新する
+	 */
 	private void update() {
 		if (permission == null) {
 			return;

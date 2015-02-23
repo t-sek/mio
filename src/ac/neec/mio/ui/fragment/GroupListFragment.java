@@ -36,21 +36,56 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+/**
+ * 全てのグループ一覧を表示する画面クラス
+ */
 public class GroupListFragment extends Fragment implements
 		SearchNotifyListener, Sourceable {
 
+	/**
+	 * タブタイトル
+	 */
 	private static final String TITLE = "全てのグループ";
+	/**
+	 * 更新メッセージ
+	 */
 	private static final int MESSAGE_UPDATE = 1;
+	/**
+	 * エラーメッセージ
+	 */
 	private static final int MESSAGE_ERROR = 2;
 
+	/**
+	 * グループリストビュー
+	 */
 	private ListView listView;
+	/**
+	 * グループリスト
+	 */
 	private List<Group> list = new ArrayList<Group>();
+	/**
+	 * グループリストビューのアダプター
+	 */
 	private GroupListAdapter adapter;
+	/**
+	 * WebAPI接続インスタンス
+	 */
 	private ApiDao dao;
+	/**
+	 * ローカルデータベース接続インスタンス
+	 */
 	private SQLiteDao daoSql;
+	/**
+	 * データ取得中ダイアログ
+	 */
 	private LoadingDialog dialog = new LoadingDialog(MessageConstants.getting());
+	/**
+	 * グループアイコン取得イテレータ
+	 */
 	private int countImage = 0;
-
+	/**
+	 * 画面ハンドラー
+	 */
 	Handler handler = new Handler() {
 		public void handleMessage(Message message) {
 			switch (message.what) {
@@ -92,10 +127,21 @@ public class GroupListFragment extends Fragment implements
 		return view;
 	}
 
+	/**
+	 * コールバックリスナーを取得する
+	 * 
+	 * @return コールバックリスナー
+	 */
 	public SearchNotifyListener getListener() {
 		return (SearchNotifyListener) this;
 	}
 
+	/**
+	 * グループ詳細画面に遷移する
+	 * 
+	 * @param group
+	 *            グループ情報
+	 */
 	private void intentGroupDetails(Group group) {
 		Intent intent = new Intent(getActivity().getApplicationContext(),
 				GroupDetailsActivity.class);
@@ -104,6 +150,9 @@ public class GroupListFragment extends Fragment implements
 		startActivity(intent);
 	}
 
+	/**
+	 * グループリストを更新する
+	 */
 	private void update() {
 		for (Group group : list) {
 			for (Group myGroup : daoSql.selectGroup()) {
@@ -120,6 +169,9 @@ public class GroupListFragment extends Fragment implements
 		}
 	}
 
+	/**
+	 * グループアイコンを取得する
+	 */
 	private void selectImage() {
 		if (countImage >= list.size()) {
 			return;
@@ -133,6 +185,9 @@ public class GroupListFragment extends Fragment implements
 		}
 	}
 
+	/**
+	 * ネットワークエラーのトーストを表示する
+	 */
 	private void networkError() {
 		dialog.dismiss();
 		Toast.makeText(getActivity().getApplicationContext(),

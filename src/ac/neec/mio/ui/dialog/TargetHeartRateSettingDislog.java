@@ -14,18 +14,44 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
+/**
+ * 計測中目標心拍数変更ダイアログクラス
+ *
+ */
 public class TargetHeartRateSettingDislog extends DialogFragment {
 
+	/**
+	 * 最低目標心拍数
+	 */
 	private static final int SEEK_MIN = 150;
-
+	/**
+	 * ダイアログインスタンス
+	 */
 	private Dialog dialog;
+	/**
+	 * 選択シークバー
+	 */
 	private SeekBar seekber;
+	/**
+	 * 決定ボタン
+	 */
 	private Button button;
-
+	/**
+	 * 選択された目標心拍数
+	 */
 	private int targetValue;
-
+	/**
+	 * コールバックリスナー
+	 */
 	private TargetHeartRateSettingListener listener;
 
+	/**
+	 * 
+	 * @param listener
+	 *            コールバックリスナー
+	 * @param targetValue
+	 *            現在の目標心拍数
+	 */
 	public TargetHeartRateSettingDislog(
 			TargetHeartRateSettingListener listener, int targetValue) {
 		this.listener = listener;
@@ -46,6 +72,9 @@ public class TargetHeartRateSettingDislog extends DialogFragment {
 		listener.onCancel();
 	}
 
+	/**
+	 * 画面の初期化処理をする
+	 */
 	private void init() {
 		seekber = (SeekBar) dialog.findViewById(R.id.seek_target_heart_rate);
 		seekber.setProgress(targetValue);
@@ -61,7 +90,7 @@ public class TargetHeartRateSettingDislog extends DialogFragment {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
-				listener.onUpdate(progress+SEEK_MIN);
+				listener.onUpdate(progress + SEEK_MIN);
 			}
 		});
 		button = (Button) dialog
@@ -75,12 +104,11 @@ public class TargetHeartRateSettingDislog extends DialogFragment {
 		});
 	}
 
+	/**
+	 * ダイアログを設定する
+	 */
 	private void setDialog() {
-		// dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-		// フルスクリーン
-		// dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-		// WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
 		dialog.setContentView(R.layout.dialog_setting_target_heart_rate);
 	}
 

@@ -17,22 +17,48 @@ import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+/**
+ * 安静時心拍数計測画面クラス
+ *
+ */
 public class QuietHeartRateMeasurementActivity extends BleConnectBaseActivity
 		implements TimerCallbackListener {
 
+	/**
+	 * 更新メッセージ
+	 */
 	private static final int MESSAGE_UPDATE = 2;
-	private static final int MESSAGE_HEART_RATE = 3;
+	/**
+	 * 計測時間
+	 */
 	private static final int MEASUREMENT_TIME = 1500;
-
+	/**
+	 * 計測中メッセージ
+	 */
 	private static final String TEXT = "計測中です";
+	/**
+	 * 計測中メッセージ
+	 */
 	private static final String SECTION = ".";
-
+	/**
+	 * 計測中メッセージを表示するテキストビュー
+	 */
 	private TextView textTime;
-	private ProgressBar progress;
+	/**
+	 * 計測心拍数リスト
+	 */
 	private List<Integer> heartRates = new ArrayList<Integer>();
+	/**
+	 * ユーザ情報
+	 */
 	private User user = User.getInstance();
+	/**
+	 * 計測中メッセージイテレータ
+	 */
 	private int sectionCount;
-
+	/**
+	 * 画面ハンドラー
+	 */
 	Handler handler = new Handler() {
 		public void handleMessage(Message message) {
 			switch (message.what) {
@@ -53,38 +79,58 @@ public class QuietHeartRateMeasurementActivity extends BleConnectBaseActivity
 		connectBleDevice();
 	}
 
+	/**
+	 * 画面の初期化処理をする
+	 */
 	private void initFindViews() {
 		textTime = (TextView) findViewById(R.id.text_time);
-		progress = (ProgressBar) findViewById(R.id.progress);
-		progress.setMax(MEASUREMENT_TIME / 100);
-		// progress.setIndeterminate(true);
 	}
 
+	/**
+	 * タイマーを設定する
+	 */
 	private void setTimer() {
 		TimerManager manager = new TimerManager(this, 15000);
 		manager.start();
 	}
 
+	/**
+	 * 計測中メッセージを更新する
+	 * 
+	 * @param time
+	 *            計測時間
+	 */
 	private void updateTime(String time) {
 		int nowTime = Integer.valueOf(TimeUtil.stringToSec(time));
-		// textTime.setText(String.valueOf(nowTime));
 		StringBuilder sb = new StringBuilder();
 		sb.append(TEXT);
-		// String text = TEXT;
 		for (int i = 0; i <= sectionCount; i++) {
-			// text.concat(SECTION);
 			sb.append(SECTION);
-			// Log.d("activity", "text " + text);
 		}
 		if (sectionCount >= 4) {
 			sectionCount = 0;
 		} else {
 			sectionCount++;
 		}
-		// textTime.setText(text);
 		textTime.setText(sb.toString());
-		progress.setProgress((MEASUREMENT_TIME / 100) - nowTime);
-		// progress.incrementProgressBy(1);
+	}
+
+	/**
+	 * 安静時心拍数を算出し、保存する
+	 */
+	private void setQuietHeartRate() {
+		int quietHeartRate = HeartRateUtil.calcQuietHeartRate(heartRates);
+		user.setQuietHeartRate(quietHeartRate);
+	}
+
+	/**
+	 * 心拍数を追加する
+	 * 
+	 * @param heartRate
+	 *            心拍数
+	 */
+	private void addQuietHeartRate(String heartRate) {
+		heartRates.add(Integer.valueOf(heartRate));
 	}
 
 	@Override
@@ -102,11 +148,7 @@ public class QuietHeartRateMeasurementActivity extends BleConnectBaseActivity
 
 	@Override
 	public void onAlarm() {
-		// Intent intent = new Intent(QuietHeartRateMeasurementActivity.this,
-		// TopActivity.class);
-		// startActivity(intent);
-		int quietHeartRate = HeartRateUtil.calcQuietHeartRate(heartRates);
-		user.setQuietHeartRate(quietHeartRate);
+		setQuietHeartRate();
 		finish();
 	}
 
@@ -129,8 +171,7 @@ public class QuietHeartRateMeasurementActivity extends BleConnectBaseActivity
 
 	@Override
 	protected void receiveHeartRate(String heartRate) {
-		heartRates.add(Integer.valueOf(heartRate));
-		Log.d("measurement", "heartRate " + heartRate);
+		addQuietHeartRate(heartRate);
 	}
 
 	@Override
@@ -147,7 +188,7 @@ public class QuietHeartRateMeasurementActivity extends BleConnectBaseActivity
 	@Override
 	protected void bleConnectTimeout() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

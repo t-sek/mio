@@ -286,7 +286,7 @@ public abstract class ProductDataFactory {
 	}
 
 	/**
-	 * トレーニングを生成する
+	 * トレーニング生成処理を実装する
 	 * 
 	 * @param id
 	 *            トレーニングID
@@ -319,44 +319,218 @@ public abstract class ProductDataFactory {
 			int targetHeartRate, int targetCal, int consumptionCal,
 			int heartRateAvg, int strange, double distance);
 
+	/**
+	 * トレーニングカテゴリー生成処理を実装する
+	 * 
+	 * @param trainingCategoryId
+	 *            カテゴリーID
+	 * @param trainingCategoryName
+	 *            カテゴリー名
+	 * @return TrainingCategory型
+	 */
 	protected abstract ProductData factoryMethod(int trainingCategotyId,
 			String trainingCategoryName);
 
+	/**
+	 * トレーニングメニュー生成処理を実装する
+	 * 
+	 * @param trainingMenuId
+	 *            メニューID
+	 * @param trainingName
+	 *            メニュー名
+	 * @param mets
+	 *            メッツ
+	 * @param trainingCategoryId
+	 *            カテゴリーID
+	 * @param color
+	 *            カラーコード
+	 * @return TrainingMenu型
+	 */
 	protected abstract ProductData factoryMethod(int trainingMenuId,
 			String trainingName, float mets, int trainingCategoryId,
 			String color);
 
+	/**
+	 * 性別生成処理を実装する
+	 * 
+	 * @param gender
+	 *            性別
+	 * @return Gender型
+	 */
 	protected abstract ProductData factoryMethod(String gender);
 
+	/**
+	 * ラップ生成処理を実装する
+	 * 
+	 * @param lapTime
+	 *            ラップタイム
+	 * @param splitTime
+	 *            スプリットタイム
+	 * @param distance
+	 *            走行距離
+	 * @return LapItem型
+	 */
 	protected abstract ProductData factoryMethod(String lapTime,
 			String splitTime, String distance);
 
+	/**
+	 * トレーニングログ生成処理を実装する
+	 * 
+	 * @param logId
+	 *            ログID
+	 * @param id
+	 *            トレーニングID
+	 * @param heartRate
+	 *            心拍数
+	 * @param disX
+	 *            経度
+	 * @param disY
+	 *            緯度
+	 * @param time
+	 *            計測時間
+	 * @param lap
+	 *            ラップタイム
+	 * @param split
+	 *            スプリットタイム
+	 * @param targetHeartRate
+	 *            目標心拍数
+	 * @return TrainingLog型
+	 */
 	protected abstract ProductData factoryMethod(int logId, int id,
 			int heartRate, double disX, double disY, String time, String lap,
 			String split, int targetHeartRate);
 
+	/**
+	 * トレーニングプレイ生成処理を実装する
+	 * 
+	 * @param trainingMenuId
+	 *            メニューID
+	 * @param trainingTime
+	 *            トレーニング時間
+	 * @return TrainingPlay型
+	 */
 	protected abstract ProductData factoryMethod(int trainingMenuId,
 			int trainingTime);
 
+	/**
+	 * 権限生成処理を実装する
+	 * 
+	 * @param id
+	 *            権限ID
+	 * @param name
+	 *            権限名
+	 * @param compelWithdrawal
+	 *            強制退会処理
+	 * @param dissolution
+	 *            グループ解散
+	 * @param permissionChange
+	 *            権限変更
+	 * @param groupInfoChange
+	 *            グループ情報変更
+	 * @param memberAddManage
+	 *            メンバー加入申請
+	 * @param memberDataCheck
+	 *            メンバーデータ閲覧
+	 * @param memberListView
+	 *            メンバー一覧表示
+	 * @param groupInfoView
+	 *            グループ情報表示
+	 * @param withdrawal
+	 *            グループ退会
+	 * @param joinStatus
+	 *            正式メンバー
+	 * @param groupNews
+	 *            グループのお知らせ
+	 * @return Permission型
+	 */
 	protected abstract ProductData factoryMethod(int id, String name,
 			int compelWithdrawal, int dissolution, int permissionChange,
 			int groupInfoChange, int memberAddManage, int memberDataCheck,
 			int memberListView, int groupInfoView, int withdrawal,
 			int joinStatus, int groupNews);
 
+	/**
+	 * グループ権限生成処理を実装する
+	 * 
+	 * @param userId
+	 *            ユーザID
+	 * @param groupId
+	 *            グループID
+	 * @param permission
+	 *            権限
+	 * @return Affiliation型
+	 */
 	protected abstract ProductData factoryMethod(String userId, String groupId,
 			Permission permission);
 
+	/**
+	 * 画像情報生成処理を実装する
+	 * 
+	 * @param id
+	 *            画像ID
+	 * @param imageFileName
+	 *            画像ファイル名
+	 * @param userId
+	 *            ユーザID
+	 * @param groupId
+	 *            グループID
+	 * @param created
+	 *            作成日
+	 * @param image
+	 *            画像
+	 * @param bigImage
+	 *            画像(大)
+	 * @param smallImage
+	 *            画像(小)
+	 * @param thumbImage
+	 *            画像(オリジナル)
+	 * @return ImageInfo型
+	 */
 	protected abstract ProductData factoryMethod(int id, String imageFileName,
 			String userId, String groupId, String created, String image,
 			String bigImage, String smallImage, String thumbImage);
 
+	/**
+	 * ロール生成処理を実装する
+	 * 
+	 * @param id
+	 *            ロールID
+	 * @param name
+	 *            ロール名
+	 * @param created
+	 *            アカウント作成日
+	 * @param updated
+	 *            アカウント更新日
+	 * @param status
+	 *            ステータス
+	 * @return Role型
+	 */
 	protected abstract ProductData factoryMethod(int id, String name,
 			String created, String updated, int status);
 
+	/**
+	 * 体重生成処理を実装する
+	 * 
+	 * @param id
+	 *            体重ID
+	 * @param date
+	 *            記録日
+	 * @param weight
+	 *            体重
+	 * @return Weight型
+	 */
 	protected abstract ProductData factoryMethod(int id, String date,
 			float weight);
 
+	/**
+	 * グループ権限生成処理を実装する
+	 * 
+	 * @param groupId
+	 *            グループID
+	 * @param permissionId
+	 *            権限ID
+	 * @return Affiliation型
+	 */
 	protected abstract ProductData factoryMethod(String groupId,
 			int permissionId);
 

@@ -18,16 +18,48 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
+/**
+ * 過去のトレーニングを日付ごとに表示する折りたたみリストビュー設定クラス
+ *
+ */
 public class TrainingDateListAdapter extends BaseExpandableListAdapter {
 
+	/**
+	 * コンテキスト
+	 */
 	private Context context;
+	/**
+	 * コールバックリスナー
+	 */
 	private TrainingDataListCallbackListener listener;
+	/**
+	 * 過去のトレーニング
+	 */
 	private List<List<Training>> trainings = new ArrayList<List<Training>>();
-
+	/**
+	 * 現在開いているタブ
+	 */
 	private int currentHourPosition = 0;
+	/**
+	 * タブの色
+	 */
 	private int colorTab;
+	/**
+	 * ローカルデータベース接続インスタンス
+	 */
 	private SQLiteDao dao;
 
+	/**
+	 * 
+	 * @param context
+	 *            コンテキスト
+	 * @param trainings
+	 *            トレーニングリスト
+	 * @param listener
+	 *            コールバックリスナー
+	 * @param colorTab
+	 *            タブの色
+	 */
 	public TrainingDateListAdapter(Context context,
 			List<List<Training>> trainings,
 			TrainingDataListCallbackListener listener, int colorTab) {
@@ -46,12 +78,22 @@ public class TrainingDateListAdapter extends BaseExpandableListAdapter {
 		currentHourPosition = groupPosition;
 	}
 
+	/**
+	 * 子要素のビューを取得する
+	 * 
+	 * @return 子要素のビュー
+	 */
 	public View getChildGenericView() {
 		View view = LayoutInflater.from(context).inflate(
 				R.layout.item_list_training, null);
 		return view;
 	}
 
+	/**
+	 * 親要素のビューを取得する
+	 * 
+	 * @return 親要素のビュー
+	 */
 	public View getGroupGenericView() {
 		View view = LayoutInflater.from(context).inflate(
 				R.layout.item_list_dates, null);
@@ -100,8 +142,6 @@ public class TrainingDateListAdapter extends BaseExpandableListAdapter {
 		TextView textDate = (TextView) view.findViewById(R.id.txt_date);
 		String date = trainings.get(groupPosition).get(0).getDate();
 		textDate.setText(DateUtil.japaneseFormat(date));
-		// view.setBackgroundColor(colorTab);
-		// setTextColor(Color.parseColor("#FF00C0"));
 		view.setBackgroundResource(colorTab);
 		return view;
 	}

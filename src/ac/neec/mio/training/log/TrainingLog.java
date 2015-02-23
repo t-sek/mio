@@ -3,7 +3,7 @@ package ac.neec.mio.training.log;
 import ac.neec.mio.framework.ProductData;
 
 /**
- * トレーニングログ
+ * トレーニング中の心拍数、位置情報などを記録していくクラス
  *
  */
 public class TrainingLog extends ProductData {

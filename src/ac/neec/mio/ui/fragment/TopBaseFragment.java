@@ -1,4 +1,4 @@
-package ac.neec.mio.ui.fragment.top;
+package ac.neec.mio.ui.fragment;
 
 import android.support.v4.app.Fragment;
 

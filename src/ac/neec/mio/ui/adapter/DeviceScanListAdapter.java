@@ -13,11 +13,27 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+/**
+ * デバイス検索結果リストビュー設定クラス
+ *
+ */
 public class DeviceScanListAdapter extends ArrayAdapter<DeviceInfo> {
 
+	/**
+	 * デバイスリスト
+	 */
 	private List<DeviceInfo> list = new ArrayList<DeviceInfo>();
 	private LayoutInflater inflater;
 
+	/**
+	 * 
+	 * @param context
+	 *            コンテキスト
+	 * @param resource
+	 *            リソース
+	 * @param list
+	 *            デバイスリスト
+	 */
 	public DeviceScanListAdapter(Context context, int resource,
 			List<DeviceInfo> list) {
 		super(context, resource, list);
@@ -26,6 +42,11 @@ public class DeviceScanListAdapter extends ArrayAdapter<DeviceInfo> {
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
+	/**
+	 * デバイス数を取得する
+	 * 
+	 * @return デバイス数
+	 */
 	public int getListSize() {
 		return list.size();
 	}

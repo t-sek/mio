@@ -7,14 +7,45 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
+/**
+ * 2択ダイアログクラス
+ */
 public class SelectionAlertDialog extends DialogFragment {
 
+	/**
+	 * コールバックリスナー
+	 */
 	private AlertCallbackListener listener;
+	/**
+	 * 質問メッセージ
+	 */
 	private String message;
+	/**
+	 * 許可メッセージ
+	 */
 	private String positive;
+	/**
+	 * 拒否メッセージ
+	 */
 	private String negative;
+	/**
+	 * キャンセル可能フラグ
+	 */
 	private boolean cancel;
 
+	/**
+	 * 
+	 * @param listener
+	 *            コールバックリスナー
+	 * @param message
+	 *            質問メッセージ
+	 * @param positive
+	 *            許可メッセージ
+	 * @param negative
+	 *            拒否メッセージ
+	 * @param cancel
+	 *            キャンセル可能フラグ
+	 */
 	public SelectionAlertDialog(AlertCallbackListener listener, String message,
 			String positive, String negative, boolean cancel) {
 		this.listener = listener;

@@ -1,7 +1,5 @@
 package ac.neec.mio.ui.fragment;
 
-import java.util.Random;
-
 import ac.neec.mio.R;
 import ac.neec.mio.training.Training;
 import ac.neec.mio.ui.dialog.TargetHeartRateSettingDislog;
@@ -9,7 +7,6 @@ import ac.neec.mio.ui.listener.MeasurementCallbackListener;
 import ac.neec.mio.ui.listener.TargetHeartRateSettingListener;
 import ac.neec.mio.util.TimeUtil;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,21 +16,36 @@ import android.widget.ImageButton;
 import com.koba.androidrtchart.ChangeLogger;
 import com.koba.androidrtchart.RateMeter;
 
+/**
+ * 計測画面(中)画面クラス
+ */
 public class GraphicalMeasurementFragment extends MeasurementBaseFragment
 		implements MeasurementCallbackListener, TargetHeartRateSettingListener {
 
+	/**
+	 * 目標心拍数
+	 */
 	private static final int DEFAULT_TARGET_HEART_RATE = 180;
 
-	private static int CALORIE_FIGHT = 600;
-	private static int CALORIE_RATING_UNIT;
-
-	private Training training;
-	private int trainingId;
-	private int categoryId;
+	/**
+	 * 心拍タコメータ
+	 */
 	private RateMeter rateMeter;
+	/**
+	 * 心拍遷移グラフ
+	 */
 	private ChangeLogger logger;
+	/**
+	 * 目標心拍数変更ボタン
+	 */
 	private ImageButton buttonTargetHeartRateSetting;
+	/**
+	 * コールバックリスナー
+	 */
 	private MeasurementCallbackListener listener;
+	/**
+	 * 目標心拍数心拍数
+	 */
 	private int targetHeartRate = DEFAULT_TARGET_HEART_RATE;
 
 	@Override
@@ -46,10 +58,16 @@ public class GraphicalMeasurementFragment extends MeasurementBaseFragment
 		return view;
 	}
 
+	/**
+	 * コールバックリスナーを設定する
+	 */
 	public GraphicalMeasurementFragment(MeasurementCallbackListener listener) {
 		this.listener = listener;
 	}
 
+	/**
+	 * 心拍タコメーターを設定する
+	 */
 	private void setTachoMeter() {
 		if (rateMeter != null) {
 			rateMeter.meterTargetSetting(DEFAULT_TARGET_HEART_RATE);
@@ -57,12 +75,21 @@ public class GraphicalMeasurementFragment extends MeasurementBaseFragment
 		}
 	}
 
+	/**
+	 * 目標心拍数設定ダイアログを表示する
+	 */
 	private void showTargetHeartRateSetting() {
 		int targetValue = rateMeter.getMeterTargetValue();
 		new TargetHeartRateSettingDislog(this, targetValue).show(getActivity()
 				.getSupportFragmentManager(), "dialog");
 	}
 
+	/**
+	 * 画面の初期化処理をする
+	 * 
+	 * @param view
+	 *            画面ビュー
+	 */
 	private void init(View view) {
 		rateMeter = (RateMeter) view.findViewById(R.id.ratemeter);
 		logger = (ChangeLogger) view.findViewById(R.id.logger);
@@ -93,25 +120,15 @@ public class GraphicalMeasurementFragment extends MeasurementBaseFragment
 
 	@Override
 	public void trainingId(int trainingId, int categoryId) {
-		// training = DBManager.selectTraining(trainingId);
-		this.categoryId = categoryId;
 		setTachoMeter();
-
 	}
 
 	@Override
 	public void notifyTime(String value) {
-		int time = TimeUtil.stringToInteger(value);
-		// item.setBarValue(time);
-		// colorbar.notifyDataSetChenged();
 	}
 
 	@Override
 	public void onSelected(int trainingMenuId) {
-		// item = new ColorBarItem(0, "", codes[trainingMenuId]);
-		// colorbar.addBarItem(item);
-		// colorbar.notifyDataSetChenged();
-
 	}
 
 	@Override

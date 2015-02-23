@@ -6,6 +6,7 @@ import java.util.List;
 import ac.neec.mio.R;
 import ac.neec.mio.ble.DeviceInfo;
 import ac.neec.mio.training.lap.LapItem;
+import ac.neec.mio.ui.adapter.item.ProfileSettingListItem;
 import ac.neec.mio.user.User;
 import ac.neec.mio.consts.PreferenceConstants;
 import android.content.Context;
@@ -16,20 +17,50 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+/**
+ * ユーザ情報リストビュー設定クラス
+ *
+ */
 public class ProfileMasterSettingListAdapter extends
 		ArrayAdapter<ProfileSettingListItem> {
 
+	/**
+	 * 名前設定メッセージ
+	 */
 	private static final String NAME = "名前";
+	/**
+	 * 生年月日設定メッセージ
+	 */
 	private static final String BIRTH = "生年月日";
+	/**
+	 * 性別設定メッセージ
+	 */
 	private static final String GENDER = "性別";
+	/**
+	 * メールアドレス設定メッセージ
+	 */
 	private static final String MAIL = "メールアドレス";
+	/**
+	 * ID設定メッセージ
+	 */
 	private static final String ID = "ID";
+	/**
+	 * パスワード設定メッセージ
+	 */
 	private static final String PASS = "パスワード";
-
+	/**
+	 * 設定リスト
+	 */
 	private static List<ProfileSettingListItem> list = new ArrayList<ProfileSettingListItem>();
 	private LayoutInflater inflater;
+	/**
+	 * ユーザ情報
+	 */
 	private User user = User.getInstance();
 
+	/**
+	 * リストを設定する
+	 */
 	{
 		list.add(new ProfileSettingListItem(NAME, user.getName()));
 		list.add(new ProfileSettingListItem(BIRTH, user.getBirth()));
@@ -40,12 +71,24 @@ public class ProfileMasterSettingListAdapter extends
 
 	}
 
+	/**
+	 * 
+	 * @param context
+	 *            コンテキスト
+	 * @param resource
+	 *            リソース
+	 */
 	public ProfileMasterSettingListAdapter(Context context, int resource) {
 		super(context, resource, list);
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
+	/**
+	 * リスト項目数を取得する
+	 * 
+	 * @return 項目数
+	 */
 	public int getListSize() {
 		return list.size();
 	}

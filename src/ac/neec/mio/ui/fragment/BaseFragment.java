@@ -6,6 +6,10 @@ import ac.neec.mio.ui.listener.NotificationCallbackListener;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-public abstract class BaseFragment extends Fragment implements NotificationCallbackListener {
+/**
+ * タブのフラグメントクラス
+ */
+public abstract class BaseFragment extends Fragment implements
+		NotificationCallbackListener {
 
 }

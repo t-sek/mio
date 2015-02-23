@@ -21,22 +21,56 @@ import android.widget.TextView;
 
 import com.sek.circleimageview.CircleImageView;
 
+/**
+ * グループ一覧リストビュー設定クラス
+ *
+ */
 public class GroupListAdapter extends ArrayAdapter<Group> implements
 		GroupFilterCallbackListener {
 
+	/**
+	 * 全グループ
+	 */
 	public static final int ALL = 1;
+	/**
+	 * 所属グループ
+	 */
 	public static final int MY = 2;
 
 	private LayoutInflater inflater;
-	private Context context;
+	/**
+	 * 全グループ、所属グループフラグ
+	 */
 	private int flag;
-	private SQLiteDao daoSql;
+	/**
+	 * グループリスト
+	 */
 	private List<Group> list = new ArrayList<Group>();
 	private Filter filter;
+	/**
+	 * アイコン
+	 */
 	private CircleImageView image;
+	/**
+	 * グループID
+	 */
 	private TextView textId;
+	/**
+	 * グループ名
+	 */
 	private TextView textName;
 
+	/**
+	 * 
+	 * @param context
+	 *            コンテキスト
+	 * @param resource
+	 *            リソース
+	 * @param objects
+	 *            グループリスト
+	 * @param flag
+	 *            全グループ、所属グループフラグ
+	 */
 	public GroupListAdapter(Context context, int resource, List<Group> objects,
 			int flag) {
 		super(context, resource, objects);
@@ -44,8 +78,6 @@ public class GroupListAdapter extends ArrayAdapter<Group> implements
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		list = objects;
-		this.context = context;
-		daoSql = DaoFacade.getSQLiteDao();
 	}
 
 	@Override
@@ -79,12 +111,6 @@ public class GroupListAdapter extends ArrayAdapter<Group> implements
 		if (groupId == null) {
 			return convertView;
 		}
-		// if (permissionId == 0) {
-		// Affiliation affiliation = daoSql.selectAffiliation(groupId);
-		// if (affiliation != null) {
-		// permissionId = affiliation.getPermition().getId();
-		// }
-		// }
 		textId.setText(groupId);
 		String name = group.getGroupName();
 		textName.setText(String.valueOf(name));

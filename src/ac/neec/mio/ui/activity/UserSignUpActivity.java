@@ -30,6 +30,10 @@ import com.google.android.gms.plus.model.people.Person.Name;
 import com.sek.drumpicker.DrumPicker;
 import com.sek.drumpicker.DrumPickerListener;
 
+/**
+ * 新規登録画面クラス
+ *
+ */
 public class UserSignUpActivity extends Activity implements DrumPickerListener,
 		OnSharedPreferenceChangeListener, OnFocusChangeListener, TextWatcher {
 
@@ -37,25 +41,81 @@ public class UserSignUpActivity extends Activity implements DrumPickerListener,
 	private static final String TAG_MONTH = "month";
 	private static final String TAG_DAY = "day";
 	private static final String NEW_LINE = "line.separator";
+	/**
+	 * ユーザID入力フォーム
+	 */
 	private EditText editId;
+	/**
+	 * パスワード入力フォーム
+	 */
 	private EditText editPass;
+	/**
+	 * パスワード確認入力フォーム
+	 */
 	private EditText editPassConf;
+	/**
+	 * ユーザ名入力フォーム
+	 */
 	private EditText editName;
+	/**
+	 * メールアドレス入力フォーム
+	 */
 	private EditText editMail;
+	/**
+	 * 入力フォームのフォーカスを保持
+	 */
 	private int focusEdit;
+	/**
+	 * 生年月日(年)設定ピッカー
+	 */
 	private DrumPicker pickerYaer;
+	/**
+	 * 生年月日(月)設定ピッカー
+	 */
 	private DrumPicker pickerMonth;
+	/**
+	 * 生年月日(日)設定ピッカー
+	 */
 	private DrumPicker pickerDay;
+	/**
+	 * 生年月日(年)
+	 */
 	private String year;
+	/**
+	 * 生年月日(月)
+	 */
 	private String month;
+	/**
+	 * 生年月日(日)
+	 */
 	private String day;
+	/**
+	 * 性別ラジオグループ
+	 */
 	private RadioGroup radioGroup;
+	/**
+	 * 男性ボタン
+	 */
 	private RadioButton male;
+	/**
+	 * 女性ボタン
+	 */
 	private RadioButton female;
+	/**
+	 * 次画面ボタン
+	 */
 	private Button buttonIntent;
+	/**
+	 * ユーザ情報
+	 */
 	private User user = User.getInstance();
+	/**
+	 * エラーメッセージ
+	 */
 	private StringBuilder errorBuilder = new StringBuilder();
-
+	/**
+	 * フォームのバリデートチェック
+	 */
 	private FormHelper helper;
 
 	@Override
@@ -76,12 +136,18 @@ public class UserSignUpActivity extends Activity implements DrumPickerListener,
 		storeUpUserData();
 	}
 
+	/**
+	 * バリデートチェックを初期化
+	 */
 	private void initValidationHelper() {
 		helper = new ActivityFormHelper(UserSignUpForm.class, this);
 		helper.setOnFocusOutValidation();
 		helper.setValidationErrorIconEnabled(false);
 	}
 
+	/**
+	 * 画面の初期化処理をする
+	 */
 	private void initFindViews() {
 		InputFilter[] filters = new InputFilter[] { new JapaneseInputFilter() };
 		editId = (EditText) findViewById(R.id.edit_id);
@@ -101,6 +167,9 @@ public class UserSignUpActivity extends Activity implements DrumPickerListener,
 		focusEdit = editId.getId();
 	}
 
+	/**
+	 * ビューにリスナーを設定する
+	 */
 	private void setListener() {
 		user.setListener(this);
 		editId.setOnFocusChangeListener(this);
@@ -125,6 +194,9 @@ public class UserSignUpActivity extends Activity implements DrumPickerListener,
 		});
 	}
 
+	/**
+	 * 生年月日設定ピッカーを設定する
+	 */
 	private void setBirthPicker() {
 		String[] years = new String[DateUtil.getYears().length];
 		years = DateUtil.getYears();
@@ -140,6 +212,9 @@ public class UserSignUpActivity extends Activity implements DrumPickerListener,
 		pickerDay.setOnDrumPickerListener(this);
 	}
 
+	/**
+	 * 日付を更新する
+	 */
 	private void updateDay() {
 		int day = DateUtil.getActualMaximum(Integer.valueOf(year),
 				Integer.valueOf(month));
@@ -149,6 +224,9 @@ public class UserSignUpActivity extends Activity implements DrumPickerListener,
 		pickerDay.setElements(getApplicationContext(), TAG_DAY, days);
 	}
 
+	/**
+	 * ユーザ情報を画面に更新する
+	 */
 	private void setUserData() {
 		editId.setText(user.getId());
 		editName.setText(user.getName());
@@ -161,6 +239,9 @@ public class UserSignUpActivity extends Activity implements DrumPickerListener,
 		}
 	}
 
+	/**
+	 * ユーザ情報を保存する
+	 */
 	private void storeUpUserData() {
 		user.setId(editId.getText().toString());
 		user.setPassword(editPass.getText().toString());
@@ -169,6 +250,9 @@ public class UserSignUpActivity extends Activity implements DrumPickerListener,
 		user.setBirth(DateUtil.dateFormat(year, month, day));
 	}
 
+	/**
+	 * 性別にチェックが入っているか確認する
+	 */
 	private void checkGenderSelected() {
 		RadioButton checkButton = (RadioButton) findViewById(radioGroup
 				.getCheckedRadioButtonId());
@@ -179,6 +263,12 @@ public class UserSignUpActivity extends Activity implements DrumPickerListener,
 		}
 	}
 
+	/**
+	 * 最低文字数を確認する
+	 * 
+	 * @return true エラーなし<br>
+	 *         false エラーあり
+	 */
 	private boolean checkEditMinValidate() {
 		boolean val = true;
 		errorBuilder = new StringBuilder();
@@ -208,6 +298,12 @@ public class UserSignUpActivity extends Activity implements DrumPickerListener,
 		return val;
 	}
 
+	/**
+	 * バリデートチェックをする
+	 * 
+	 * @return true エラーなし<br>
+	 *         false エラーあり
+	 */
 	private boolean checkValidate() {
 		boolean val = true;
 		StringBuilder sb = new StringBuilder();
@@ -227,6 +323,9 @@ public class UserSignUpActivity extends Activity implements DrumPickerListener,
 		return val;
 	}
 
+	/**
+	 * 身体情報設定画面に遷移する
+	 */
 	private void intentBodilySetting() {
 		Intent intent = new Intent(UserSignUpActivity.this,
 				UserSignUpBodilyActivity.class);

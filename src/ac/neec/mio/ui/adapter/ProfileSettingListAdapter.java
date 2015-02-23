@@ -8,6 +8,7 @@ import java.util.List;
 import ac.neec.mio.R;
 import ac.neec.mio.ble.DeviceInfo;
 import ac.neec.mio.training.lap.LapItem;
+import ac.neec.mio.ui.adapter.item.ProfileSettingListItem;
 import ac.neec.mio.user.User;
 import ac.neec.mio.consts.PreferenceConstants;
 import android.content.Context;
@@ -18,12 +19,28 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+/**
+ * 身体情報設定リストビュー設定クラス
+ *
+ */
 public class ProfileSettingListAdapter extends
 		ArrayAdapter<ProfileSettingListItem> {
 
 	private LayoutInflater inflater;
+	/**
+	 * 設定リスト
+	 */
 	private List<ProfileSettingListItem> list;
 
+	/**
+	 * 
+	 * @param context
+	 *            コンテキスト
+	 * @param resource
+	 *            リソース
+	 * @param list
+	 *            設定リスト
+	 */
 	public ProfileSettingListAdapter(Context context, int resource,
 			List<ProfileSettingListItem> list) {
 		super(context, resource, list);
@@ -32,6 +49,11 @@ public class ProfileSettingListAdapter extends
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
+	/**
+	 * 設定リスト項目数を取得する
+	 * 
+	 * @return 項目数
+	 */
 	public int getListSize() {
 		return list.size();
 	}

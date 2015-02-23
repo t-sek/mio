@@ -24,19 +24,39 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+/**
+ * BluetoothLE対応デバイス検索処理を定義した抽象クラス<br>
+ * デバイス検索を行う場合は、このクラスを継承する。
+ *
+ */
 public abstract class BleDeviceScanBaseActivity extends FragmentActivity {
-
+	/**
+	 * 通信リクエストコード
+	 */
 	private static final int REQUEST_ENABLE_BT = 1;
-	// Stops scanning after 10 seconds.
+	/**
+	 * 検索タイムアウト時間
+	 */
 	private static final long SCAN_PERIOD = 10000;
-
+	/**
+	 * BluetoothAdapterクラスのインスタンス
+	 */
 	private BluetoothAdapter mBluetoothAdapter;
+	/**
+	 * 検索中フラグ
+	 */
 	private boolean mScanning;
+	/**
+	 * 通信ハンドラー
+	 */
 	private Handler mHandler;
-
+	/**
+	 * 見つかったデバイスリスト
+	 */
 	private List<DeviceInfo> devices = new ArrayList<DeviceInfo>();
-
-	// Device scan callback.
+	/**
+	 * 検索結果を受信する
+	 */
 	private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
 		@Override
 		public void onLeScan(final BluetoothDevice device, final int rssi,
@@ -63,8 +83,6 @@ public abstract class BleDeviceScanBaseActivity extends FragmentActivity {
 		}
 		final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
 		mBluetoothAdapter = bluetoothManager.getAdapter();
-
-		// Checks if Bluetooth is supported on the device.
 		if (mBluetoothAdapter == null) {
 			Toast.makeText(this, R.string.error_bluetooth_not_supported,
 					Toast.LENGTH_SHORT).show();
@@ -102,6 +120,14 @@ public abstract class BleDeviceScanBaseActivity extends FragmentActivity {
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
+	/**
+	 * 検索を開始する
+	 * 
+	 * @param enable
+	 *            検索フラグ<br>
+	 *            true 停止する<br>
+	 *            false 検索を開始する
+	 */
 	protected void scanLeDevice(final boolean enable) {
 		if (enable) {
 			// Stops scanning after a pre-defined scan period.
@@ -123,6 +149,12 @@ public abstract class BleDeviceScanBaseActivity extends FragmentActivity {
 		invalidateOptionsMenu();
 	}
 
+	/**
+	 * 見つかったデバイスを通知する
+	 * 
+	 * @param device
+	 *            見つかったデバイス
+	 */
 	protected abstract void onDeviceScan(DeviceInfo device);
 
 }

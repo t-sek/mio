@@ -21,7 +21,7 @@ import ac.neec.mio.dao.ApiDao;
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.Sourceable;
 import ac.neec.mio.ui.adapter.ProfileSettingListAdapter;
-import ac.neec.mio.ui.adapter.ProfileSettingListItem;
+import ac.neec.mio.ui.adapter.item.ProfileSettingListItem;
 import ac.neec.mio.ui.dialog.ProfileBirthSettingDialog;
 import ac.neec.mio.ui.dialog.ProfileBirthSettingDialog.ProfileBirthCallbackListener;
 import ac.neec.mio.ui.dialog.ProfileBodilySelectDialog;
@@ -52,6 +52,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * ユーザ情報設定画面クラス
+ */
 public class UserDataSettingActivity extends Activity implements
 		PickerChangedListener, EditChangedListener, PasswordChangedListener,
 		ProfileBodilyCallbackListener, ProfileBirthCallbackListener,
@@ -59,20 +62,57 @@ public class UserDataSettingActivity extends Activity implements
 
 	private static final int MESSAGE_VALIDATE = 2;
 
+	/**
+	 * 身体情報設定リストビュー
+	 */
 	private ListView listBody;
+	/**
+	 * ユーザ情報設定リストビュー
+	 */
 	private ListView listMaster;
+	/**
+	 * アカウント情報設定リストビュー
+	 */
 	private ListView listAccount;
+	/**
+	 * 体重推移画面遷移テキストビュー
+	 */
 	private TextView textWeightGraph;
+	/**
+	 * 身体情報設定リスト
+	 */
 	private List<ProfileSettingListItem> itemBody = new ArrayList<ProfileSettingListItem>();
+	/**
+	 * ユーザ情報設定リスト
+	 */
 	private List<ProfileSettingListItem> itemMaster = new ArrayList<ProfileSettingListItem>();
+	/**
+	 * アカウント情報設定リスト
+	 */
 	private List<ProfileSettingListItem> itemAccount = new ArrayList<ProfileSettingListItem>();
+	/**
+	 * ユーザ情報
+	 */
 	private User user = User.getInstance();
+	/**
+	 * 身体情報設定リストのアダプター
+	 */
 	private ProfileSettingListAdapter bodyListAdapter;
+	/**
+	 * ユーザ情報設定リストのアダプター
+	 */
 	private ProfileSettingListAdapter masterListAdapter;
+	/**
+	 * アカウント情報設定リストのアダプター
+	 */
 	private ProfileSettingListAdapter accountListAdapter;
+	/**
+	 * WebAPI接続インスタンス
+	 */
 	private ApiDao dao;
-	private boolean daoFlag;
-
+	/**
+	 * 画面ハンドラー
+	 */
 	private Handler handler = new Handler() {
 		public void handleMessage(Message message) {
 			switch (message.what) {
@@ -102,12 +142,18 @@ public class UserDataSettingActivity extends Activity implements
 		updateList();
 	}
 
+	/**
+	 * 設定リストを初期化する
+	 */
 	private void clearList() {
 		itemBody.clear();
 		itemMaster.clear();
 		itemAccount.clear();
 	}
 
+	/**
+	 * 設定リストを設定する
+	 */
 	private void setList() {
 		itemBody.add(new ProfileSettingListItem(height(), String.valueOf(user
 				.getHeight())));
@@ -126,6 +172,9 @@ public class UserDataSettingActivity extends Activity implements
 		itemAccount.add(new ProfileSettingListItem(logout(), ""));
 	}
 
+	/**
+	 * アダプターを設定する
+	 */
 	private void setAdapter() {
 		setList();
 		bodyListAdapter = new ProfileSettingListAdapter(
@@ -164,12 +213,18 @@ public class UserDataSettingActivity extends Activity implements
 
 	}
 
+	/**
+	 * 体重推移画面に遷移する
+	 */
 	private void intentWeightGraph() {
 		Intent intent = new Intent(UserDataSettingActivity.this,
 				WeightGraphActivity.class);
 		startActivity(intent);
 	}
 
+	/**
+	 * 画面の初期化処理をする
+	 */
 	private void init() {
 		listBody = (ListView) findViewById(R.id.list_profile_body);
 		listMaster = (ListView) findViewById(R.id.list_profile_master);
@@ -184,6 +239,12 @@ public class UserDataSettingActivity extends Activity implements
 		setAdapter();
 	}
 
+	/**
+	 * 身体情報設定ダイアログを表示する
+	 * 
+	 * @param position
+	 *            設定項目
+	 */
 	private void showBodyDialog(int position) {
 		switch (position) {
 		case 0:
@@ -202,11 +263,25 @@ public class UserDataSettingActivity extends Activity implements
 		}
 	}
 
+	/**
+	 * 設定ダイアログを表示する
+	 * 
+	 * @param row
+	 *            要素
+	 * @param section
+	 *            設定項目
+	 */
 	private void showProfileBodilyDialog(String[] row, int section) {
 		new ProfileBodilySelectDialog(this, row, section).show(
 				getFragmentManager(), "dialog");
 	}
 
+	/**
+	 * ユーザ情報設定ダイアログを表示する
+	 * 
+	 * @param position
+	 *            設定項目
+	 */
 	private void showMasterDialog(int position) {
 		switch (position) {
 		case 0:
@@ -221,11 +296,6 @@ public class UserDataSettingActivity extends Activity implements
 			new UserDataSettingEditDialog(this, UserDataSettingEditDialog.MAIL)
 					.show(getFragmentManager(), "mail");
 			break;
-		// case 4:
-		// new UserDataSettingEditDialog(this,
-		// UserDataSettingEditDialog.USER_ID).show(
-		// getFragmentManager(), "user_id");
-		// break;
 		case 5:
 			new UserDataSettingPasswordDialog(this).show(getFragmentManager(),
 					"pass");
@@ -235,6 +305,9 @@ public class UserDataSettingActivity extends Activity implements
 		}
 	}
 
+	/**
+	 * ログアウトする
+	 */
 	private void userLogout() {
 		user.logout();
 		Intent intent = new Intent(UserDataSettingActivity.this,
@@ -245,12 +318,18 @@ public class UserDataSettingActivity extends Activity implements
 		finish();
 	}
 
+	/**
+	 * 安静時心拍数設定画面に遷移する
+	 */
 	private void intentQuietHeartRateMeasurement() {
 		Intent intent = new Intent(UserDataSettingActivity.this,
 				DeviceScanActivity.class);
 		startActivity(intent);
 	}
 
+	/**
+	 * 安静時心拍数設定確認画面を表示する
+	 */
 	private void showQuietHeartRateDialog() {
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 		alertDialogBuilder.setMessage("どのように設定しますか？");
@@ -274,6 +353,9 @@ public class UserDataSettingActivity extends Activity implements
 		alertDialog.show();
 	}
 
+	/**
+	 * ログアウト確認ダイアログを表示する
+	 */
 	private void showLogoutDialog() {
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 		alertDialogBuilder.setMessage("ログアウトしますか？");
@@ -295,6 +377,9 @@ public class UserDataSettingActivity extends Activity implements
 		alertDialog.show();
 	}
 
+	/**
+	 * 設定リストを更新する
+	 */
 	private void updateList() {
 		clearList();
 		setList();

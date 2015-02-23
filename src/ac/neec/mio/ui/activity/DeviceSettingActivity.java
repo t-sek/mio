@@ -19,17 +19,35 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
+/**
+ * デバイス検索を行う画面クラス
+ *
+ */
 public class DeviceSettingActivity extends BleDeviceScanBaseActivity implements
 		AlertCallbackListener {
 
 	public static String FLAG = "intent_flag";
 	public static int INTENT_MEASUREMENT = 1;
 
+	/**
+	 * デバイスを表示するリストビュー
+	 */
 	private ListView listView;
+	/**
+	 * listViewに値を設定するアダプター
+	 */
 	private DeviceScanListAdapter adapter;
+	/**
+	 * デバイスリストインデックス
+	 */
 	private int position;
+	/**
+	 * 画面遷移フラグ
+	 */
 	private int flag;
-
+	/**
+	 * 見つかったデバイスリスト
+	 */
 	private List<DeviceInfo> devices = new ArrayList<DeviceInfo>();
 
 	@Override
@@ -47,6 +65,9 @@ public class DeviceSettingActivity extends BleDeviceScanBaseActivity implements
 		super.onPause();
 	}
 
+	/**
+	 * 画面の初期化処理をする
+	 */
 	private void init() {
 		listView = (ListView) findViewById(R.id.list_scan_device);
 		adapter = new DeviceScanListAdapter(getApplicationContext(),
@@ -61,12 +82,24 @@ public class DeviceSettingActivity extends BleDeviceScanBaseActivity implements
 		});
 	}
 
+	/**
+	 * 確認ダイアログを表示する
+	 * 
+	 * @param position
+	 *            デバイスリストインデックス
+	 */
 	private void showAlertDialog(int position) {
 		this.position = position;
 		new SelectionAlertDialog(this, "このデバイスに設定しますか？", "はい", "いいえ", false)
 				.show(getFragmentManager(), "dialog");
 	}
 
+	/**
+	 * デバイス名とデバイスアドレスを保存する
+	 * 
+	 * @param position
+	 *            デバイスリストインデックス
+	 */
 	private void setDeviceInfo(int position) {
 		DeviceInfo device = devices.get(position);
 		DevicePreferenceManager.putDeviceAddress(device.getAddress());
@@ -76,6 +109,9 @@ public class DeviceSettingActivity extends BleDeviceScanBaseActivity implements
 				Toast.LENGTH_SHORT).show();
 	}
 
+	/**
+	 * 計測画面に遷移する
+	 */
 	private void intentMeasurement() {
 		Intent intent = new Intent(DeviceSettingActivity.this,
 				MeasurementActivity.class);

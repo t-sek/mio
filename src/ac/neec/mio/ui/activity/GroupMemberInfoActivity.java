@@ -52,37 +52,119 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * グループメンバー詳細画面クラス
+ *
+ */
 public class GroupMemberInfoActivity extends Activity implements Sourceable,
 		TrainingDataListCallbackListener, AlertCallbackListener {
 
+	/**
+	 * 更新メッセージ
+	 */
 	private static final int MESSAGE_UPDATE = 1;
+	/**
+	 * ネットワークエラーメッセージ
+	 */
 	private static final int MESSAGE_NETWORK_ERROR = 3;
 	private static final int DATE_NUM = 50000;
 
+	/**
+	 * ユーザ名を表示するテキストビュー
+	 */
 	private TextView textUserName;
+	/**
+	 * ユーザIDを表示するテキストビュー
+	 */
 	private TextView textUserId;
+	/**
+	 * 権限名を表示するテキストビュー
+	 */
 	private TextView textPermissionName;
+	/**
+	 * メニューを表示するテキストビュー
+	 */
 	private TextView textMenu;
+	/**
+	 * メニューリストビュー
+	 */
 	private ListView listMenu;
+	/**
+	 * メンバーアイコンを表示するイメージビュー
+	 */
 	private CircleImageView imageProfile;
+	/**
+	 * メンバーの過去のトレーニングを日付ごとに表示する折りたたみリストビュー
+	 */
 	private ExpandableListView listTraining;
+	/**
+	 * データ取得中ダイアログ
+	 */
 	private LoadingDialog dialog = new LoadingDialog();
+	/**
+	 * 過去のトレーニングリストアダプター
+	 */
 	private TrainingDateListAdapter adapter;
+	/**
+	 * メンバーのユーザID
+	 */
 	private String userId;
+	/**
+	 * メンバー名
+	 */
 	private String userName;
+	/**
+	 * メンバーの所属グループID
+	 */
 	private String groupId;
+	/**
+	 * WebAPI接続インスタンス
+	 */
 	private ApiDao dao;
+	/**
+	 * メンバーアイコン
+	 */
 	private Bitmap image;
+	/**
+	 * ローカルデータベース接続インスタンス
+	 */
 	private SQLiteDao daoSql;
+	/**
+	 * 端末ユーザの権限
+	 */
 	private Permission permission;
+	/**
+	 * メンバーの権限
+	 */
 	private Permission permissionMember;
+	/**
+	 * 権限変更フラグ
+	 */
 	private boolean permissionChange;
+	/**
+	 * ユーザ情報
+	 */
 	private User user = User.getInstance();
+	/**
+	 * WebAPIから取得したトレーニングリスト
+	 */
 	private List<Training> response = new ArrayList<Training>();
+	/**
+	 * 日付ごとのトレーニングリスト トレーニングリストビューに設定する
+	 */
 	private List<List<Training>> trainings = new ArrayList<List<Training>>();
+	/**
+	 * 設定のメニューリスト
+	 */
 	private List<String> menus = new ArrayList<String>();
+	/**
+	 * 終了フラグ
+	 */
 	private boolean finish;
 
+	/**
+	 * 画面ハンドラー
+	 */
 	Handler handler = new Handler() {
 		public void handleMessage(Message message) {
 			switch (message.what) {
@@ -133,10 +215,16 @@ public class GroupMemberInfoActivity extends Activity implements Sourceable,
 		setMenuAdapter();
 	}
 
+	/**
+	 * メニューを更新する
+	 */
 	private void update() {
 		adapter.notifyDataSetChanged();
 	}
 
+	/**
+	 * 画面の初期化処理をする
+	 */
 	private void initFindViews() {
 		textUserName = (TextView) findViewById(R.id.text_user_name);
 		textUserId = (TextView) findViewById(R.id.text_user_id);
@@ -148,6 +236,9 @@ public class GroupMemberInfoActivity extends Activity implements Sourceable,
 		imageProfile = (CircleImageView) findViewById(R.id.img_profile);
 	}
 
+	/**
+	 * メニューを追加する
+	 */
 	private void setMenuAdapter() {
 		menus = new ArrayList<String>();
 		if (permissionMember.getId() == PermissionConstants.groupAdmin()) {
@@ -185,6 +276,9 @@ public class GroupMemberInfoActivity extends Activity implements Sourceable,
 		listMenu.setAdapter(adapter);
 	}
 
+	/**
+	 * トレーナーに追加確認ダイアログを表示する
+	 */
 	private void showAddTrainerDialog() {
 		SelectionAlertDialog dialog = new SelectionAlertDialog(this,
 				SettingConstants.messageTrainer(),
@@ -193,6 +287,9 @@ public class GroupMemberInfoActivity extends Activity implements Sourceable,
 		dialog.show(getFragmentManager(), "dialog");
 	}
 
+	/**
+	 * メンバーに追加確認ダイアログを表示する
+	 */
 	private void showDeleteTrainerDialog() {
 		SelectionAlertDialog dialog = new SelectionAlertDialog(this,
 				SettingConstants.messageMember(),
@@ -201,6 +298,9 @@ public class GroupMemberInfoActivity extends Activity implements Sourceable,
 		dialog.show(getFragmentManager(), "dialog");
 	}
 
+	/**
+	 * メンバーを強制退会確認ダイアログを表示する
+	 */
 	private void showDeleteMemberDialog() {
 		SelectionAlertDialog dialog = new SelectionAlertDialog(this,
 				SettingConstants.messageNotive(),
@@ -209,6 +309,9 @@ public class GroupMemberInfoActivity extends Activity implements Sourceable,
 		dialog.show(getFragmentManager(), "dialog");
 	}
 
+	/**
+	 * トレーニングリストビューのアダプターを設定する
+	 */
 	private void setAdapter() {
 		adapter = new TrainingDateListAdapter(getApplicationContext(),
 				trainings, this, R.color.theme_white_dark);
@@ -224,6 +327,14 @@ public class GroupMemberInfoActivity extends Activity implements Sourceable,
 		});
 	}
 
+	/**
+	 * トレーニング詳細画面に遷移する
+	 * 
+	 * @param groupPosition
+	 *            日付インデックス
+	 * @param childPosition
+	 *            日付ごとのトレーニングインデックス
+	 */
 	private void intentDetailTrainingData(int groupPosition, int childPosition) {
 		Training item = trainings.get(groupPosition).get(childPosition);
 		Intent intent = new Intent(GroupMemberInfoActivity.this,
@@ -233,6 +344,9 @@ public class GroupMemberInfoActivity extends Activity implements Sourceable,
 		startActivity(intent);
 	}
 
+	/**
+	 * メンバーの情報を画面に表示する
+	 */
 	private void setUserData() {
 		textUserName.setText(userName);
 		textUserId.setText(userId);
@@ -261,12 +375,22 @@ public class GroupMemberInfoActivity extends Activity implements Sourceable,
 		listTraining.collapseGroup(position);
 	}
 
+	/**
+	 * 画面ハンドラーメッセージを設定する
+	 * 
+	 * @param msg
+	 *            メッセージ
+	 * @return メッセージインスタンス
+	 */
 	private Message setMessage(int msg) {
 		Message message = new Message();
 		message.what = msg;
 		return message;
 	}
 
+	/**
+	 * WebAPIから取得したトレーニングリストを日付ごとのリストに変換する
+	 */
 	private void setTraining() {
 		String lastDate = response.get(0).getDate();
 		List<Training> lastTraining = new ArrayList<Training>();

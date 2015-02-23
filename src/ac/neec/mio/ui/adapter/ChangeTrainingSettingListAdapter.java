@@ -13,15 +13,26 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 /**
- * 
- *
+ * トレーニング追加ダイアログでのトレーニングメニューリストビュー設定クラス
  */
 public class ChangeTrainingSettingListAdapter extends
 		ArrayAdapter<TrainingMenu> {
 
+	/**
+	 * トレーニングメニューリスト
+	 */
 	private List<TrainingMenu> list = new ArrayList<TrainingMenu>();
 	private LayoutInflater inflater;
 
+	/**
+	 * 
+	 * @param context
+	 *            コンテキスト
+	 * @param resource
+	 *            リソース
+	 * @param list
+	 *            トレーニングメニューリスト
+	 */
 	public ChangeTrainingSettingListAdapter(Context context, int resource,
 			List<TrainingMenu> list) {
 		super(context, resource, list);

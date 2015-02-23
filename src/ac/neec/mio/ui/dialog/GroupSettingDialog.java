@@ -18,27 +18,89 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+/**
+ * グループ作成、グループ編集ダイアログクラス
+ */
 public class GroupSettingDialog extends DialogFragment {
 
+	/**
+	 * グループ作成タイトル
+	 */
 	public static final String NEW_GROUP = "新規グループ登録";
+	/**
+	 * グループ編集タイトル
+	 */
 	public static final String EDIT_GROUP = "グループ編集";
 
+	/**
+	 * コールバックリスナー
+	 */
 	private CallbackListener listener;
+	/**
+	 * タイトル
+	 */
 	private String tag;
+	/**
+	 * ダイアログインスタンス
+	 */
 	private Dialog dialog;
+	/**
+	 * ダイアログタイトルを表示するテキストビュー
+	 */
 	private TextView textTitle;
+	/**
+	 * 決定ボタン
+	 */
 	private Button buttonDecided;
+	/**
+	 * グループID入力フォーム
+	 */
 	private EditText editId;
+	/**
+	 * グループ名入力フォーム
+	 */
 	private EditText editName;
+	/**
+	 * コメント入力フォーム
+	 */
 	private EditText editComment;
+	/**
+	 * グループID
+	 */
 	private String groupId;
+	/**
+	 * グループ名
+	 */
 	private String groupName;
+	/**
+	 * コメント
+	 */
 	private String comment;
 
+	/**
+	 * 入力項目通知リスナー
+	 */
 	public interface CallbackListener {
+		/**
+		 * 入力項目を通知する
+		 * 
+		 * @param groupId
+		 *            グループID
+		 * @param groupName
+		 *            グループ名
+		 * @param comment
+		 *            コメント
+		 */
 		void notifyChenged(String groupId, String groupName, String comment);
 	}
 
+	/**
+	 * 
+	 * @param listener
+	 *            コールバックリスナー
+	 * @param tag
+	 *            タイトル GroupSettingDialogクラスのNEW_GROUPかEDIT_GROUPを設定
+	 */
 	public GroupSettingDialog(CallbackListener listener, String tag) {
 		this.listener = listener;
 		this.tag = tag;
@@ -58,10 +120,19 @@ public class GroupSettingDialog extends DialogFragment {
 		return dialog;
 	}
 
+	/**
+	 * グループIDを設定する
+	 * 
+	 * @param id
+	 *            グループID
+	 */
 	public void setGroupId(String id) {
 		groupId = id;
 	}
 
+	/**
+	 * ダイアログを設定する
+	 */
 	private void setDialog() {
 		dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -71,6 +142,9 @@ public class GroupSettingDialog extends DialogFragment {
 				new ColorDrawable(Color.TRANSPARENT));
 	}
 
+	/**
+	 * 画面の初期化処理をする
+	 */
 	private void initFindViews() {
 		InputFilter[] filters = new InputFilter[] { new JapaneseInputFilter() };
 		textTitle = (TextView) dialog.findViewById(R.id.dialog_group_title);
@@ -88,6 +162,9 @@ public class GroupSettingDialog extends DialogFragment {
 		editComment.setText(comment);
 	}
 
+	/**
+	 * 入力項目を確認する
+	 */
 	private void checkInsertData() {
 		String id;
 		if (tag.equals(EDIT_GROUP)) {
@@ -102,6 +179,9 @@ public class GroupSettingDialog extends DialogFragment {
 		}
 	}
 
+	/**
+	 * ビューにリスナーを設定する
+	 */
 	private void setListeners() {
 		buttonDecided.setOnClickListener(new OnClickListener() {
 			@Override

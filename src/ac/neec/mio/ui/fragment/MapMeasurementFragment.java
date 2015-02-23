@@ -27,35 +27,60 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
+/**
+ * 計測画面(左)画面クラス
+ *
+ */
 public class MapMeasurementFragment extends MapBaseFragment {
 
-	// private FragmentManager fragmentManager;
+	/**
+	 * 画面ビュー
+	 */
 	private static View view;
+	/**
+	 * Googleマップフラグメント
+	 */
 	private SupportMapFragment mapFragment;
+	/**
+	 * 右のタブに移動するボタン
+	 */
 	private Button buttonMoveRight;
-
+	/**
+	 * コールバックリスナー
+	 */
 	private LocationCallbackListener listener;
+	/**
+	 * 現在の位置情報
+	 */
 	private Location lastLocation;
+	/**
+	 * 走行距離
+	 */
 	private double distance = 0;
+	/**
+	 * 走行スピード
+	 */
 	private float[] results = new float[1];
 
-	public MapMeasurementFragment(FragmentManager fragmentManager,
-			LocationCallbackListener listener) {
+	/**
+	 * 
+	 * @param listener
+	 *            コールバックリスナー
+	 */
+	public MapMeasurementFragment(LocationCallbackListener listener) {
 		this.listener = listener;
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-//		map = ((SupportMapFragment) getActivity().getSupportFragmentManager()
-				map = ((SupportMapFragment) getChildFragmentManager()
-				.findFragmentById(R.id.map)).getMap();
+		map = ((SupportMapFragment) getChildFragmentManager().findFragmentById(
+				R.id.map)).getMap();
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.e("fragment", "onCreate called!!");
 		if (savedInstanceState != null && mapFragment == null) {
 			mapFragment = (SupportMapFragment) getActivity()
 					.getSupportFragmentManager().getFragment(
@@ -66,7 +91,6 @@ public class MapMeasurementFragment extends MapBaseFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-
 		if (view != null) {
 			ViewGroup parent = (ViewGroup) view.getParent();
 			if (parent != null) {
@@ -82,6 +106,9 @@ public class MapMeasurementFragment extends MapBaseFragment {
 		return view;
 	}
 
+	/**
+	 * 画面の初期化処理をする
+	 */
 	private void init() {
 		mapFragment = (SupportMapFragment) getActivity()
 				.getSupportFragmentManager().findFragmentById(R.id.map);
@@ -92,12 +119,8 @@ public class MapMeasurementFragment extends MapBaseFragment {
 				listener.onPagerMoveRight();
 			}
 		});
-		// map = ((SupportMapFragment)
-		// fragmentManager.findFragmentById(R.id.map))
-		// .getMap();
 		MapsInitializer.initialize(getActivity().getApplicationContext());
 		setLocationListener(getActivity().getApplicationContext());
-
 	}
 
 	@Override
@@ -116,7 +139,6 @@ public class MapMeasurementFragment extends MapBaseFragment {
 		if (mapFragment != null) {
 			getActivity().getSupportFragmentManager().putFragment(outState,
 					"map_fragment", mapFragment);
-			Log.e("fragment", "onSaveInstanceState " + outState);
 		}
 		super.onSaveInstanceState(outState);
 	}
@@ -149,12 +171,6 @@ public class MapMeasurementFragment extends MapBaseFragment {
 		listener.onLocationChanged(location,
 				bd.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue(), speed);
 		lastLocation = location;
-	}
-
-	private void moveToSapporoStation() {
-		CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(new LatLng(43.0675,
-				141.350784), 15);
-		map.moveCamera(cu);
 	}
 
 	@Override

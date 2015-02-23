@@ -19,27 +19,67 @@ import android.widget.TextView;
 import com.sek.drumpicker.DrumPicker;
 import com.sek.drumpicker.DrumPickerListener;
 
+/**
+ * トレーニングカテゴリー、トレーニングメニューをピッカーで選択するダイアログクラス
+ */
 public class TrainingSelectedDialog extends DialogFragment implements
 		DrumPickerListener {
 
+	/**
+	 * コンテキスト
+	 */
 	private Context context;
+	/**
+	 * コールバックリスナー
+	 */
 	private TrainingSelectCallbackListener listener;
+	/**
+	 * ダイアログインスタンス
+	 */
 	private Dialog dialog;
+	/**
+	 * ピッカー要素
+	 */
 	private String[] row;
+	/**
+	 * 決定ボタン
+	 */
 	private Button buttonDecided;
+	/**
+	 * 選択されたデータを表示するテキストビュー
+	 */
 	private TextView textDataInsert;
+	/**
+	 * 選択されているピッカーのインデックス
+	 */
 	private int index;
+	/**
+	 * 選択ピッカー
+	 */
 	private DrumPicker picker;
 
+	/**
+	 * 
+	 * @param context
+	 *            コンテキスト
+	 * @param listener
+	 *            コールバックリスナー
+	 * @param row
+	 *            ピッカーに設定する要素
+	 * @param index
+	 *            ピッカーの開始インデックス
+	 */
 	public TrainingSelectedDialog(Context context,
 			TrainingSelectCallbackListener listener, String[] row, int index) {
 		this.context = context;
 		this.listener = listener;
 		this.row = row;
-		Log.d("dialog", "create index " + index);
 		this.index = index;
 	}
 
+	/**
+	 * ダイアログを設定する
+	 */
 	private void setDialog() {
 		dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		// フルスクリーン
@@ -49,9 +89,11 @@ public class TrainingSelectedDialog extends DialogFragment implements
 		// 背景を透明にする
 		dialog.getWindow().setBackgroundDrawable(
 				new ColorDrawable(Color.TRANSPARENT));
-		// setCancelable(false);
 	}
 
+	/**
+	 * 画面の初期化処理をする
+	 */
 	private void initFindViews() {
 		buttonDecided = (Button) dialog.findViewById(R.id.btn_dialog_decided);
 		picker = (DrumPicker) dialog.findViewById(R.id.picker);
@@ -62,9 +104,12 @@ public class TrainingSelectedDialog extends DialogFragment implements
 		picker.setOnDrumPickerListener(this);
 		picker.setUpdateStyle(false);
 		picker.setTextSize(20);
-		picker.setScrollPosition(index-1);
+		picker.setScrollPosition(index - 1);
 	}
 
+	/**
+	 * ビューにリスナーを設定する
+	 */
 	private void setListeners() {
 		buttonDecided.setOnClickListener(new OnClickListener() {
 			@Override
@@ -88,7 +133,6 @@ public class TrainingSelectedDialog extends DialogFragment implements
 	@Override
 	public void onScrollChanged(String tag, String element, int index) {
 		textDataInsert.setText(element);
-		Log.d("dialog", "index " + index);
 		listener.onSelected(index);
 	}
 

@@ -1,22 +1,16 @@
 package ac.neec.mio.ui.activity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import ac.neec.mio.R;
 import ac.neec.mio.consts.ErrorConstants;
 import ac.neec.mio.consts.MessageConstants;
-import ac.neec.mio.consts.PermissionConstants;
 import ac.neec.mio.dao.ApiDao;
 import ac.neec.mio.dao.DaoFacade;
 import ac.neec.mio.dao.SQLiteDao;
 import ac.neec.mio.dao.Sourceable;
-import ac.neec.mio.exception.SQLiteInsertException;
-import ac.neec.mio.exception.SQLiteTableConstraintException;
 import ac.neec.mio.exception.XmlParseException;
 import ac.neec.mio.exception.XmlReadException;
-import ac.neec.mio.group.Affiliation;
-import ac.neec.mio.group.Group;
 import ac.neec.mio.group.GroupInfo;
 import ac.neec.mio.ui.adapter.GroupListPagerAdapter;
 import ac.neec.mio.ui.dialog.GroupSettingDialog;
@@ -24,8 +18,6 @@ import ac.neec.mio.ui.dialog.GroupSettingDialog.CallbackListener;
 import ac.neec.mio.ui.dialog.LoadingDialog;
 import ac.neec.mio.ui.listener.SearchNotifyListener;
 import ac.neec.mio.user.User;
-import ac.neec.mio.user.UserInfo;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,7 +27,6 @@ import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,20 +36,51 @@ import android.widget.Toast;
 public class GroupListActivity extends FragmentActivity implements Sourceable,
 		CallbackListener {
 
+	/**
+	 * 追加エラーメッセージ
+	 */
 	private static final int MESSAGE_ADD_ERROR = 7;
+	/**
+	 * 不正文字入力エラーメッセージ
+	 */
 	private static final int MESSAGE_VALIDATE = 2;
 
-	private List<Group> list = new ArrayList<Group>();
+	/**
+	 * タブ
+	 */
 	private ViewPager viewPager;
+	/**
+	 * グループ検索を行うテキストフォーム
+	 */
 	private EditText searchGroup;
+	/**
+	 * タブ通知リスナー
+	 */
 	private List<SearchNotifyListener> listeners;
+	/**
+	 * WebAPI接続インスタンス
+	 */
 	private ApiDao dao;
+	/**
+	 * ローカルデータベース接続インスタンス
+	 */
 	private SQLiteDao daoSql;
+	/**
+	 * ユーザ情報
+	 */
 	private User user = User.getInstance();
-	private List<Affiliation> affiliations = new ArrayList<Affiliation>();
+	/**
+	 * データ取得中ダイアログ
+	 */
 	private LoadingDialog dialog;
+	/**
+	 * グループ追加フラグ
+	 */
 	private boolean createGroup;
 
+	/**
+	 * 画面ハンドラー
+	 */
 	Handler handler = new Handler() {
 		public void handleMessage(Message message) {
 			switch (message.what) {
@@ -120,6 +142,9 @@ public class GroupListActivity extends FragmentActivity implements Sourceable,
 		return true;
 	}
 
+	/**
+	 * グループ検索結果をタブに通知する
+	 */
 	private void setSearchEdit() {
 		searchGroup = (EditText) findViewById(R.id.search_group);
 		searchGroup.addTextChangedListener(new TextWatcher() {
@@ -150,44 +175,17 @@ public class GroupListActivity extends FragmentActivity implements Sourceable,
 
 	}
 
-	private void setMyGroupList(UserInfo info) {
-		daoSql.deleteAffiliation();
-		daoSql.deleteGroup();
-		// List<Affiliation> affiliations = info.getAffiliations();
-		List<Group> groups = info.getGroups();
-		for (Group group : groups) {
-			int permissionId = group.getPermissionId();
-			if (permissionId != PermissionConstants.notice()
-					&& permissionId != PermissionConstants.pending()) {
-				Log.d("activity", "delete permission " + permissionId
-						+ " group " + group.getGroupName());
-				try {
-					daoSql.insertAffiliation(group.getId(),
-							group.getPermissionId());
-					daoSql.insertGroup(group.getId(), group.getGroupName(),
-							group.getComment(), group.getUserId(),
-							group.getCreated(), group.getPermissionId());
-				} catch (SQLiteInsertException e) {
-					e.printStackTrace();
-				} catch (SQLiteTableConstraintException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-
+	/**
+	 * グループ作成ダイアログを表示する
+	 */
 	private void showNewGroupSettingDialog() {
 		new GroupSettingDialog(this, GroupSettingDialog.NEW_GROUP).show(
 				getSupportFragmentManager(), "");
 	}
 
-	private void intentGroupDetails(String groupId) {
-		Intent intent = new Intent(GroupListActivity.this,
-				GroupDetailsActivity.class);
-		intent.putExtra("Group_Id", groupId);
-		startActivity(intent);
-	}
-
+	/**
+	 * タブに更新を通知する
+	 */
 	private void setGroupList() {
 		for (SearchNotifyListener listener : listeners) {
 			listener.onUpdate();

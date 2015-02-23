@@ -22,17 +22,43 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 
+/**
+ * トレーニングメニュー変更ダイアログクラス
+ */
 public class ChangeTrainingSelectDialog extends DialogFragment {
 
+	/**
+	 * ダイアログ
+	 */
 	private Dialog dialog;
-
+	/**
+	 * トレーニングメニューリストビュー
+	 */
 	private ListView listView;
-
+	/**
+	 * コールバックリスナー
+	 */
 	private MeasurementCallbackListener listener;
+	/**
+	 * トレーニングメニューリスト
+	 */
 	private List<TrainingMenu> list = new ArrayList<TrainingMenu>();
+	/**
+	 * トレーニングメニューリストの設定アダプター
+	 */
 	private ChangeTrainingSettingListAdapter adapter;
+	/**
+	 * ローカルデータベース接続インスタンス
+	 */
 	private SQLiteDao dao;
 
+	/**
+	 * 
+	 * @param listener
+	 *            コールバックリスナー
+	 * @param categoryId
+	 *            カテゴリーID
+	 */
 	public ChangeTrainingSelectDialog(MeasurementCallbackListener listener,
 			int categoryId) {
 		this.listener = listener;
@@ -55,6 +81,9 @@ public class ChangeTrainingSelectDialog extends DialogFragment {
 		listener.onDialogCancel();
 	}
 
+	/**
+	 * ダイアログを設定する
+	 */
 	private void setDialog() {
 		dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		dialog.setContentView(R.layout.dialog_new_training_select);
@@ -62,6 +91,9 @@ public class ChangeTrainingSelectDialog extends DialogFragment {
 				LayoutParams.WRAP_CONTENT);
 	}
 
+	/**
+	 * アダプターを設定する
+	 */
 	private void setAdapter() {
 		listView = (ListView) dialog.findViewById(R.id.list_training_menu);
 		adapter = new ChangeTrainingSettingListAdapter(getActivity(),

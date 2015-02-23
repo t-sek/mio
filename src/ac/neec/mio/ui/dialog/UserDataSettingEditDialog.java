@@ -18,24 +18,73 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+/**
+ * ユーザ情報設定ダイアログクラス
+ *
+ */
 public class UserDataSettingEditDialog extends DialogFragment {
 
+	/**
+	 * ユーザ名フラグ
+	 */
 	public static final int NAME = 1;
+	/**
+	 * メールアドレスフラグ
+	 */
 	public static final int MAIL = 2;
+	/**
+	 * ユーザIDフラグ
+	 */
 	public static final int USER_ID = 3;
 
+	/**
+	 * ダイアログインスタンス
+	 */
 	private Dialog dialog;
+	/**
+	 * ダイアログタイトルを表示するテキストビュー
+	 */
 	private TextView textTitle;
+	/**
+	 * 入力フォーム
+	 */
 	private EditText edit;
+	/**
+	 * 決定ボタン
+	 */
 	private Button button;
+	/**
+	 * コールバックリスナー
+	 */
 	private EditChangedListener listener;
+	/**
+	 * フラグ<br>
+	 * DuserDataSettingEditDialogクラスのNAME、MAIL、USER_ID
+	 */
 	private int item;
+	/**
+	 * ユーザ情報
+	 */
 	private User user = User.getInstance();
 
+	/**
+	 * コールバックリスナー
+	 */
 	public interface EditChangedListener {
+		/**
+		 * 変更を通知する
+		 */
 		void dataChanged();
 	}
 
+	/**
+	 * 
+	 * @param listener
+	 *            コールバックリスナー
+	 * @param item
+	 *            フラグ<br>
+	 *            DuserDataSettingEditDialogクラスのNAME、MAIL、USER_ID
+	 */
 	public UserDataSettingEditDialog(EditChangedListener listener, int item) {
 		this.listener = listener;
 		this.item = item;
@@ -49,6 +98,9 @@ public class UserDataSettingEditDialog extends DialogFragment {
 		return dialog;
 	}
 
+	/**
+	 * 画面の初期化処理をする
+	 */
 	private void init() {
 		textTitle = (TextView) dialog.findViewById(R.id.dialog_title);
 		button = (Button) dialog.findViewById(R.id.button);
@@ -74,7 +126,7 @@ public class UserDataSettingEditDialog extends DialogFragment {
 			textTitle.setText(mail());
 			break;
 		case USER_ID:
-//			edit.setInputType(InputType.TYPE_CLASS_PHONE);
+			// edit.setInputType(InputType.TYPE_CLASS_PHONE);
 			edit.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_SUBJECT);
 			// edit.setInputType(InputType.TYPE_CLASS_TEXT);
 			edit.setText(user.getId());
@@ -85,6 +137,9 @@ public class UserDataSettingEditDialog extends DialogFragment {
 		}
 	}
 
+	/**
+	 * 設定されたデータを保存する
+	 */
 	private void storeUpEditData() {
 		switch (item) {
 		case NAME:
@@ -102,6 +157,9 @@ public class UserDataSettingEditDialog extends DialogFragment {
 
 	}
 
+	/**
+	 * ダイアログを設定する
+	 */
 	private void setDialog() {
 		dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		dialog.setContentView(R.layout.dialog_user_data_setting_edit);

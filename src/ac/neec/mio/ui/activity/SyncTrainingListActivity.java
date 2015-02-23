@@ -1,6 +1,5 @@
 package ac.neec.mio.ui.activity;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +19,6 @@ import ac.neec.mio.ui.adapter.SyncTrainingListAdapter.CallbackListener;
 import ac.neec.mio.ui.adapter.item.SyncTrainingItem;
 import ac.neec.mio.ui.dialog.LoadingDialog;
 import ac.neec.mio.ui.dialog.SelectionAlertDialog;
-import ac.neec.mio.ui.fragment.top.TrainingDataFragment;
 import ac.neec.mio.ui.listener.AlertCallbackListener;
 import ac.neec.mio.user.User;
 import ac.neec.mio.util.TimeUtil;
@@ -38,6 +36,10 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
+/**
+ * トレーニング未同期一覧画面クラス
+ *
+ */
 public class SyncTrainingListActivity extends Activity implements Sourceable,
 		CallbackListener, AlertCallbackListener {
 	private static final int FLAG_TRAINING = 2;
@@ -48,20 +50,62 @@ public class SyncTrainingListActivity extends Activity implements Sourceable,
 	private static final int MESSAGE_UNCLICK = 7;
 	private static final int MESSAGE_UPDATE = 8;
 
+	/**
+	 * 未同期トレーニングを表示するリストビュー
+	 */
 	private ListView listView;
+	/**
+	 * リストビューのアダプター
+	 */
 	private SyncTrainingListAdapter adapter;
+	/**
+	 * データ同期中ダイアログ
+	 */
 	private LoadingDialog dialog;
+	/**
+	 * WebAPI接続インスタンス
+	 */
 	private ApiDao dao;
+	/**
+	 * ローカルデータベース接続インスタンス
+	 */
 	private SQLiteDao daoSql;
+	/**
+	 * 未同期トレーニングリスト<br>
+	 * 日付、カテゴリー
+	 */
 	private List<SyncTrainingItem> list = new ArrayList<SyncTrainingItem>();
+	/**
+	 * ユーザ情報
+	 */
 	private User user = User.getInstance();
+	/**
+	 * WebAPI通信フラグ
+	 */
 	private int daoFlag;
+	/**
+	 * WebAPIから取得したトレーニングID
+	 */
 	private int trainingId;
+	/**
+	 * 未同期トレーニングID
+	 */
 	private int id;
+	/**
+	 * 未同期トレーニング情報リスト
+	 */
 	private List<Training> trainings;
+	/**
+	 * 未同期トレーニングログリスト
+	 */
 	private List<TrainingLog> trainingLogs;
+	/**
+	 * 未同期トレーニングプレイリスト
+	 */
 	private List<TrainingPlay> trainingPlays;
-
+	/**
+	 * 画面ハンドラー
+	 */
 	Handler handler = new Handler() {
 		public void handleMessage(Message message) {
 			switch (message.what) {
@@ -101,13 +145,6 @@ public class SyncTrainingListActivity extends Activity implements Sourceable,
 	}
 
 	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		// startActivityForResult(getIntent(),
-		// TrainingDataFragment.REQUEST_CODE);
-	}
-
-	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.sync_training, menu);
 		return true;
@@ -126,6 +163,9 @@ public class SyncTrainingListActivity extends Activity implements Sourceable,
 		return true;
 	}
 
+	/**
+	 * 未同期トレーニングリストを設定する
+	 */
 	private void setTrainingList() {
 		List<Training> trainings = daoSql.selectTraining();
 		if (trainings.size() == 0) {
@@ -139,11 +179,9 @@ public class SyncTrainingListActivity extends Activity implements Sourceable,
 		}
 	}
 
-	private void clickLog(int position) {
-		Toast.makeText(this, "Item click: " + adapter.getItem(position),
-				Toast.LENGTH_SHORT).show();
-	}
-
+	/**
+	 * 画面の初期化処理をする
+	 */
 	private void init() {
 		listView = (ListView) findViewById(R.id.list_training);
 		listView.setAdapter(adapter);
@@ -158,6 +196,9 @@ public class SyncTrainingListActivity extends Activity implements Sourceable,
 		dialog = new LoadingDialog("保存中");
 	}
 
+	/**
+	 * トレーニング情報を同期する
+	 */
 	private void insertTraining() {
 		daoFlag = FLAG_TRAINING;
 		if (trainings.size() == 0) {
@@ -177,6 +218,9 @@ public class SyncTrainingListActivity extends Activity implements Sourceable,
 		trainings.remove(0);
 	}
 
+	/**
+	 * トレーニングログを同期する
+	 */
 	private void insertTrainingLog() {
 		daoFlag = FLAG_TRAINING_LOG;
 		Log.d("activity", "trainingLog size " + trainingLogs.size());
@@ -190,6 +234,9 @@ public class SyncTrainingListActivity extends Activity implements Sourceable,
 		}
 	}
 
+	/**
+	 * トレーニングプレイを同期する
+	 */
 	private void insertTrainingPlay() {
 		daoFlag = FLAG_TRAINING_PLAY;
 		if (trainingPlays.size() != 0) {
@@ -201,13 +248,21 @@ public class SyncTrainingListActivity extends Activity implements Sourceable,
 		}
 	}
 
+	/**
+	 * ローカルデータベースからトレーニング情報を削除する
+	 */
 	private void deleteTraining() {
-		Log.e("activity", "delete id " + id);
 		daoSql.deleteTraining(id);
 		daoSql.deleteTrainingLog(id);
 		daoSql.deleteTrainingPlay(id);
 	}
 
+	/**
+	 * 選択されたトレーニングを同期する
+	 * 
+	 * @param items
+	 *            選択されたトレーニング
+	 */
 	private void uploadItems(List<SyncTrainingItem> items) {
 		daoFlag = FLAG_TRAINING;
 		trainings = new ArrayList<Training>();
@@ -218,24 +273,36 @@ public class SyncTrainingListActivity extends Activity implements Sourceable,
 		insertTraining();
 	}
 
+	/**
+	 * トレーニング削除確認ダイアログを表示する
+	 */
 	private void showDeleteDialog() {
 		SelectionAlertDialog dialog = new SelectionAlertDialog(this,
 				"トレーニングを削除しますか？", "はい", "いいえ", false);
 		dialog.show(getFragmentManager(), "dialog");
 	}
 
+	/**
+	 * ネットワークエラーをトーストで表示する
+	 */
 	private void showNetworkError() {
 		Toast.makeText(getApplicationContext(), "ネットワークに接続できません",
 				Toast.LENGTH_SHORT).show();
 		uncheckAll();
 	}
 
+	/**
+	 * 同期エラーをトーストで表示する
+	 */
 	private void showError() {
 		Toast.makeText(getApplicationContext(), "同期に失敗しました", Toast.LENGTH_SHORT)
 				.show();
 		uncheckAll();
 	}
 
+	/**
+	 * 全チェックをはずす
+	 */
 	private void uncheckAll() {
 		adapter.uncheckAll();
 	}
@@ -249,7 +316,6 @@ public class SyncTrainingListActivity extends Activity implements Sourceable,
 				if (trainingId == 0) {
 					throw new CreateTrainingIdException();
 				}
-				Log.d("activity", "trainingId " + trainingId);
 			} catch (XmlParseException e) {
 				e.printStackTrace();
 				dialog.dismiss();
@@ -275,9 +341,7 @@ public class SyncTrainingListActivity extends Activity implements Sourceable,
 			}
 			break;
 		case FLAG_TRAINING_PLAY:
-			Log.e("activity", "play complete ");
 			if (trainingPlays.size() != 0) {
-				Log.e("activity", "insert play ");
 				insertTrainingPlay();
 			} else {
 				if (trainings.size() != 0) {
@@ -285,7 +349,6 @@ public class SyncTrainingListActivity extends Activity implements Sourceable,
 					insertTraining();
 				} else {
 					deleteTraining();
-					Log.e("activity", "training finish");
 					setMessage(MESSAGE_UNCLICK);
 					setMessage(MESSAGE_UPDATE);
 					dialog.dismiss();
@@ -297,9 +360,16 @@ public class SyncTrainingListActivity extends Activity implements Sourceable,
 		}
 	}
 
-	private void setMessage(int what) {
+	/**
+	 * 画面ハンドラーメッセージを設定する
+	 *
+	 * @param msg
+	 *            メッセージ
+	 * @return メッセージインスタンス
+	 */
+	private void setMessage(int msg) {
 		Message message = new Message();
-		message.what = what;
+		message.what = msg;
 		handler.sendMessage(message);
 	}
 
@@ -320,6 +390,11 @@ public class SyncTrainingListActivity extends Activity implements Sourceable,
 		updateAdapter();
 	}
 
+	/**
+	 * トレーニングを設定する
+	 * 
+	 * @return トレーニングリスト
+	 */
 	private List<SyncTrainingItem> setTrainingAll() {
 		List<SyncTrainingItem> items = new ArrayList<SyncTrainingItem>();
 		for (int i = 0; i < adapter.getCount(); i++) {
@@ -328,15 +403,24 @@ public class SyncTrainingListActivity extends Activity implements Sourceable,
 		return items;
 	}
 
+	/**
+	 * 全てのトレーニングを同期する
+	 */
 	private void uploadTrainingAll() {
 		uploadItems(setTrainingAll());
 	}
 
+	/**
+	 * 全てのトレーニングを削除する
+	 */
 	private void deleteTrainingAll() {
 		deleteItems(setTrainingAll());
 		finish();
 	}
 
+	/**
+	 * トレーニングリストを更新する
+	 */
 	private void updateAdapter() {
 		adapter.clear();
 		setTrainingList();
@@ -373,7 +457,7 @@ public class SyncTrainingListActivity extends Activity implements Sourceable,
 	@Override
 	public void validate() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

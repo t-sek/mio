@@ -18,18 +18,52 @@ import android.widget.Toast;
 
 import com.manuelpeinado.multichoiceadapter.MultiChoiceArrayAdapter;
 
+/**
+ * 未同期トレーニングリストビュー設定クラス
+ */
 public class SyncTrainingListAdapter extends
 		MultiChoiceArrayAdapter<SyncTrainingItem> {
-	private LayoutInflater inflater;
+	/**
+	 * 未同期トレーニングリスト
+	 */
 	private List<SyncTrainingItem> items = new ArrayList<SyncTrainingItem>();
+	/**
+	 * コールバックリスナー
+	 */
 	private CallbackListener listener;
 
+	/**
+	 * 選択された項目を通知する
+	 */
 	public interface CallbackListener {
+		/**
+		 * 選択された項目を同期する
+		 * 
+		 * @param items
+		 *            選択された項目
+		 */
 		void onUpload(List<SyncTrainingItem> items);
 
+		/**
+		 * 選択された項目を削除する
+		 * 
+		 * @param items
+		 *            選択された項目
+		 */
 		void onDelete(List<SyncTrainingItem> items);
 	}
 
+	/**
+	 * 
+	 * @param savedInstanceState
+	 *            画面情報
+	 * @param context
+	 *            コンテキスト
+	 * @param listener
+	 *            コールバックリスナー
+	 * @param items
+	 *            未同期トレーニングリスト
+	 */
 	public SyncTrainingListAdapter(Bundle savedInstanceState, Context context,
 			CallbackListener listener, List<SyncTrainingItem> items) {
 		super(savedInstanceState, context,
@@ -37,8 +71,6 @@ public class SyncTrainingListAdapter extends
 				items);
 		this.listener = listener;
 		this.items = items;
-		inflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	@Override
@@ -55,12 +87,20 @@ public class SyncTrainingListAdapter extends
 		return view;
 	}
 
+	/**
+	 * 全項目の選択をはずす
+	 */
 	public void uncheckAll() {
 		for (int i = 0; i < getCount(); i++) {
 			setItemChecked(i, false);
 		}
 	}
 
+	/**
+	 * 選択されている項目リストを取得する
+	 * 
+	 * @return 選択されている項目リスト
+	 */
 	private List<SyncTrainingItem> setClickList() {
 		List<SyncTrainingItem> clickList = new ArrayList<SyncTrainingItem>();
 		for (int i = 0; i < items.size(); i++) {

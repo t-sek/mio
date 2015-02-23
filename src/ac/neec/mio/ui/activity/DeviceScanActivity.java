@@ -16,10 +16,23 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+/**
+ * デバイス検索を行う画面クラス
+ *
+ */
 public class DeviceScanActivity extends BleDeviceScanBaseActivity {
 
+	/**
+	 * 見つかったデバイス一覧を表示するリストビュー
+	 */
 	private ListView listView;
+	/**
+	 * デバイス一覧リストビューのアダプター
+	 */
 	private DeviceScanListAdapter adapter;
+	/**
+	 * 見つかったデバイスリスト
+	 */
 	private List<DeviceInfo> devices = new ArrayList<DeviceInfo>();
 
 	@Override
@@ -30,6 +43,9 @@ public class DeviceScanActivity extends BleDeviceScanBaseActivity {
 		scanLeDevice(true);
 	}
 
+	/**
+	 * 画面の初期化処理をする
+	 */
 	private void init() {
 		listView = (ListView) findViewById(R.id.list_device_scan);
 		adapter = new DeviceScanListAdapter(getApplicationContext(),
@@ -44,6 +60,9 @@ public class DeviceScanActivity extends BleDeviceScanBaseActivity {
 		});
 	}
 
+	/**
+	 * 安静時心拍数計測画面に遷移する
+	 */
 	private void intentQuietHeartRateMeasurement() {
 		Intent intent = new Intent(DeviceScanActivity.this,
 				QuietHeartRateMeasurementActivity.class);
@@ -51,6 +70,12 @@ public class DeviceScanActivity extends BleDeviceScanBaseActivity {
 		finish();
 	}
 
+	/**
+	 * デバイスを保存する
+	 * 
+	 * @param position
+	 *            リストインデックス
+	 */
 	private void setDeviceInfo(int position) {
 		DeviceInfo device = devices.get(position);
 		DevicePreferenceManager.putDeviceAddress(device.getAddress());

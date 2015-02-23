@@ -3,7 +3,7 @@ package ac.neec.mio.training.lap;
 import ac.neec.mio.framework.ProductData;
 
 /**
- * ラップクラス
+ * トレーニング中に追加されたラップタイムを記録していくクラス
  *
  */
 public class LapItem extends ProductData {
@@ -21,7 +21,7 @@ public class LapItem extends ProductData {
 	 */
 	private String splitTime;
 	/**
-	 * 距離
+	 * 走行距離
 	 */
 	private String distance;
 
@@ -34,7 +34,7 @@ public class LapItem extends ProductData {
 	 * @param splitTime
 	 *            スプリットタイム
 	 * @param distance
-	 *            距離
+	 *            走行距離
 	 */
 	public LapItem(int id, String lapTime, String splitTime, String distance) {
 		this.id = id;
@@ -71,9 +71,9 @@ public class LapItem extends ProductData {
 	}
 
 	/**
-	 * 距離を取得する
+	 * 走行距離を取得する
 	 * 
-	 * @return 距離
+	 * @return 走行距離
 	 */
 	public String getDistance() {
 		return distance;

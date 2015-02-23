@@ -47,6 +47,10 @@ import com.koba.androidrtchart.LineDot;
 import com.koba.androidrtchart.LineDotTouchListener;
 import com.koba.androidrtchart.LineGraph;
 
+/**
+ * トレーニングデータ参照画面クラス
+ *
+ */
 public class TrainingDataDetailActivity extends FragmentActivity implements
 		Sourceable {
 
@@ -54,17 +58,41 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 		void update();
 	}
 
+	/**
+	 * 更新メッセージ
+	 */
 	private static final int MESSAGE_UPDATE = 0;
+	/**
+	 * エラーメッセージ
+	 */
 	private static final int MESSAGE_ERROR = 2;
-
+	/**
+	 * コールバックリスナー
+	 */
 	private CallbackListener listener;
-
+	/**
+	 * データ取得中ダイアログ
+	 */
 	private LoadingDialog dialog;
+	/**
+	 * トレーニング情報
+	 */
 	private static TrainingInfo training;
+	/**
+	 * 表示するトレーニングを実施したユーザID
+	 */
 	private String targetUserId;
+	/**
+	 * ユーザ情報
+	 */
 	private static User user = User.getInstance();
+	/**
+	 * WebAPI接続インスタンス
+	 */
 	private ApiDao dao;
-
+	/**
+	 * 画面ハンドラー
+	 */
 	Handler handler = new Handler() {
 		public void handleMessage(Message message) {
 			switch (message.what) {
@@ -121,6 +149,9 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 		return true;
 	}
 
+	/**
+	 * 走行ルート画面に遷移する
+	 */
 	private void intentMapData() {
 		Intent intent = new Intent(TrainingDataDetailActivity.this,
 				MapDataActivity.class);
@@ -137,19 +168,57 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 	public static class PlaceholderFragment extends Fragment implements
 			LineDotTouchListener, CallbackListener, ColorBarListener {
 
+		/**
+		 * 心拍数グラフ
+		 */
 		private LineGraph graph;
+		/**
+		 * トレーニング名を表示するテキストビュー
+		 */
 		private TextView textDetailName;
+		/**
+		 * 計測時間を表示するテキストビュー
+		 */
 		private TextView textDetailTime;
+		/**
+		 * メッツを表示するテキストビュー
+		 */
 		private TextView textDetailMets;
+		/**
+		 * カロリーを表示するテキストビュー
+		 */
 		private TextView textDetailCalorie;
+		/**
+		 * 走行距離を表示するテキストビュー
+		 */
 		private TextView textDetailDistance;
+		/**
+		 * 選択された計測を表示するテキストビュー
+		 */
 		private TextView textDatasTime;
+		/**
+		 * 選択された心拍数を表示するテキストビュー
+		 */
 		private TextView textDatasHeartRate;
+		/**
+		 * 選択された消費カロリーを表示するテキストビュー
+		 */
 		private TextView textDatasCalorie;
-
+		/**
+		 * トレーニングメニューを表すカラーバー
+		 */
 		private ColorBar colorbar;
+		/**
+		 * ローカルデータベース接続インスタンス
+		 */
 		private SQLiteDao daoSql;
+		/**
+		 * グラフに表示するトレーニングログリスト
+		 */
 		private List<TrainingLog> logs = new ArrayList<TrainingLog>();
+		/**
+		 * カラーバーに表示するトレーニングプレイリスト
+		 */
 		private List<TrainingPlay> plays = new ArrayList<TrainingPlay>();
 
 		public PlaceholderFragment() {
@@ -165,6 +234,11 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 			return rootView;
 		}
 
+		/**
+		 * 画面の初期化処理をする
+		 * 
+		 * @param rootView
+		 */
 		private void initFindViews(View rootView) {
 			graph = (LineGraph) rootView.findViewById(R.id.line_graph);
 			textDetailName = (TextView) rootView
@@ -187,6 +261,9 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 			colorbar.setOnTouchListener(this);
 		}
 
+		/**
+		 * 心拍グラフを設定する
+		 */
 		private void setLineGraph() {
 			graph.setLineDotTouchListener(this);
 			graph.setLineDotLmit(logs.size());
@@ -198,6 +275,9 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 			graph.notifyDataSetChenged();
 		}
 
+		/**
+		 * カラーバーを設定する
+		 */
 		private void setColorBar() {
 			ColorBarItem item;
 			for (TrainingPlay play : plays) {
@@ -208,7 +288,8 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 						.getTrainingMenuId());
 				if (menu != null) {
 					color = menu.getColor();
-					item = new ColorBarItem(play.getTrainingTime(), menu.getTrainingName(), color);
+					item = new ColorBarItem(play.getTrainingTime(),
+							menu.getTrainingName(), color);
 					colorbar.addBarItem(item);
 				} else {
 					color = ColorUtil.DEFAULT_COLOR;
@@ -216,6 +297,9 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 			}
 		}
 
+		/**
+		 * トレーニング情報を画面に更新する
+		 */
 		private void setViewText() {
 			if (training.getTraining() == null) {
 				return;
@@ -232,6 +316,11 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 					.getDistance()));
 		}
 
+		/**
+		 * コールバックリスナーを取得する
+		 * 
+		 * @return コールバックリスナー
+		 */
 		protected CallbackListener getListener() {
 			return this;
 		}
@@ -277,6 +366,13 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 
 	}
 
+	/**
+	 * 画面ハンドラーメッセージを設定する
+	 *
+	 * @param msg
+	 *            メッセージ
+	 * @return メッセージインスタンス
+	 */
 	private Message setMessage(int msg) {
 		Message message = new Message();
 		message.what = msg;

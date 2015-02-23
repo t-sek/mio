@@ -25,7 +25,6 @@ import ac.neec.mio.timer.TimerManager;
 import ac.neec.mio.training.category.TrainingCategory;
 import ac.neec.mio.training.menu.TrainingMenu;
 import ac.neec.mio.ui.dialog.SelectionAlertDialog;
-import ac.neec.mio.ui.fragment.FirstSignUpSelectFragment;
 import ac.neec.mio.ui.listener.TimerCallbackListener;
 import ac.neec.mio.user.LoginState;
 import ac.neec.mio.user.User;
@@ -52,6 +51,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * スプラッシュ画面クラス
+ *
+ */
 public class SplashActivity extends FragmentActivity implements
 		AnimationListener, TimerCallbackListener, Sourceable {
 
@@ -62,27 +65,68 @@ public class SplashActivity extends FragmentActivity implements
 	private static final int MESSAGE_INTENT = 1;
 	private static final int MESSAGE_UPDATE = 6;
 	private static final int MESSAGE_ERROR = 9;
-	private static final int WEIT_TIME = 100;
-
 	private static final String SECTION = ".";
 
+	/**
+	 * タイマーマネージャーインスタンス
+	 */
 	private TimerManager manager;
-	private TextView title;
+	/**
+	 * トップ画面遷移ボタン
+	 */
 	private ImageView buttonMeasurement;
+	/**
+	 * 新規登録ボタン
+	 */
 	private Button buttonSignUp;
+	/**
+	 * ログインボタン
+	 */
 	private Button buttonLogin;
+	/**
+	 * facebookログインボタン
+	 */
 	private Button buttonFacebookLogin;
+	/**
+	 * 取得中メッセージ
+	 */
 	private TextView textMessage;
+	/**
+	 * 取得中メッセージ
+	 */
 	private TextView textSection;
+	/**
+	 * 取得完了メッセージ
+	 */
 	private TextView textComplete;
+	/**
+	 * WebAPI接続インスタンス
+	 */
 	private ApiDao dao;
+	/**
+	 * ローカルデータベース接続インスタンス
+	 */
 	private SQLiteDao daoSql;
+	/**
+	 * WebAPI通信フラグ
+	 */
 	private int daoFlag;
+	/**
+	 * ユーザ情報
+	 */
 	private User user = User.getInstance();
 	private Bundle bundle;
+	/**
+	 * facebookログイン
+	 */
 	private Login login;
+	/**
+	 * 通信メッセージイテレータ
+	 */
 	private int sectionCount;
-
+	/**
+	 * 画面ハンドラー
+	 */
 	Handler handler = new Handler() {
 		public void handleMessage(Message message) {
 			switch (message.what) {
@@ -110,7 +154,6 @@ public class SplashActivity extends FragmentActivity implements
 		initFindViews();
 		Typeface face = Typeface.createFromAsset(getAssets(),
 				"font/Roboto-Regular.ttf");
-		title.setTypeface(face);
 		setListeners();
 		AppPreference.init(getApplicationContext());
 		AppConstants.setResorces(getResources());
@@ -125,8 +168,10 @@ public class SplashActivity extends FragmentActivity implements
 		manager.start();
 	}
 
+	/**
+	 * 画面の初期化処理をする
+	 */
 	private void initFindViews() {
-		title = (TextView) findViewById(R.id.text_title);
 		buttonMeasurement = (ImageView) findViewById(R.id.btn_measurement_setting);
 		buttonSignUp = (Button) findViewById(R.id.btn_sign_up);
 		buttonLogin = (Button) findViewById(R.id.btn_login);
@@ -136,6 +181,9 @@ public class SplashActivity extends FragmentActivity implements
 		textComplete = (TextView) findViewById(R.id.text_complete);
 	}
 
+	/**
+	 * ビューにリスナーを設定する
+	 */
 	private void setListeners() {
 		buttonMeasurement.setOnClickListener(new OnClickListener() {
 			@Override
@@ -162,6 +210,9 @@ public class SplashActivity extends FragmentActivity implements
 		});
 	}
 
+	/**
+	 * ハートのアニメーションを設定する
+	 */
 	private void animationHeart() {
 		manager.stop();
 		textMessage.setVisibility(View.INVISIBLE);
@@ -173,12 +224,18 @@ public class SplashActivity extends FragmentActivity implements
 		buttonMeasurement.startAnimation(anim);
 	}
 
+	/**
+	 * トップ画面に遷移する
+	 */
 	private void intentTop() {
 		Intent intent = new Intent(SplashActivity.this, TopActivity.class);
 		startActivity(intent);
 		finish();
 	}
 
+	/**
+	 * 新規登録画面に遷移する
+	 */
 	private void intentSignUp() {
 		Intent intent = new Intent(SplashActivity.this,
 				UserSignUpActivity.class);
@@ -187,18 +244,30 @@ public class SplashActivity extends FragmentActivity implements
 		// finish();
 	}
 
+	/**
+	 * facebookログインダイアログを表示する
+	 */
 	private void facebookLogin() {
 		login = new Login(this, Login.LOGIN, bundle);
 		login.logoutFacebook();
 		login.connectFacebookAuth();
 	}
 
+	/**
+	 * ログイン画面に遷移する
+	 */
 	private void intentLogin() {
 		Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
 		startActivity(intent);
 		// finish();
 	}
 
+	/**
+	 * 取得中メッセージを更新する
+	 * 
+	 * @param time
+	 *            タイム
+	 */
 	private void updateTime(String time) {
 		String text = null;
 		switch (daoFlag) {
@@ -231,21 +300,33 @@ public class SplashActivity extends FragmentActivity implements
 		textSection.setText(sb.toString());
 	}
 
+	/**
+	 * WebAPIからトレーニングカテゴリーを取得する
+	 */
 	private void downloadTrainingCategory() {
 		daoFlag = FLAG_CATEGORY;
 		dao.selectTrainingCategory();
 	}
 
+	/**
+	 * WebAPIからトレーニングメニューを取得する
+	 */
 	private void downloadTrainingMenu() {
 		daoFlag = FLAG_MENU;
 		dao.selectTrainingMenu();
 	}
 
+	/**
+	 * WebAPIからユーザ情報を取得する
+	 */
 	private void downloadUserInfo() {
 		daoFlag = FLAG_USER;
 		dao.selectUser(user.getId(), user.getPassword());
 	}
 
+	/**
+	 * WebAPIからユーザアイコンを取得する
+	 */
 	private void downloadUserImage(String image) {
 		if (image != null) {
 			dao.selectImage(image);
@@ -254,28 +335,21 @@ public class SplashActivity extends FragmentActivity implements
 		}
 	}
 
+	/**
+	 * WebAPIから権限を取得する
+	 */
 	private void downloadPermition() {
 		daoFlag = FLAG_PERM;
 		dao.selectPermition();
 	}
 
+	/**
+	 * アニメーションを開始する
+	 */
 	private void startAnimation() {
 		Message message = new Message();
 		message.what = MESSAGE_INTENT;
 		handler.sendMessage(message);
-	}
-
-	private void popupSelectForm() {
-		Fragment newFragment = new FirstSignUpSelectFragment();
-		FragmentTransaction transaction = getSupportFragmentManager()
-				.beginTransaction();
-		// transaction.replace(R.id.container_play, newFragment);
-		// transaction.add(R.id.container_play, newFragment);
-		transaction.setCustomAnimations(R.anim.ans_start, R.anim.ans_end);
-		transaction.replace(R.id.container_select, newFragment);
-		transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-		transaction.addToBackStack(null);
-		transaction.commit();
 	}
 
 	@Override
@@ -320,13 +394,14 @@ public class SplashActivity extends FragmentActivity implements
 
 	@Override
 	public void notifyMin() {
-		// dao.cancel();
-		// Log.d("activity", "category " +
-		// daoSql.selectTrainingCategory().size());
-		// Log.d("activity", "menu " + daoSql.selectTrainingMenu().size());
-		// startAnimation();
 	}
 
+	/**
+	 * ローカルデータベースにトレーニングカテゴリーを保存する
+	 * 
+	 * @param category
+	 *            トレーニングカテゴリー
+	 */
 	private void insertTrainingCategory(List<TrainingCategory> category) {
 		daoSql.deleteTrainingCategoryTableAll();
 		for (TrainingCategory item : category) {
@@ -341,6 +416,12 @@ public class SplashActivity extends FragmentActivity implements
 		}
 	}
 
+	/**
+	 * ローカルデータベースにトレーニングメニューを保存する
+	 * 
+	 * @param menu
+	 *            トレーニングメニュー
+	 */
 	private void insertTrainingMenu(List<TrainingMenu> menu) {
 		daoSql.deleteTrainingMenuTableAll();
 		for (TrainingMenu item : menu) {
@@ -356,6 +437,12 @@ public class SplashActivity extends FragmentActivity implements
 		}
 	}
 
+	/**
+	 * ユーザ情報を保存する
+	 * 
+	 * @param info
+	 *            ユーザ情報
+	 */
 	private void insertUserInfo(UserInfo info) {
 		if (info.getUserId() == null) {
 			return;
@@ -369,6 +456,12 @@ public class SplashActivity extends FragmentActivity implements
 		user.setCreated(DateUtil.splitCreated(date));
 	}
 
+	/**
+	 * ローカルデータベースに権限を保存する
+	 * 
+	 * @param perm
+	 *            権限
+	 */
 	private void insertPermition(List<Permission> perm) {
 		daoSql.deletePermission();
 		try {
@@ -397,6 +490,12 @@ public class SplashActivity extends FragmentActivity implements
 		}
 	}
 
+	/**
+	 * ローカルデータベースに所属しているグループを保存する
+	 * 
+	 * @param info
+	 *            ユーザ情報
+	 */
 	private void setMyGroupList(UserInfo info) {
 		daoSql.deleteAffiliation();
 		List<Group> groups = info.getGroups();
@@ -416,7 +515,6 @@ public class SplashActivity extends FragmentActivity implements
 
 	@Override
 	public void complete() {
-		Log.d("activity", "complete");
 		try {
 			switch (daoFlag) {
 			case FLAG_CATEGORY:
@@ -476,7 +574,7 @@ public class SplashActivity extends FragmentActivity implements
 	@Override
 	public void validate() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

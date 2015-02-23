@@ -5,6 +5,7 @@ import java.util.List;
 
 import ac.neec.mio.R;
 import ac.neec.mio.group.GroupInfo;
+import ac.neec.mio.ui.adapter.item.GroupInfoListItem;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
@@ -15,13 +16,19 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * グループメニューリストビュー設定クラス
+ *
+ */
 public class GroupInfoListAdapter extends ArrayAdapter<GroupInfoListItem> {
 
 	private LayoutInflater inflater;
+	/**
+	 * グループメニューリスト
+	 */
 	private List<GroupInfoListItem> list;
 
 	public GroupInfoListAdapter(Context context, int resource,
-	// List<GroupInfoListItem> objects) {
 			List<GroupInfoListItem> objects) {
 		super(context, resource, objects);
 		list = objects;
