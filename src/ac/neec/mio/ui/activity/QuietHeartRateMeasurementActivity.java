@@ -153,11 +153,6 @@ public class QuietHeartRateMeasurementActivity extends BleConnectBaseActivity
 	}
 
 	@Override
-	public void notifyMin() {
-
-	}
-
-	@Override
 	protected void requestEnable() {
 		// TODO Auto-generated method stub
 

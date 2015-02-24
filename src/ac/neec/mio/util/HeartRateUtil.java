@@ -9,6 +9,9 @@ import ac.neec.mio.training.log.TrainingLog;
 import android.content.Context;
 import android.util.Log;
 
+/**
+ * 心拍数ユーティリティークラス
+ */
 public class HeartRateUtil {
 
 	/**
@@ -63,12 +66,17 @@ public class HeartRateUtil {
 		return heartRate / heartRates.size();
 	}
 
+	/**
+	 * トレーニングIDからそのトレーニングの平均心拍数を算出する
+	 * 
+	 * @param id
+	 *            トレーニングID
+	 * @return 平均心拍数
+	 */
 	public static int heartRateAvg(int id) {
 		SQLiteDao dao = DaoFacade.getSQLiteDao();
 		int num = 0;
-		// List<TrainingLog> log = DBManager.selectTrainingLog(id);
 		List<TrainingLog> log = dao.selectTrainingLog(id);
-		Log.d("util", "log size " + log.size());
 		int size = log.size();
 		for (TrainingLog trainingLog : log) {
 			num += trainingLog.getHeartRate();

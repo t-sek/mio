@@ -77,18 +77,7 @@ public class LapMeasurementFragment extends MeasurementBaseFragment implements
 	}
 
 	@Override
-	public void notifyRestUpdate() {
-
-	}
-
-	@Override
 	public void notifyTime(String value) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void trainingId(int trainingId, int categoryId) {
 		// TODO Auto-generated method stub
 
 	}

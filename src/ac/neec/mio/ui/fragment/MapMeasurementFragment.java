@@ -186,19 +186,7 @@ public class MapMeasurementFragment extends MapBaseFragment {
 	}
 
 	@Override
-	public void notifyRestUpdate() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void notifyTime(String value) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void trainingId(int trainingId, int categoryId) {
 		// TODO Auto-generated method stub
 
 	}

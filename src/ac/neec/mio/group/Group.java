@@ -1,12 +1,9 @@
 package ac.neec.mio.group;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.graphics.Bitmap;
 
 /**
- * グループ
+ * グループクラス
  */
 public class Group {
 
@@ -47,6 +44,23 @@ public class Group {
 	 */
 	private String imageName;
 
+	/**
+	 * 
+	 * @param id
+	 *            グループID
+	 * @param groupName
+	 *            グループ名
+	 * @param imageName
+	 *            アイコン名
+	 * @param comment
+	 *            コメント
+	 * @param userId
+	 *            管理者ID
+	 * @param adminName
+	 *            管理者名
+	 * @param created
+	 *            作成日
+	 */
 	public Group(String id, String groupName, String imageName, String comment,
 			String userId, String adminName, String created) {
 		this.id = id;
@@ -58,6 +72,21 @@ public class Group {
 		this.created = created;
 	}
 
+	/**
+	 * 
+	 * @param id
+	 *            グループID
+	 * @param groupName
+	 *            グループ名
+	 * @param bitmap
+	 *            アイコン
+	 * @param comment
+	 *            コメント
+	 * @param userId
+	 *            管理者ID
+	 * @param created
+	 *            作成日
+	 */
 	public Group(String id, String groupName, Bitmap bitmap, String comment,
 			String userId, String created) {
 		this.id = id;
@@ -68,6 +97,23 @@ public class Group {
 		this.created = created;
 	}
 
+	/**
+	 * 
+	 * @param id
+	 *            グループID
+	 * @param groupName
+	 *            グループ名
+	 * @param bitmap
+	 *            アイコン
+	 * @param comment
+	 *            コメント
+	 * @param userId
+	 *            管理者ID
+	 * @param created
+	 *            作成日
+	 * @param permissionId
+	 *            権限ID
+	 */
 	public Group(String id, String groupName, Bitmap bitmap, String comment,
 			String userId, String created, int permissionId) {
 		this.id = id;
@@ -75,18 +121,6 @@ public class Group {
 		this.image = bitmap;
 		this.comment = comment;
 		this.userId = userId;
-		this.created = created;
-		this.permissionId = permissionId;
-	}
-
-	public Group(String id, String groupName, Bitmap bitmap, String comment,
-			String userId, String adminName, String created, int permissionId) {
-		this.id = id;
-		this.groupName = groupName;
-		this.image = bitmap;
-		this.comment = comment;
-		this.userId = userId;
-		this.adminName = adminName;
 		this.created = created;
 		this.permissionId = permissionId;
 	}

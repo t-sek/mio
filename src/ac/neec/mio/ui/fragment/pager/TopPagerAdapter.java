@@ -9,7 +9,6 @@ import ac.neec.mio.ui.fragment.MeasurementFragment;
 import ac.neec.mio.ui.fragment.ProfileFragment;
 import ac.neec.mio.ui.fragment.TopBaseFragment;
 import ac.neec.mio.ui.fragment.TrainingDataFragment;
-import ac.neec.mio.ui.listener.TopCallbackListener;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -19,26 +18,33 @@ import android.util.Log;
 import com.google.android.gms.internal.hk;
 import com.viewpagerindicator.IconPagerAdapter;
 
+/**
+ * トップ画面のタブを設定するアダプタークラス
+ *
+ */
 public class TopPagerAdapter extends FragmentPagerAdapter implements
 		IconPagerAdapter {
 
+	/**
+	 * タブ名リスト
+	 */
 	private List<String> contents = new ArrayList<String>();
+	/**
+	 * タブ画面リスト
+	 */
 	private List<TopBaseFragment> fragments = new ArrayList<TopBaseFragment>();
+	/**
+	 * タブアイコンリスト
+	 */
 	private List<Integer> icons = new ArrayList<Integer>();
 
-	private TopCallbackListener listener;
-	private FragmentTransaction transaction;
-	private FragmentManager manager;
-	private int id;
-	private DeviceDataFragment fragmentDeviceData;
-	private boolean isDeviceDataShow = false;
-
-	public TopPagerAdapter(FragmentManager manager,
-			TopCallbackListener listener, int id) {
+	/**
+	 * 
+	 * @param manager
+	 *            フラグメントマネージャー
+	 */
+	public TopPagerAdapter(FragmentManager manager) {
 		super(manager);
-		this.manager = manager;
-		this.listener = listener;
-		this.id = id;
 		setContents();
 	}
 
@@ -67,45 +73,18 @@ public class TopPagerAdapter extends FragmentPagerAdapter implements
 		return POSITION_NONE;
 	}
 
-	@Override
-	public void notifyDataSetChanged() {
-		if (transaction != null) {
-			transaction.commitAllowingStateLoss();
-			transaction = null;
-		}
-		super.notifyDataSetChanged();
-	}
-
+	/**
+	 * タブ画面リストを取得する
+	 * 
+	 * @return タブ画面リスト
+	 */
 	public List<TopBaseFragment> getFragments() {
 		return fragments;
 	}
 
-	public void updateDiviceFragment() {
-		fragmentDeviceData = new DeviceDataFragment();
-		replace(fragments.size() - 1, fragmentDeviceData);
-
-	}
-
-	public void updateHeartRate(String heartRate) {
-		fragmentDeviceData.updateHeartRate(heartRate);
-	}
-
-	private void replace(int position, TopBaseFragment fragment) {
-		String tag = makeFragmentName(id, position);
-		if (transaction == null) {
-			transaction = manager.beginTransaction();
-		}
-		transaction.replace(id, fragment, tag);
-		fragments.set(position, fragment);
-		for (TopBaseFragment fragment2 : fragments) {
-			Log.e("adapter", "fragment " + fragment2);
-		}
-	}
-
-	private String makeFragmentName(int viewId, int index) {
-		return "android:switcher:" + viewId + ":" + index;
-	}
-
+	/**
+	 * タイトル、アイコンを設定する
+	 */
 	public void setContents() {
 		fragments.add(new TrainingDataFragment());
 		TopBaseFragment fragmentMeasurement = new MeasurementFragment();
@@ -114,12 +93,9 @@ public class TopPagerAdapter extends FragmentPagerAdapter implements
 		for (TopBaseFragment fragment : fragments) {
 			contents.add(fragment.getTitle());
 		}
-
 		icons.add(R.drawable.tab_data);
-		// icons.add(R.drawable.perm_group_camera);
 		icons.add(R.drawable.tab_training);
 		icons.add(R.drawable.tab_profile);
-		// icons.add(R.drawable.perm_group_device_alarms);
 	}
 
 }

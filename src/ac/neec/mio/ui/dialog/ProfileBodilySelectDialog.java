@@ -2,7 +2,6 @@ package ac.neec.mio.ui.dialog;
 
 import static ac.neec.mio.consts.SignUpConstants.*;
 import ac.neec.mio.R;
-import ac.neec.mio.ui.listener.CallbackListener;
 import ac.neec.mio.ui.picker.DrumPicker;
 import ac.neec.mio.user.User;
 import android.app.Dialog;

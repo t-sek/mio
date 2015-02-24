@@ -66,15 +66,41 @@ public class ProfileFragment extends TopBaseFragment implements
 	 * デバイス設定画面遷移ボタン
 	 */
 	private ImageButton buttonSetting;
+	/**
+	 * 背景テーマレイアウト
+	 */
 	private LinearLayout layoutTheme;
+	/**
+	 * ユーザ情報設定画面遷移ボタンレイアウト
+	 */
 	private LinearLayout layoutData;
+	/**
+	 * グループ情報画面遷移ボタンレイアウト
+	 */
 	private LinearLayout layoutGroup;
+	/**
+	 * デバイス設定画面遷移ボタンレイアウト
+	 */
 	private LinearLayout layoutSetting;
+	/**
+	 * ユーザアイコン
+	 */
 	private CircleImageView imageProfile;
+	/**
+	 * アイコンURI
+	 */
 	private Uri imageUri;
+	/**
+	 * ユーザ名を表示するテキストビュー
+	 */
 	private TextView textName;
+	/**
+	 * ユーザIDを表示するテキストビュー
+	 */
 	private TextView textId;
-
+	/**
+	 * ユーザ情報
+	 */
 	private User user = User.getInstance();
 
 	@Override
@@ -93,6 +119,9 @@ public class ProfileFragment extends TopBaseFragment implements
 		textId.setText(user.getId());
 	}
 
+	/**
+	 * 画面の初期化処理をする
+	 */
 	private void initFindViews() {
 		buttonData = (ImageButton) view.findViewById(R.id.button_data);
 		buttonGroup = (ImageButton) view.findViewById(R.id.button_group);
@@ -117,6 +146,9 @@ public class ProfileFragment extends TopBaseFragment implements
 		}
 	}
 
+	/**
+	 * ビューにリスナーを設定する
+	 */
 	private void setListeners() {
 		buttonData.setOnClickListener(this);
 		buttonGroup.setOnClickListener(this);
@@ -127,40 +159,49 @@ public class ProfileFragment extends TopBaseFragment implements
 		imageProfile.setOnClickListener(this);
 	}
 
+	/**
+	 * ユーザ情報設定画面に遷移する
+	 */
 	private void intentProfileSetting() {
 		Intent intent = new Intent(getActivity(), UserDataSettingActivity.class);
 		startActivity(intent);
 	}
 
+	/**
+	 * デバイス設定画面に遷移する
+	 */
 	private void intentDeviceSetting() {
 		Intent intent = new Intent(getActivity(), DeviceSettingActivity.class);
 		startActivity(intent);
 	}
 
+	/**
+	 * グループ情報画面に遷移する
+	 */
 	private void intentGroupSetting() {
 		Intent intent = new Intent(getActivity(), GroupListActivity.class);
 		startActivity(intent);
 	}
 
-	private void intentCrop(Uri uri) {
-		Log.d("crop", "uri " + uri);
-		Intent intent = new Intent("com.android.camera.action.CROP");
-		intent.setData(uri);
-		intent.putExtra("outputX", 100);
-		intent.putExtra("outputY", 100);
-		intent.putExtra("aspectX", 1);
-		intent.putExtra("aspectY", 1);
-		intent.putExtra("scale", true);
-		intent.putExtra("return-data", true);
-		startActivityForResult(intent, REQUEST_CROP_PICK);
-	}
-
+	/**
+	 * アイコンを設定する
+	 * 
+	 * @param image
+	 *            アイコン
+	 */
 	public void setProfileImage(Bitmap image) {
 		image = BitmapUtil.getBitmapClippedCircle(image, 100);
 		// imageProfile.setImageDrawable(new BitmapDrawable(image));
 		imageProfile.setImage(image);
 	}
 
+	/**
+	 * 取得したデータから画像URIを取得する
+	 * 
+	 * @param data
+	 *            取得したデータ
+	 * @return URI 画像URI
+	 */
 	private Uri getImageUri(Intent data) {
 		Uri result = null;
 		if (null != data) {

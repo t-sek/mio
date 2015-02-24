@@ -35,38 +35,70 @@ import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ImageButton;
 
+/**
+ * トップ画面(左)<br>
+ * 過去のトレーニングデータ参照画面
+ *
+ */
 public class TrainingDataFragment extends TopBaseFragment implements
 		Sourceable, TrainingDataListCallbackListener {
+	/**
+	 * タブタイトル
+	 */
 	public static final String TITLE = "データログ";
+	/**
+	 * 更新メッセージ
+	 */
 	private static final int MESSAGE_UPDATE = 1;
-	private static final int MESSAGE_PROGRESS_GONE = 2;
-	private static final int DATE_NUM = 50;
-	public static final int REQUEST_CODE = 20;
-
+	/**
+	 * 画面ビュー
+	 */
 	private View view;
+	/**
+	 * 過去のトレーニングを日付ごとに表示する折りたたみリストビュー
+	 */
 	private ExpandableListView listView;
-	// private ProgressBar progress;
+	/**
+	 * トレーニング手入力画面遷移ボタン
+	 */
 	private ImageButton buttonInsert;
+	/**
+	 * 過去のトレーニングリストのアダプター
+	 */
 	private TrainingDateListAdapter adapter;
+	/**
+	 * ユーザ情報
+	 */
 	private User user = User.getInstance();
-	private int dateNum;
+	/**
+	 * WebAPI接続インスタンス
+	 */
 	private ApiDao dao;
+	/**
+	 * ローカルデータベース接続インスタンス
+	 */
 	private SQLiteDao daoSql;
-	// private static boolean created;
+	/**
+	 * トレーニング未同期一覧画面遷移ボタン
+	 */
 	private ImageButton buttonSync;
+	/**
+	 * トレーニング未同期がある場合バッジを表示する
+	 */
 	private BadgeView badge;
-	private int num;
-
+	/**
+	 * 過去のトレーニングリスト
+	 */
 	private List<List<Training>> trainings = new ArrayList<List<Training>>();
-
+	/**
+	 * 画面ハンドラー
+	 */
 	Handler handler = new Handler() {
 		public void handleMessage(Message message) {
 			switch (message.what) {
 			case MESSAGE_UPDATE:
 				updateTraining((List<Training>) message.obj);
 				break;
-			case MESSAGE_PROGRESS_GONE:
-				// progressGone();
 			default:
 				break;
 			}
@@ -85,11 +117,14 @@ public class TrainingDataFragment extends TopBaseFragment implements
 		dao = DaoFacade.getApiDao(this);
 		daoSql = DaoFacade.getSQLiteDao();
 		dao.selectTraining(user.getId(), user.getId(), user.getBirth(),
-				DateUtil.nowDate(), dateNum, 0, user.getPassword());
+				DateUtil.nowDate(), 10000000, 0, user.getPassword());
 		init();
 		return view;
 	}
 
+	/**
+	 * 未同期トレーニングがある場合、バッジを表示する
+	 */
 	private void initSync() {
 		buttonSync = (ImageButton) view.findViewById(R.id.button_sync);
 		buttonSync.setOnClickListener(new OnClickListener() {
@@ -109,6 +144,9 @@ public class TrainingDataFragment extends TopBaseFragment implements
 
 	}
 
+	/**
+	 * 画面の初期化処理をする
+	 */
 	private void init() {
 		listView = (ExpandableListView) view
 				.findViewById(R.id.list_training_data);
@@ -134,6 +172,14 @@ public class TrainingDataFragment extends TopBaseFragment implements
 		initSync();
 	}
 
+	/**
+	 * トレーニング詳細画面に遷移する
+	 * 
+	 * @param groupPosition
+	 *            日付インデックス
+	 * @param childPosition
+	 *            日付ごとのトレーニングインデックス
+	 */
 	private void intentDetailTrainingData(int groupPosition, int childPosition) {
 		Training item = trainings.get(groupPosition).get(childPosition);
 		Intent intent = new Intent(getActivity(),
@@ -142,6 +188,9 @@ public class TrainingDataFragment extends TopBaseFragment implements
 		startActivity(intent);
 	}
 
+	/**
+	 * 未同期トレーニング一覧画面に遷移する
+	 */
 	private void intentSyncTraining() {
 		badge.hide();
 		Intent intent = new Intent(getActivity(),
@@ -149,12 +198,24 @@ public class TrainingDataFragment extends TopBaseFragment implements
 		getActivity().startActivity(intent);
 	}
 
+	/**
+	 * トレーニング手入力画面に遷移する
+	 */
 	private void intentInsertTraining() {
 		Intent intent = new Intent(getActivity(),
 				TrainingFreeInsertActivity.class);
 		getActivity().startActivity(intent);
 	}
 
+	/**
+	 * トレーニング更新メッセージを設定し、取得する
+	 * 
+	 * @param msg
+	 *            メッセージ
+	 * @param training
+	 *            更新するトレーニング
+	 * @return メッセージ
+	 */
 	private Message setMessage(int msg, List<Training> training) {
 		Message message = new Message();
 		if (training != null) {
@@ -164,6 +225,12 @@ public class TrainingDataFragment extends TopBaseFragment implements
 		return message;
 	}
 
+	/**
+	 * トレーニングをリストビューに表示する
+	 * 
+	 * @param trainings
+	 *            表示するトレーニング
+	 */
 	private void updateTraining(List<Training> trainings) {
 		if (trainings.size() == 0) {
 			return;
@@ -206,7 +273,6 @@ public class TrainingDataFragment extends TopBaseFragment implements
 			e.printStackTrace();
 			return;
 		}
-		// updateTraining(training);
 		handler.sendMessage(setMessage(MESSAGE_UPDATE, training));
 	}
 
@@ -225,7 +291,7 @@ public class TrainingDataFragment extends TopBaseFragment implements
 	@Override
 	public void validate() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

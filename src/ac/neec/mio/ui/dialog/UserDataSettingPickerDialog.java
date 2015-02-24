@@ -4,7 +4,6 @@ import com.sek.drumpicker.DrumPicker;
 import com.sek.drumpicker.DrumPickerListener;
 
 import ac.neec.mio.R;
-import ac.neec.mio.ui.listener.CallbackListener;
 import ac.neec.mio.user.User;
 import ac.neec.mio.user.gender.Gender;
 import android.app.Dialog;

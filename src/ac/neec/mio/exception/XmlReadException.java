@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.xmlpull.v1.XmlPullParserException;
 
 /**
- * XMLの読み込みに失敗
+ * XML読み込みエラー
  */
 public class XmlReadException extends Exception {
 

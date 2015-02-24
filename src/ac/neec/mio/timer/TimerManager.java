@@ -89,9 +89,6 @@ public class TimerManager implements Observer {
 		int m = ((time - 3600 * h) / 60);
 		int s = (time - 3600 * h - 60 * m);
 		TimerManager.time = new Time(h, m, s);
-		if (s == 0) {
-			listener.notifyMin();
-		}
 		return TimerManager.time.toString();
 	}
 

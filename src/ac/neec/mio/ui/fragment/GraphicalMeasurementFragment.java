@@ -114,16 +114,6 @@ public class GraphicalMeasurementFragment extends MeasurementBaseFragment
 	}
 
 	@Override
-	public void notifyRestUpdate() {
-
-	}
-
-	@Override
-	public void trainingId(int trainingId, int categoryId) {
-		setTachoMeter();
-	}
-
-	@Override
 	public void notifyTime(String value) {
 	}
 

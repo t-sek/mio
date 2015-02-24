@@ -1,11 +1,13 @@
 package ac.neec.mio.ui.activity;
 
-import static ac.neec.mio.consts.SignUpConstants.*;
+import static ac.neec.mio.consts.SignUpConstants.name;
+import static ac.neec.mio.consts.SignUpConstants.password;
+import static ac.neec.mio.consts.SignUpConstants.userId;
 import ac.neec.mio.R;
-import ac.neec.mio.filter.JapaneseInputFilter;
 import ac.neec.mio.user.User;
 import ac.neec.mio.user.gender.Gender;
 import ac.neec.mio.util.DateUtil;
+import ac.neec.mio.validate.JapaneseInputFilter;
 import ac.neec.mio.validate.UserSignUpForm;
 import android.app.Activity;
 import android.content.Intent;
@@ -26,7 +28,7 @@ import android.widget.RadioGroup;
 
 import com.androidformenhancer.helper.ActivityFormHelper;
 import com.androidformenhancer.helper.FormHelper;
-import com.google.android.gms.plus.model.people.Person.Name;
+import com.sek.drumpicker.DrumPicker;
 import com.sek.drumpicker.DrumPicker;
 import com.sek.drumpicker.DrumPickerListener;
 

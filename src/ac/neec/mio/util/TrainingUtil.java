@@ -1,20 +1,15 @@
 package ac.neec.mio.util;
 
-
+/**
+ * カロリー、走行距離を設定する要素ユーティリティークラス
+ */
 public class TrainingUtil {
 
-	public static void calcCalorie() {
-
-	}
-
-	public static void calcSpeed() {
-
-	}
-
-	public static void calcDistance() {
-
-	}
-
+	/**
+	 * カロリーの要素を取得する
+	 * 
+	 * @return 要素
+	 */
 	public static String[] getCalorie() {
 		String[] calorie = new String[1000];
 		for (int i = 0; i < calorie.length; i++) {
@@ -23,6 +18,11 @@ public class TrainingUtil {
 		return calorie;
 	}
 
+	/**
+	 * 走行距離の要素を取得する
+	 * 
+	 * @return 要素
+	 */
 	public static String[] getDistance() {
 		String[] distance = new String[11];
 		for (int i = 0; i < distance.length; i++) {

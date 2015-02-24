@@ -102,7 +102,7 @@ public class GroupMemberInfoActivity extends Activity implements Sourceable,
 	 */
 	private LoadingDialog dialog = new LoadingDialog();
 	/**
-	 * 過去のトレーニングリストアダプター
+	 * 過去のトレーニングリストのアダプター
 	 */
 	private TrainingDateListAdapter adapter;
 	/**

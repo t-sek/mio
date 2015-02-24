@@ -3,7 +3,7 @@ package ac.neec.mio.exception;
 import android.database.SQLException;
 
 /**
- * データベースのインサートに失敗しました
+ * ローカルデータベースインサートエラー
  */
 public class SQLiteInsertException extends Exception{
 

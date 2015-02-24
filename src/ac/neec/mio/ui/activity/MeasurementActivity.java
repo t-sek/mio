@@ -71,10 +71,6 @@ public class MeasurementActivity extends BleConnectBaseActivity implements
 	 */
 	private static final int MESSAGE_TIME_UPDATE = 1;
 	/**
-	 * 平均ペース更新メッセージ
-	 */
-	private static final int MESSAGE_NOTIFY_MIN = 2;
-	/**
 	 * デバイス接続タイムアウト
 	 */
 	private static final int MESSAGE_CONNECT_TIMEOUT = 3;
@@ -241,9 +237,6 @@ public class MeasurementActivity extends BleConnectBaseActivity implements
 				updateTime();
 				updateCalorie();
 				break;
-			case MESSAGE_NOTIFY_MIN:
-				notifyMinSpeed();
-				break;
 			case MESSAGE_CONNECT_TIMEOUT:
 				Toast.makeText(getApplicationContext(),
 						ErrorConstants.connectTimeout(), Toast.LENGTH_SHORT)
@@ -355,9 +348,6 @@ public class MeasurementActivity extends BleConnectBaseActivity implements
 		fragments.add(fragment3);
 		for (Fragment fragment : fragments) {
 			listeners.add((NotificationCallbackListener) fragment);
-		}
-		for (NotificationCallbackListener listener : listeners) {
-			listener.trainingId(id, trainingCategoryId);
 		}
 	}
 
@@ -659,13 +649,6 @@ public class MeasurementActivity extends BleConnectBaseActivity implements
 
 	@Override
 	public void onAlarm() {
-	}
-
-	@Override
-	public void notifyMin() {
-		Message message = new Message();
-		message.what = MESSAGE_NOTIFY_MIN;
-		handler.sendMessage(message);
 	}
 
 	@Override

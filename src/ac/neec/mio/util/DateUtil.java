@@ -8,20 +8,31 @@ import java.util.List;
 
 import android.util.Log;
 
+/**
+ * 日付ユーティリティークラス
+ */
 public class DateUtil {
 
+	/**
+	 * 日付区切り
+	 */
 	private static final String SECTION = "-";
 
+	/**
+	 * 
+	 * @param date
+	 * @return
+	 */
 	public static String splitCreated(String date) {
 		String[] created = date.split(" ");
 		return created[0];
 	}
 
-	public static String splitDate(String format) {
-		String[] date = format.split(SECTION);
-		return date[0] + date[1] + date[2];
-	}
-
+	/**
+	 * 今日の日付をyyyy-mm-dd形式で取得する
+	 * 
+	 * @return 今日の日付
+	 */
 	public static String nowDate() {
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -56,29 +67,57 @@ public class DateUtil {
 		Calendar cal = Calendar.getInstance();
 		cal.clear();
 		cal.set(year, month - 1, 1);
-		Log.d("util", "month " + month);
-		// cal.set(Calendar.YEAR, year);
-		// cal.set(Calendar.MONTH, month);
 		return cal.getActualMaximum(Calendar.DATE);
 	}
 
+	/**
+	 * 今日の年を返す
+	 * 
+	 * @return 年
+	 */
 	public static String nowYear() {
 		return nowDate().split(SECTION)[0];
 	}
 
+	/**
+	 * 今日の月を返す
+	 * 
+	 * @return 月
+	 */
 	public static String nowMonth() {
 		return nowDate().split(SECTION)[1];
 	}
 
+	/**
+	 * 今日の日を返す
+	 * 
+	 * @return 日
+	 */
 	public static String nowDay() {
 		return nowDate().split(SECTION)[2];
 	}
 
+	/**
+	 * 今日の日付をyyyy年mm月dd日形式で取得する
+	 * 
+	 * @return 今日の日付
+	 */
 	public static String japaneseNowDay() {
 		String[] date = nowDate().split(SECTION);
 		return date[0] + "年" + date[1] + "月" + date[2] + "日";
 	}
 
+	/**
+	 * 生年月日から年齢を算出する
+	 * 
+	 * @param y
+	 *            生年月日 年
+	 * @param m
+	 *            生年月日 月
+	 * @param d
+	 *            生年月日 日
+	 * @return 年齢
+	 */
 	public static int getAge(String y, String m, String d) {
 		if (y.length() == 0 || m.length() == 0 || d.length() == 0) {
 			return 0;
@@ -91,16 +130,25 @@ public class DateUtil {
 				.parseInt(m) == mon && Integer.parseInt(d) > day)) ? 1 : 0));
 	}
 
-	public static String timeJapaneseFormat(String format) {
-		String[] time = format.split(":");
-		return time[0] + "時" + time[1] + "分";
-	}
-
+	/**
+	 * hh:mm形式をhh時:mm分に変換する
+	 * 
+	 * @param format
+	 *            変換する時間
+	 * @return 変換後時間
+	 */
 	public static String trainingTimeJapaneseFormat(String format) {
 		String[] time = format.split(":");
 		return time[1] + "時" + time[2] + "分";
 	}
 
+	/**
+	 * yyyy年mm月dd日形式をString配列に変換する
+	 * 
+	 * @param date
+	 *            変換する日付
+	 * @return 変換後日付
+	 */
 	public static String[] getSplitDate(String date) {
 		String[] splitDate = new String[3];
 		String[] year = date.split("年");
@@ -112,34 +160,39 @@ public class DateUtil {
 		return splitDate;
 	}
 
-	public static String dateFormat(String date) {
-		Log.d("util", "date " + date);
-		StringBuilder sb = new StringBuilder();
-		String[] year = date.split("年");
-		sb.append(year[0] + SECTION);
-		String[] month = year[1].split("月");
-		if (month[0].length() == 1) {
-			sb.append("0");
-		}
-		sb.append(month[0] + SECTION);
-		String[] day = month[1].split("日");
-		if (day[0].length() == 1) {
-			sb.append("0");
-		}
-		sb.append(day[0]);
-		return sb.toString();
-	}
-
+	/**
+	 * 年月日をyyyy-mm-dd形式に変換する
+	 * 
+	 * @param year
+	 *            年
+	 * @param month
+	 *            月
+	 * @param day
+	 *            日
+	 * @return yyyy-mm-dd形式年月日
+	 * 
+	 */
 	public static String dateFormat(String year, String month, String day) {
-		// return japaneseFormat(year + SECTION + month + SECTION + day);
 		return year + SECTION + month + SECTION + day;
 	}
 
+	/**
+	 * yyyy-mm-dd形式をyyyy年mm月dd日に変換する
+	 * 
+	 * @param date
+	 *            変換する日付
+	 * @return 変換後日付
+	 */
 	public static String japaneseFormat(String date) {
 		String[] format = date.split(SECTION);
 		return format[0] + "年" + format[1] + "月" + format[2] + "日";
 	}
 
+	/**
+	 * 日付設定で使う年要素を取得する
+	 * 
+	 * @return 要素
+	 */
 	public static String[] getYears() {
 		String[] years = new String[100];
 		Calendar calendar = Calendar.getInstance();
@@ -151,6 +204,11 @@ public class DateUtil {
 		return years;
 	}
 
+	/**
+	 * 日付設定で使う月要素を取得する
+	 * 
+	 * @return 要素
+	 */
 	public static String[] getMonths() {
 		String[] months = new String[12];
 		for (int i = 0; i < 12; i++) {
@@ -159,6 +217,11 @@ public class DateUtil {
 		return months;
 	}
 
+	/**
+	 * 日付設定で使う日要素を取得する
+	 * 
+	 * @return 要素
+	 */
 	public static String[] getDays(int maxDay) {
 		String[] days = new String[maxDay];
 		for (int i = 0; i < maxDay; i++) {
@@ -167,6 +230,15 @@ public class DateUtil {
 		return days;
 	}
 
+	/**
+	 * 年月から日の要素を取得する
+	 * 
+	 * @param year
+	 *            年
+	 * @param month
+	 *            月
+	 * @return 日
+	 */
 	public static String[] getDays(int year, int month) {
 		if (year == 0 || month == 0) {
 			year = Integer.valueOf(nowYear());
@@ -181,6 +253,13 @@ public class DateUtil {
 		return days;
 	}
 
+	/**
+	 * 日付をyyyy-mm-dd形式で取得する
+	 * 
+	 * @param last
+	 *            前
+	 * @return yyyy-mm-dd形式日付
+	 */
 	public static String getDate(int last) {
 		if (last == 0) {
 			nowDate();

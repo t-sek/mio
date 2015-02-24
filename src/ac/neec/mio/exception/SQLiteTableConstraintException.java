@@ -1,7 +1,7 @@
 package ac.neec.mio.exception;
 
 /**
- * データベースのテーブル制約に誤りがあります
+ * ローカルデータベーステーブル制約エラー
  */
 public class SQLiteTableConstraintException extends Exception {
 

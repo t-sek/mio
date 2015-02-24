@@ -1,9 +1,7 @@
 package ac.neec.mio.ui.dialog;
 
-import com.google.android.gms.internal.co;
-
 import ac.neec.mio.R;
-import ac.neec.mio.filter.JapaneseInputFilter;
+import ac.neec.mio.validate.JapaneseInputFilter;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;

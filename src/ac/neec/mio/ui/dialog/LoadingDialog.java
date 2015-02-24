@@ -198,10 +198,4 @@ public class LoadingDialog extends DialogFragment implements
 
 	}
 
-	@Override
-	public void notifyMin() {
-		// TODO Auto-generated method stub
-
-	}
-
 }

@@ -13,30 +13,60 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
 
+/**
+ * ギャラリーアプリの起動、カメラアプリの起動、画像トリミングアプリの起動を行うクラス
+ */
 public class ExternalAppGallery {
+	/**
+	 * ギャラリーアプリにアクセスするリクエストコード
+	 */
 	public static final int REQUEST_GALLERY = 1;
+	/**
+	 * カメラアプリにアクセスするリクエストコード
+	 */
 	public static final int REQUEST_CAMERA = 2;
+	/**
+	 * 画像トリミングアプリにアクセスするリクエストコード
+	 */
 	public static final int REQUEST_CROP = 3;
 
+	/**
+	 * トリミング横サイズ
+	 */
 	private static final int TRIMMING_X = 100;
+	/**
+	 * トリミング縦サイズ
+	 */
 	private static final int TRIMMING_Y = 100;
+	/**
+	 * トリミング画像横比率
+	 */
 	private static final int ASPECT_X = 1;
+	/**
+	 * トリミング画像縦比率
+	 */
 	private static final int ASPECT_Y = 1;
 
+	/**
+	 * ギャラリーアプリを起動する
+	 * 
+	 * @param activity
+	 *            画面情報
+	 */
 	public static void openGallery(Activity activity) {
-
-		// Intent intent = new Intent();
-		// intent.setType("image/*");
-		// intent.setAction(Intent.ACTION_GET_CONTENT);
-		// activity.startActivityForResult(intent, REQUEST_GALLERY);
-
 		Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
 		intent.addCategory(Intent.CATEGORY_OPENABLE);
 		intent.setType("image/*");
 		activity.startActivityForResult(intent, REQUEST_GALLERY);
-
 	}
 
+	/**
+	 * カメラアプリを起動する
+	 * 
+	 * @param activity
+	 *            画面情報
+	 * @return 撮影した画像URI
+	 */
 	public static Uri openCamera(Activity activity) {
 		Uri uri = null;
 		StringBuilder stringBuilder = new StringBuilder();
@@ -50,7 +80,6 @@ public class ExternalAppGallery {
 		ContentResolver contentResolver = activity.getContentResolver();
 		uri = contentResolver.insert(
 				MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-		Log.d("Gallery", "uri " + uri);
 		Intent intent = new Intent();
 		intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
 		intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
@@ -58,6 +87,14 @@ public class ExternalAppGallery {
 		return uri;
 	}
 
+	/**
+	 * ギャラリーから画像選択した後、画像トリミングアプリを起動する
+	 * 
+	 * @param activity
+	 *            画面情報
+	 * @param uri
+	 *            画像URI
+	 */
 	public static void performCrop(Activity activity, Uri uri) {
 		try {
 			try {
@@ -69,7 +106,6 @@ public class ExternalAppGallery {
 				intent.putExtra("aspectY", ASPECT_Y);
 				Environment.getExternalStorageDirectory().getPath();
 				intent.putExtra("return-data", true);
-				Log.d("crop", "uri " + uri);
 				activity.startActivityForResult(intent, REQUEST_CROP);
 			} catch (Exception e) {
 			}
@@ -81,8 +117,15 @@ public class ExternalAppGallery {
 		}
 	}
 
+	/**
+	 * カメラで撮影した後、画像トリミングアプリを起動する
+	 * 
+	 * @param activity
+	 *            画面情報
+	 * @param uri
+	 *            画像URI
+	 */
 	public static void openCrop(Activity activity, Uri uri) {
-		Log.d("crop", "uri " + uri);
 		Intent intent = new Intent("com.android.camera.action.CROP");
 		intent.setData(uri);
 		intent.putExtra("outputX", TRIMMING_X);
@@ -95,5 +138,4 @@ public class ExternalAppGallery {
 		intent.putExtra("return-data", true);
 		activity.startActivityForResult(intent, REQUEST_CROP);
 	}
-	// }
 }

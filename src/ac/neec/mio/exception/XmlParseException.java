@@ -3,7 +3,7 @@ package ac.neec.mio.exception;
 import org.xmlpull.v1.XmlPullParserException;
 
 /**
- * XMLの解析に失敗
+ * XML解析エラー
  */
 public class XmlParseException extends Exception {
 

@@ -5,7 +5,6 @@ import java.util.List;
 
 import ac.neec.mio.R;
 import ac.neec.mio.ui.fragment.pager.TopPagerAdapter;
-import ac.neec.mio.ui.listener.TopCallbackListener;
 import ac.neec.mio.user.User;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -23,8 +22,7 @@ import com.viewpagerindicator.TabPageIndicator;
  * トップ画面クラス
  *
  */
-public class TopActivity extends FragmentActivity implements
-		TopCallbackListener {
+public class TopActivity extends FragmentActivity {
 
 	/**
 	 * タブのアダプター
@@ -51,8 +49,7 @@ public class TopActivity extends FragmentActivity implements
 	 * 画面の初期化処理をする
 	 */
 	private void initFindViews() {
-		adapter = new TopPagerAdapter(getSupportFragmentManager(), this,
-				R.id.pager_top);
+		adapter = new TopPagerAdapter(getSupportFragmentManager());
 		pager = (ViewPager) findViewById(R.id.pager_top);
 		pager.setId(R.id.pager_top);
 		indicator = (TabPageIndicator) findViewById(R.id.indicator_top);
@@ -88,7 +85,6 @@ public class TopActivity extends FragmentActivity implements
 		Log.d("activity", "file path " + c.getString(0));
 		File file = new File(c.getString(0));
 		Log.d("activity", "file name " + file.getName());
-		User.getInstance().setImageUri(c.getString(0));
 		adapter.getFragments().get(index)
 				.onActivityResult(requestCode, resultCode, data);
 		super.onActivityResult(requestCode, resultCode, data);
@@ -97,12 +93,6 @@ public class TopActivity extends FragmentActivity implements
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-	}
-
-	@Override
-	public void onDeviceScanClicked() {
-		// TODO Auto-generated method stub
-
 	}
 
 }

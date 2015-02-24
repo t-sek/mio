@@ -21,7 +21,6 @@ import ac.neec.mio.training.play.TrainingPlay;
 import ac.neec.mio.ui.dialog.LoadingDialog;
 import ac.neec.mio.user.User;
 import ac.neec.mio.util.CalorieUtil;
-import ac.neec.mio.util.ColorUtil;
 import ac.neec.mio.util.DateUtil;
 import ac.neec.mio.util.TimeUtil;
 import android.app.Fragment;
@@ -291,8 +290,6 @@ public class TrainingDataDetailActivity extends FragmentActivity implements
 					item = new ColorBarItem(play.getTrainingTime(),
 							menu.getTrainingName(), color);
 					colorbar.addBarItem(item);
-				} else {
-					color = ColorUtil.DEFAULT_COLOR;
 				}
 			}
 		}

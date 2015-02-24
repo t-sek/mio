@@ -392,10 +392,6 @@ public class SplashActivity extends FragmentActivity implements
 
 	}
 
-	@Override
-	public void notifyMin() {
-	}
-
 	/**
 	 * ローカルデータベースにトレーニングカテゴリーを保存する
 	 * 

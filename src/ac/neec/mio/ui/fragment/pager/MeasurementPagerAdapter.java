@@ -11,10 +11,22 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 
+/**
+ * 計測画面のタブを設定するアダプタークラス
+ *
+ */
 public class MeasurementPagerAdapter extends FragmentPagerAdapter {
 
+	/**
+	 * タブに表示する画面フラグメントクラス
+	 */
 	private List<Fragment> fragments = new ArrayList<Fragment>();
 
+	/**
+	 * 
+	 * @param fm
+	 *            フラグメントマネージャー
+	 */
 	public MeasurementPagerAdapter(FragmentManager fm) {
 		super(fm);
 	}
@@ -26,18 +38,15 @@ public class MeasurementPagerAdapter extends FragmentPagerAdapter {
 
 	@Override
 	public Fragment getItem(int position) {
-		Log.e("adapter", "item " + fragments.get(position));
 		return fragments.get(position);
 	}
 
-	public List<Fragment> getFragments() {
-		return fragments;
-	}
-
-	public void addFragment(MeasurementBaseFragment fragment) {
-		fragments.add(fragment);
-	}
-
+	/**
+	 * 表示するフラグメントを追加する
+	 * 
+	 * @param list
+	 *            表示するフラグメント
+	 */
 	public void addFragmentAll(List<Fragment> list) {
 		fragments.addAll(list);
 	}

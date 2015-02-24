@@ -8,6 +8,9 @@ import com.androidformenhancer.annotation.MinLength;
 import com.androidformenhancer.annotation.Required;
 import com.androidformenhancer.annotation.Widget;
 
+/**
+ * 新規登録画面入力フォームチェック
+ */
 public class UserSignUpForm {
 
 	@Widget(id = R.id.edit_id, nameResId = R.string.userId)

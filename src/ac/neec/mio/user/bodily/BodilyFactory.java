@@ -8,6 +8,9 @@ import ac.neec.mio.group.Permission;
 import ac.neec.mio.user.bodily.weight.Weight;
 import android.graphics.Bitmap;
 
+/**
+ * Bodilyクラスを生成するクラス
+ */
 public class BodilyFactory extends ProductDataFactory {
 
 	@Override
@@ -44,8 +47,8 @@ public class BodilyFactory extends ProductDataFactory {
 	}
 
 	@Override
-	protected ProductData factoryMethod(int id, int trainingMenuId, String userId,
-			String date, String startTime, String playTime,
+	protected ProductData factoryMethod(int id, int trainingMenuId,
+			String userId, String date, String startTime, String playTime,
 			int targetHeartRate, int targetCal, int consumptionCal,
 			int heartRateAvg, int strange, double distance) {
 		// TODO Auto-generated method stub

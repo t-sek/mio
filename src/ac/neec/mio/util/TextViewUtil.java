@@ -4,11 +4,13 @@ import android.graphics.Paint;
 import android.util.TypedValue;
 import android.widget.TextView;
 
+/**
+ * テキストビューユーティリティークラス
+ */
 public abstract class TextViewUtil {
 
 	/**
 	 * TextView のテキストサイズを 1 行に収まるように調整。
-	 * 
 	 */
 	public static float resizeTextView(TextView textView, float minTextSize) {
 		float textSize = getAdjustTextSize(textView.getWidth(), textView
@@ -38,30 +40,24 @@ public abstract class TextViewUtil {
 			float initTextSize, float minTextSize) {
 		Paint paint = new Paint();
 		float textWidth;
-
 		// テキストサイズ (この値を徐々に小さくしていく)
 		float textSize = initTextSize;
-
 		// Paint にテキストを書いてテキスト横幅取得
 		paint.setTextSize(textSize);
 		textWidth = paint.measureText(text);
-
 		/*
 		 * 横幅に収まるまでループ
 		 */
 		while (width < textWidth) {
 			textSize = textSize - 1;
-
 			// 最小サイズ以下になっちゃったら終了
 			if (minTextSize > 0 && minTextSize >= textSize) {
 				textSize = minTextSize;
 				break;
 			}
-
 			paint.setTextSize(textSize);
 			textWidth = paint.measureText(text);
 		}
-
 		return textSize;
 	}
 

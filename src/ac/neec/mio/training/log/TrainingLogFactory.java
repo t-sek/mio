@@ -5,7 +5,7 @@ import ac.neec.mio.framework.ProductDataFactory;
 import ac.neec.mio.group.Permission;
 
 /**
- * TrainingLogクラスを生成する
+ * TrainingLogクラスを生成するクラス
  *
  */
 public class TrainingLogFactory extends ProductDataFactory {
