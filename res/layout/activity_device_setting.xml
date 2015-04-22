@@ -8,19 +8,20 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="ac.neec.mio.ui.activity.DeviceSettingActivity" >
 
-<!--     <ImageView
+    <!--
+         <ImageView
         android:id="@+id/imageView1"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:src="@drawable/circle" />
- -->
+    -->
+
     <ListView
         android:id="@+id/list_scan_device"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_above="@+id/imageView1"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

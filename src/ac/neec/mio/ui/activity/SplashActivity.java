@@ -20,7 +20,6 @@ import ac.neec.mio.group.Group;
 import ac.neec.mio.group.MemberInfo;
 import ac.neec.mio.group.Permission;
 import ac.neec.mio.pref.AppPreference;
-import ac.neec.mio.sns.facebook.Login;
 import ac.neec.mio.timer.TimerManager;
 import ac.neec.mio.training.category.TrainingCategory;
 import ac.neec.mio.training.menu.TrainingMenu;
@@ -117,10 +116,6 @@ public class SplashActivity extends FragmentActivity implements
 	private User user = User.getInstance();
 	private Bundle bundle;
 	/**
-	 * facebookログイン
-	 */
-	private Login login;
-	/**
 	 * 通信メッセージイテレータ
 	 */
 	private int sectionCount;
@@ -205,7 +200,7 @@ public class SplashActivity extends FragmentActivity implements
 		buttonFacebookLogin.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				facebookLogin();
+//				facebookLogin();
 			}
 		});
 	}
@@ -242,15 +237,6 @@ public class SplashActivity extends FragmentActivity implements
 		// FirstSignUpSelectActivity.class);
 		startActivity(intent);
 		// finish();
-	}
-
-	/**
-	 * facebookログインダイアログを表示する
-	 */
-	private void facebookLogin() {
-		login = new Login(this, Login.LOGIN, bundle);
-		login.logoutFacebook();
-		login.connectFacebookAuth();
 	}
 
 	/**
@@ -479,11 +465,11 @@ public class SplashActivity extends FragmentActivity implements
 		Log.d("activity", "data " + data);
 		Log.d("result", "name " + user.getName());
 		Log.d("result", "mail " + user.getMail());
-		if (login != null) {
-			Log.d("activity", "intent name " + user.getName());
-			login.helperOnActivityResult(requestCode, resultCode, data);
-			intentSignUp();
-		}
+//		if (login != null) {
+//			Log.d("activity", "intent name " + user.getName());
+//			login.helperOnActivityResult(requestCode, resultCode, data);
+//			intentSignUp();
+//		}
 	}
 
 	/**

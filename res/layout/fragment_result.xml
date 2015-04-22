@@ -50,7 +50,7 @@
         android:background="@drawable/frame" >
 
         <TextView
-            android:id="@+id/view_label"
+            android:id="@+id/view_training_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#aa339933"
@@ -62,15 +62,15 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/view_label"
+            android:layout_alignBottom="@+id/view_training_label"
             android:layout_marginBottom="8dp"
-            android:layout_toRightOf="@+id/view_label"
+            android:layout_toRightOf="@+id/view_training_label"
             android:background="#aa339933" />
 
         <include
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/view_label"
+            android:layout_below="@+id/view_training_label"
             android:layout_centerHorizontal="true"
             android:layout_centerInParent="true"
             android:layout_centerVertical="true"
@@ -91,7 +91,7 @@
         android:background="@drawable/frame" >
 
         <TextView
-            android:id="@+id/view_label"
+            android:id="@+id/view_heart_rate_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#aa339933"
@@ -103,16 +103,16 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/view_label"
+            android:layout_alignBottom="@+id/view_heart_rate_label"
             android:layout_marginBottom="8dp"
-            android:layout_toRightOf="@+id/view_label"
+            android:layout_toRightOf="@+id/view_heart_rate_label"
             android:background="#aa339933" />
 
         <include
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/view_label"
-            android:layout_below="@+id/view_label"
+            android:layout_alignLeft="@+id/view_heart_rate_label"
+            android:layout_below="@+id/view_heart_rate_label"
             layout="@layout/view_result_graph" />
     </RelativeLayout>
 
@@ -123,7 +123,7 @@
         android:background="@drawable/frame" >
 
         <TextView
-            android:id="@+id/view_label"
+            android:id="@+id/view_datas_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#aa339933"
@@ -135,16 +135,16 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/view_label"
+            android:layout_alignBottom="@+id/view_datas_label"
             android:layout_marginBottom="8dp"
-            android:layout_toRightOf="@+id/view_label"
+            android:layout_toRightOf="@+id/view_datas_label"
             android:background="#aa339933" />
 
         <include
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignLeft="@+id/view_label"
-            android:layout_below="@+id/view_label"
+            android:layout_alignLeft="@+id/view_datas_label"
+            android:layout_below="@+id/view_datas_label"
             layout="@layout/view_result_datas" />
     </RelativeLayout>
 

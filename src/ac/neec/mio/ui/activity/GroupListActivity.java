@@ -33,6 +33,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+/**
+ * グループ一覧タブ画面クラス
+ */
 public class GroupListActivity extends FragmentActivity implements Sourceable,
 		CallbackListener {
 

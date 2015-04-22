@@ -145,7 +145,7 @@ public class GroupSettingDialog extends DialogFragment {
 	 */
 	private void initFindViews() {
 		InputFilter[] filters = new InputFilter[] { new JapaneseInputFilter() };
-		textTitle = (TextView) dialog.findViewById(R.id.dialog_group_title);
+		textTitle = (TextView) dialog.findViewById(R.id.dialog_group_title2);
 		textTitle.setText(tag);
 		buttonDecided = (Button) dialog.findViewById(R.id.btn_dialog_decided);
 		editId = (EditText) dialog.findViewById(R.id.edit_group_id);
